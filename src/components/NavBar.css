@@ -1,0 +1,91 @@
+.NavBar {
+    height: 80px;
+    border-bottom: 1px solid lightgray;
+}
+
+.navbar-container {
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.navbar-logo {
+    cursor: pointer;
+    flex: 1;
+    font-size: 4rem;
+    font-weight: 600;
+}
+
+.navbar-logo-green {
+    color: var(--primary-color);
+}
+
+.navbar-search-container {
+    flex: 3;
+    margin-left: 20px;
+    border: 0.5px solid lightgray;
+    border-radius: 4px;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    max-width: 600px;
+}
+
+.navbar-category-select {
+    cursor: pointer;
+    font-size: 1.5rem;
+    padding: 5px;
+    border: none;
+    outline: none;
+    font-weight: 600;
+} 
+
+.navbar-search-input {
+    width: 100%;
+    font-size: 1.5rem;
+    padding: 5px;
+    padding-left: 10px;
+    border: none;
+    border-left: 1px solid lightgray;
+    outline: none;
+}
+
+.navbar-search-icon {
+    cursor: pointer;
+    margin-right: 10px;
+    width: 30px;
+    height: 30px;
+}
+
+.navbar-controller {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.navbar-controller-item {
+    position: relative;
+    cursor: pointer;
+}
+
+.navbar-controller-icon {
+    width: 30px;
+    height: 30px;
+}
+
+.navbar-controller-count {
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    color: #FFF;
+    font-size: 1.2rem;
+    display: inline-block;
+    padding: 3px;
+    min-width: 15px;
+    line-height: 15px;
+    text-align: center;
+    height: calc(width);
+    position: absolute;
+    right: -12px;
+    top: 0;
+}

@@ -1,0 +1,25 @@
+* {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 500;
+}
+
+:root {
+    --primary-color: #44de87;
+    --text-color-primary: #273f50;
+    --text-color-secondary: #9b9b9b;
+}
+
+html {
+    font-size: 62.5%;
+    box-sizing: border-box;
+}
+
+.App {
+
+}
+
+.content {
+    width: 1200px;
+    max-width: 100%;
+    margin: 0 auto;
+}

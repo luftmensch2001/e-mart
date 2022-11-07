@@ -10,6 +10,10 @@
     --text-color-secondary: #9b9b9b;
 }
 
+body {
+    margin: 0;
+}
+
 html {
     font-size: 62.5%;
     box-sizing: border-box;
@@ -23,4 +27,15 @@ html {
     width: 1200px;
     max-width: 100%;
     margin: 0 auto;
+}
+
+.title-text {
+    font-size: 3.4rem;
+    font-weight: 700;
+    color: var(--text-color-primary);
+}
+
+.green-text {
+    color: var(--primary-color);
+    font-weight: 700;
 }

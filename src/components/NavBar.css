@@ -20,10 +20,6 @@
     font-weight: 600;
 }
 
-.navbar-logo-green {
-    color: var(--primary-color);
-}
-
 .navbar-search-container {
     flex: 3;
     margin-left: 20px;

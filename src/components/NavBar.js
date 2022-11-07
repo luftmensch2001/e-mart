@@ -13,7 +13,7 @@ function NavBar() {
         <div className='NavBar'>
             <div className='navbar-full-width'>
                 <div className='content navbar-container'>
-                    <span className='navbar-logo'>E-<span className='navbar-logo-green'>Mart</span></span>
+                    <span className='navbar-logo'>E-<span className='green-text'>Mart</span></span>
                     <div className='navbar-search-container'>
                         <select className='navbar-category-select'>
                             <option>Tất cả danh mục</option>

@@ -92,7 +92,7 @@ function Recommend() {
                 </div>
             </div>
             <div className='recommend-block'>
-                <span className='title-text recommend-title'>Mua <span className='green-text'>Gần Đây</span></span>
+                <span className='title-text recommend-title'>Giảm <span className='green-text'>Giá Sâu</span></span>
                 <div className='recommend-product-container'>
                     <div className='recommend-product'>
                         <img className='recommend-product-img' alt='' src={productImg2} />

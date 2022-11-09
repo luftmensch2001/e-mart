@@ -30,7 +30,7 @@ function Footer() {
                     </div>
                     <div className='footer-info'>
                         <FiClock className='footer-icon' />
-                        <span className='footer-text'>7:00 AM - 17:00 PM</span>
+                        <span className='footer-text'>8:00 AM - 17:00 PM</span>
                     </div>
                 </div>
 

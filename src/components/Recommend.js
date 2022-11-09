@@ -1,9 +1,11 @@
 import React from 'react';
 import './Recommend.css'
 
-import productImg from '../assets/images/products/38625950889ac5bc6a35f73617a5e7e8.jpg'
-import productImg2 from '../assets/images/products/beatsolo3.png'
-import productImg3 from '../assets/images/products/product-290274-160922-071637-600x600.jpg'
+import product1 from '../assets/images/products/2.jpg';
+import product2 from '../assets/images/products/3.jpg';
+import product3 from '../assets/images/products/4.jpg';
+import product4 from '../assets/images/products/5.jpg';
+import product5 from '../assets/images/products/6.jpg';
 import i4stars from '../assets/images/reviews/4.png';
 
 function Recommend() {
@@ -13,9 +15,9 @@ function Recommend() {
                 <span className='title-text recommend-title'>Best <span className='green-text'>Seller</span></span>
                 <div className='recommend-product-container'>
                     <div className='recommend-product'>
-                        <img className='recommend-product-img' alt='' src={productImg} />
+                        <img className='recommend-product-img' alt='' src={product1} />
                         <div className='recommend-product-info'>
-                            <span className='recommend-product-name'>iPhone 14 VN/A</span>
+                            <span className='recommend-product-name'>Nước Hoa Pháp Cao Cấp</span>
                             <img className='recommend-product-stars' alt='' src={i4stars} />
                             <span className='recommend-category'>Đồ điện tử</span>
                             <div className='recommend-price-container'>
@@ -25,9 +27,9 @@ function Recommend() {
                          </div>
                     </div>
                     <div className='recommend-product'>
-                        <img className='recommend-product-img' alt='' src={productImg2} />
+                        <img className='recommend-product-img' alt='' src={product2} />
                         <div className='recommend-product-info'>
-                            <span className='recommend-product-name'>iPhone 14 VN/A</span>
+                            <span className='recommend-product-name'>Nước Hoa Pháp Cao Cấp</span>
                             <img className='recommend-product-stars' alt='' src={i4stars} />
                             <span className='recommend-category'>Đồ điện tử</span>
                             <div className='recommend-price-container'>
@@ -37,9 +39,9 @@ function Recommend() {
                          </div>
                     </div>
                     <div className='recommend-product'>
-                        <img className='recommend-product-img' alt='' src={productImg3} />
+                        <img className='recommend-product-img' alt='' src={product3} />
                         <div className='recommend-product-info'>
-                            <span className='recommend-product-name'>iPhone 14 VN/A</span>
+                            <span className='recommend-product-name'>Nước Hoa Pháp Cao Cấp</span>
                             <img className='recommend-product-stars' alt='' src={i4stars} />
                             <span className='recommend-category'>Đồ điện tử</span>
                             <div className='recommend-price-container'>
@@ -54,9 +56,9 @@ function Recommend() {
                 <span className='title-text recommend-title'>Mới <span className='green-text'>Nhất</span></span>
                 <div className='recommend-product-container'>
                     <div className='recommend-product'>
-                        <img className='recommend-product-img' alt='' src={productImg3} />
+                        <img className='recommend-product-img' alt='' src={product4} />
                         <div className='recommend-product-info'>
-                            <span className='recommend-product-name'>iPhone 14 VN/A</span>
+                            <span className='recommend-product-name'>Nước Hoa Pháp Cao Cấp</span>
                             <img className='recommend-product-stars' alt='' src={i4stars} />
                             <span className='recommend-category'>Đồ điện tử</span>
                             <div className='recommend-price-container'>
@@ -66,9 +68,9 @@ function Recommend() {
                          </div>
                     </div>
                     <div className='recommend-product'>
-                        <img className='recommend-product-img' alt='' src={productImg} />
+                        <img className='recommend-product-img' alt='' src={product5} />
                         <div className='recommend-product-info'>
-                            <span className='recommend-product-name'>iPhone 14 VN/A</span>
+                            <span className='recommend-product-name'>Nước Hoa Pháp Cao Cấp</span>
                             <img className='recommend-product-stars' alt='' src={i4stars} />
                             <span className='recommend-category'>Đồ điện tử</span>
                             <div className='recommend-price-container'>
@@ -78,9 +80,9 @@ function Recommend() {
                          </div>
                     </div>
                     <div className='recommend-product'>
-                        <img className='recommend-product-img' alt='' src={productImg2} />
+                        <img className='recommend-product-img' alt='' src={product1} />
                         <div className='recommend-product-info'>
-                            <span className='recommend-product-name'>iPhone 14 VN/A</span>
+                            <span className='recommend-product-name'>Nước Hoa Pháp Cao Cấp</span>
                             <img className='recommend-product-stars' alt='' src={i4stars} />
                             <span className='recommend-category'>Đồ điện tử</span>
                             <div className='recommend-price-container'>
@@ -95,9 +97,9 @@ function Recommend() {
                 <span className='title-text recommend-title'>Giảm <span className='green-text'>Giá Sâu</span></span>
                 <div className='recommend-product-container'>
                     <div className='recommend-product'>
-                        <img className='recommend-product-img' alt='' src={productImg2} />
+                        <img className='recommend-product-img' alt='' src={product2} />
                         <div className='recommend-product-info'>
-                            <span className='recommend-product-name'>iPhone 14 VN/A</span>
+                            <span className='recommend-product-name'>Nước Hoa Pháp Cao Cấp</span>
                             <img className='recommend-product-stars' alt='' src={i4stars} />
                             <span className='recommend-category'>Đồ điện tử</span>
                             <div className='recommend-price-container'>
@@ -107,9 +109,9 @@ function Recommend() {
                          </div>
                     </div>
                     <div className='recommend-product'>
-                        <img className='recommend-product-img' alt='' src={productImg3} />
+                        <img className='recommend-product-img' alt='' src={product3} />
                         <div className='recommend-product-info'>
-                            <span className='recommend-product-name'>iPhone 14 VN/A</span>
+                            <span className='recommend-product-name'>Nước Hoa Pháp Cao Cấp</span>
                             <img className='recommend-product-stars' alt='' src={i4stars} />
                             <span className='recommend-category'>Đồ điện tử</span>
                             <div className='recommend-price-container'>
@@ -119,9 +121,9 @@ function Recommend() {
                          </div>
                     </div>
                     <div className='recommend-product'>
-                        <img className='recommend-product-img' alt='' src={productImg} />
+                        <img className='recommend-product-img' alt='' src={product4} />
                         <div className='recommend-product-info'>
-                            <span className='recommend-product-name'>iPhone 14 VN/A</span>
+                            <span className='recommend-product-name'>Nước Hoa Pháp Cao Cấp</span>
                             <img className='recommend-product-stars' alt='' src={i4stars} />
                             <span className='recommend-category'>Đồ điện tử</span>
                             <div className='recommend-price-container'>

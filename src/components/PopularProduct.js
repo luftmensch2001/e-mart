@@ -6,6 +6,11 @@ import { AiOutlineShoppingCart, AiOutlineHeart } from "react-icons/ai";
 
 import iphone from '../assets/images/products/1.png';
 import dongho from '../assets/images/products/38625950889ac5bc6a35f73617a5e7e8.jpg';
+import product1 from '../assets/images/products/2.jpg';
+import product2 from '../assets/images/products/3.jpg';
+import product3 from '../assets/images/products/4.jpg';
+import product4 from '../assets/images/products/5.jpg';
+import product5 from '../assets/images/products/6.jpg';
 import i1star from '../assets/images/reviews/1.png';
 import i2stars from '../assets/images/reviews/2.png';
 import i3stars from '../assets/images/reviews/3.png';
@@ -30,7 +35,7 @@ function PopularProduct() {
             </div>
             <div className='product-list'>
                 <div className='product-item'>
-                    <img className='product-img' src={iphone} alt=""/>
+                    <img className='product-img' src={product3} alt=""/>
                     <div className='product-info'>
                         <p className='product-name'>iPhone 14 Chính Hãng VN/A</p>
                         <div className='product-star'>
@@ -54,7 +59,7 @@ function PopularProduct() {
                     </div>
                 </div>
                 <div className='product-item'>
-                    <img className='product-img' src={dongho} alt=""/>
+                    <img className='product-img' src={product2} alt=""/>
                     <div className='product-info'>
                         <p className='product-name'>Đồng Hồ Rolex Mạ Vàng 24K</p>
                         <div className='product-star'>
@@ -77,7 +82,7 @@ function PopularProduct() {
                     </div>
                 </div>
                 <div className='product-item'>
-                    <img className='product-img' src={iphone} alt=""/>
+                    <img className='product-img' src={product1} alt=""/>
                     <div className='product-info'>
                         <p className='product-name'>iPhone 14 Chính Hãng VN/A</p>
                         <div className='product-star'>
@@ -100,7 +105,7 @@ function PopularProduct() {
                     </div>
                 </div>
                 <div className='product-item'>
-                    <img className='product-img' src={dongho} alt=""/>
+                    <img className='product-img' src={product2} alt=""/>
                     <div className='product-info'>
                         <p className='product-name'>iPhone 14 Chính Hãng VN/A</p>
                         <div className='product-star'>
@@ -123,7 +128,7 @@ function PopularProduct() {
                     </div>
                 </div>
                 <div className='product-item'>
-                    <img className='product-img' src={dongho} alt=""/>
+                    <img className='product-img' src={product3} alt=""/>
                     <div className='product-info'>
                         <p className='product-name'>iPhone 14 Chính Hãng VN/A</p>
                         <div className='product-star'>
@@ -146,7 +151,7 @@ function PopularProduct() {
                     </div>
                 </div>
                 <div className='product-item'>
-                    <img className='product-img' src={iphone} alt=""/>
+                    <img className='product-img' src={product4} alt=""/>
                     <div className='product-info'>
                         <p className='product-name'>iPhone 14 Chính Hãng VN/A</p>
                         <div className='product-star'>
@@ -169,7 +174,7 @@ function PopularProduct() {
                     </div>
                 </div>
                 <div className='product-item'>
-                    <img className='product-img' src={dongho} alt=""/>
+                    <img className='product-img' src={product5} alt=""/>
                     <div className='product-info'>
                         <p className='product-name'>iPhone 14 Chính Hãng VN/A</p>
                         <div className='product-star'>
@@ -192,7 +197,7 @@ function PopularProduct() {
                     </div>
                 </div>
                 <div className='product-item'>
-                    <img className='product-img' src={iphone} alt=""/>
+                    <img className='product-img' src={product3} alt=""/>
                     <div className='product-info'>
                         <p className='product-name'>iPhone 14 Chính Hãng VN/A</p>
                         <div className='product-star'>

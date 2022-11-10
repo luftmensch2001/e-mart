@@ -1,10 +1,65 @@
 import React from 'react'
+import { toast } from 'react-toastify';
 import './ProfileTab.css'
+
+import cover from '../../assets/images/cover.jpg'
+import avatar from '../../assets/images/avatar.jpg'
+
+import { AiOutlineCamera } from 'react-icons/ai';
+
+function notifyReadOnly() {
+    toast.warn('Không thể sửa tên đăng nhập!', {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+    });
+}
+
+function saveInfo() {
+    toast.success('Lưu thông tin thành công!', {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+    });
+}
 
 function ProfileTab() {
     return (
         <div className='ProfileTab'>
-            Profile
+            <img alt='' className='profile-cover-img' src={cover}/>
+            <div className='profile-container'>
+                <img alt='' className='profile-avatar-img' src={avatar} />
+                <button className='profile-change-cover-button'>
+                    <AiOutlineCamera className='profile-change-cover-icon'/>
+                </button>
+                <div className='profile-change-avatar-zone'>
+                    <AiOutlineCamera className='profile-change-avatar-icon'/>
+                </div>
+                <span className='profile-name'>Trần Văn Mèo</span>
+                <div className='profile-left'>
+                    <p className='profile-left-label'>Tên đăng nhập</p>
+                    <p className='profile-left-label'>Họ và tên</p>
+                    <p className='profile-left-label'>Địa chỉ E-mail</p>
+                    <p className='profile-left-label'>Số điện thoại</p>
+                </div>
+                <div className='profile-right'>
+                    <input className='profile-input profile-username-input' type='text' value='tranvanmeo' readOnly='readOnly' onClick={notifyReadOnly}/>
+                    <input className='profile-input' type='text' value='Trần Văn Mèo'/>
+                    <input className='profile-input' type='email' value='meotran@gmail.com'/>
+                    <input className='profile-input' type='number' value='0905090782'/>
+                    <button className='profile-save-button primary-button' onClick={saveInfo}>Lưu thông tin</button>
+                </div>
+            </div>
         </div>
     )
 }

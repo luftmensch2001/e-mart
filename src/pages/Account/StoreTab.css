@@ -1,0 +1,37 @@
+.StoreTab {
+    margin-top: 30px;
+    width: 900px;
+}
+
+.store-product-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.store-product-item {
+    padding-bottom: 80px;
+    border-radius: 20px;
+}
+.store-product-item .product-img{
+    border-radius: 20px 20px 0 0; 
+}
+.store-product-item:hover {
+    background-color: rgb(227, 242, 255);
+    cursor: pointer;
+    position: relative;
+}
+
+.store-product-name {
+    min-height: auto !important;
+}
+
+.store-product-star {
+    position: absolute;
+    bottom: 50px;
+}
+
+.store-product-price {
+    position: absolute;
+    bottom: 20px;
+}

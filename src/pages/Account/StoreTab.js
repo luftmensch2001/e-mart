@@ -1,5 +1,6 @@
 import {React, useState} from 'react'
 import './StoreTab.css'
+import { AiOutlineSearch } from "react-icons/ai";
 import ReactPaginate from 'react-paginate';
 
 import productImage from '../../assets/images/products/5.jpg'
@@ -345,26 +346,46 @@ const items = [
 ]
 
 function Items({ currentItems }) {
+    const [searchValue, setSearchValue] = useState('');
+
+    function SearchInputOnChange(event) {
+        setSearchValue(event.target.value);
+    }
+
     return (
-      <div className='store-product-container'>
-        {currentItems &&
-          currentItems.map((item) => (
-            <div className='product-item store-product-item'>
-                <img className='product-img' src={item.productImg} alt=""/>
-                <div className='product-info'>
-                    <p className='product-name'>{item.productName}</p>
-                    <div className='product-star store-product-star'>
-                        <img src={item.productStar} alt="" />
-                        <span>({item.productStarNumber})</span>
-                    </div>
-                    <div className='product-price-container store-product-price'>
-                        <span className='product-sale-price'>{item.productPrice}</span>
-                        {item.productOldPrice !== -1 && <span className='product-old-price'>{item.productOldPrice}</span>}
-                    </div>
+        <div>
+            <div className='store-top'>
+                <button className='store-add-product-button primary-button'>
+                    Thêm sản phẩm
+                </button>
+                <div className='store-search-container'>
+                    <input type='text' className='store-search-input' value={searchValue} placeholder='Tìm kiếm sản phẩm' onChange={SearchInputOnChange}/> 
+                    <button className='store-search-button primary-button'>
+                        <AiOutlineSearch  className='store-search-icon'/>
+                    </button>
                 </div>
             </div>
-          ))}
-      </div>
+            <div className='store-product-container'>
+                {currentItems &&
+                    currentItems.map((item) => (
+                        <div className='product-item store-product-item'>
+                            <img className='product-img' src={item.productImg} alt=""/>
+                            <div className='product-info'>
+                                <p className='product-name'>{item.productName}</p>
+                                <div className='product-star store-product-star'>
+                                    <img src={item.productStar} alt="" />
+                                    <span>({item.productStarNumber})</span>
+                                </div>
+                                <div className='product-price-container store-product-price'>
+                                    <span className='product-sale-price'>{item.productPrice}</span>
+                                    {item.productOldPrice !== -1 && <span className='product-old-price'>{item.productOldPrice}</span>}
+                                </div>
+                            </div>
+                        </div>
+                ))}
+            </div>
+        </div>
+      
     );
 }
 

@@ -7,7 +7,7 @@ import Account from './pages/Account/Account'
 function App() {
   return (
     <div className="App">
-        <Account tabIndex={1} />
+        <Account tabIndex={3} />
         {/* <Home /> */}
     </div>
   );

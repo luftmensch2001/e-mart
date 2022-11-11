@@ -56,27 +56,6 @@
     color: rgb(155, 155, 155);
 }
 
-.profile-change-avatar-zone {
-    position: absolute;
-    border-radius: 50%;
-    border: 3px solid #FFF;
-    width: 200px;
-    height: 200px;
-    top: -80px;
-    left: 40px;
-    background-color: rgb(255 255 255 /50%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    display: none;
-}
-
-.profile-change-avatar-icon {
-    width: 40px;
-    height: 40px;
-    color: rgb(73, 73, 73);
-}
-
 .profile-name {
     font-size: 3rem;
     font-weight: 700;
@@ -115,8 +94,9 @@
     outline: none;
     width: 350px;
     font-weight: 600;
-    border-radius: 6px;
+    border-radius: 12px;
     color: var(--text-color-primary);
+    box-shadow: -2px 2px 2px 2px rgb(0 0 0 /3%);
 }
 
 .profile-username-input:hover {
@@ -125,5 +105,27 @@
 
 .profile-save-button  {
     margin-top: 30px;
-    border-radius: 6px;
+    border-radius: 12px;
 }
+
+.profile-change-avatar-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 350;
+}
+
+.profile-change-avatar-img {
+    border-radius: 50%;
+    border: 1px solid lightgray;
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    margin-top: 50px;
+}
+
+.profile-upload-button {
+    margin-top: 40px;
+    margin-left: 20px;
+}
+

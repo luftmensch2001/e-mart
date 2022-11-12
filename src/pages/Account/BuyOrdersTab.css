@@ -29,11 +29,17 @@
 .BuyOrdersTab .search-icon {
     width: 24px;
     height: 24px;
+    padding: 6px 6px 6px 0;
     position: absolute;
     color: var(--text-color-primary);
     left: 8px;
     top: 50%;
     transform: translateY(-50%);
+}
+
+.BuyOrdersTab .search-icon:hover {
+    cursor: pointer;
+    color: var(--primary-color);
 }
 
 .BuyOrdersTab .seach-input {

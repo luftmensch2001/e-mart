@@ -7,9 +7,15 @@ import { AiOutlineSearch } from "react-icons/ai";
 import productImage from '../../assets/images/products/5.jpg'
 import productImage2 from '../../assets/images/products/product-290274-160922-071637-600x600.jpg'
 
+let day1 = new Date(2022, 10, 13);
+let day2 = new Date(2022, 10, 8);
+let day3 = new Date(2022, 10, 2);
+let day4 = new Date(2022, 8, 22);
+let day5 = new Date(2020, 7, 1);
+
 const dataRaw = [
     {
-        orderDate: '5/12/2022',
+        orderDate: day1,
         productName: 'Bình Giữ Nhiệt Lock&Lock 450ML',
         productImg: productImage,
         count: 3,
@@ -17,7 +23,7 @@ const dataRaw = [
         status: 1
     },
     {
-        orderDate: '5/12/2022',
+        orderDate: day2,
         productName: 'iPhone 14 Pro Max 1TB',
         productImg: productImage2,
         count: 3,
@@ -25,15 +31,15 @@ const dataRaw = [
         status: 2
     },
     {
-        orderDate: '5/12/2022',
+        orderDate: day3,
         productName: 'Bình Giữ Nhiệt Lock&Lock 450ML',
         productImg: productImage,
         count: 3,
         total: 465000,
-        status: 3
+        status: 2
     },
     {
-        orderDate: '5/12/2022',
+        orderDate: day4,
         productName: 'Áo Khoác Blazer Kiểu Dáng Hàn Quốc',
         productImg: productImage2,
         count: 3,
@@ -41,7 +47,7 @@ const dataRaw = [
         status: 4
     },
     {
-        orderDate: '5/12/2022',
+        orderDate: day5,
         productName: 'Bình Giữ Nhiệt Lock&Lock 450ML',
         productImg: productImage,
         count: 3,
@@ -49,7 +55,7 @@ const dataRaw = [
         status: 3
     },
     {
-        orderDate: '5/12/2022',
+        orderDate: day2,
         productName: 'Bình Giữ Nhiệt Lock&Lock 450ML',
         productImg: productImage2,
         count: 3,
@@ -57,7 +63,7 @@ const dataRaw = [
         status: 3
     },
     {
-        orderDate: '5/12/2022',
+        orderDate: day3,
         productName: 'Bình Giữ Nhiệt Lock&Lock 450ML',
         productImg: productImage,
         count: 3,
@@ -103,18 +109,23 @@ function Items({ currentItems, filterFunction }) {
         switch (event.target.value) {
             case 'Tất cả':
                 setDateFilterValue(1);
+                filterFunction(searchValue, statusFilterValue, 1);
                 break;
             case 'Hôm nay':
                 setDateFilterValue(2);
+                filterFunction(searchValue, statusFilterValue, 2);
                 break;
             case 'Tuần này':
                 setDateFilterValue(3);
+                filterFunction(searchValue, statusFilterValue, 3);
                 break;
             case 'Tháng này':
                 setDateFilterValue(4);
+                filterFunction(searchValue, statusFilterValue, 4);
                 break;
             case 'Năm này':
                 setDateFilterValue(5);
+                filterFunction(searchValue, statusFilterValue, 5);
                 break;
             default:
                 break;
@@ -129,6 +140,12 @@ function Items({ currentItems, filterFunction }) {
     function SearchButtonClick(event) {
         filterFunction(searchValue, statusFilterValue, dateFilterValue);
     }
+
+    function SearchKeyDown(event) {
+        if (event.key === 'Enter') {
+            filterFunction(searchValue, statusFilterValue, dateFilterValue);
+        }
+    }
     
     return (
         <>
@@ -137,7 +154,7 @@ function Items({ currentItems, filterFunction }) {
                     <span className='top-label'>Tìm kiếm</span>
                     <div className='search-field'>
                         <AiOutlineSearch className='search-icon' onClick={SearchButtonClick}/>
-                        <input className='seach-input' type='text' placeholder='Tìm kiếm đơn hàng' value={searchValue} onChange={SearchInputOnChange}/>
+                        <input className='seach-input' type='text' placeholder='Tìm kiếm đơn hàng' value={searchValue} onChange={SearchInputOnChange} onKeyDown={SearchKeyDown}/>
                     </div>
                 </div>
                 <div className='status-filter-container'>
@@ -192,6 +209,8 @@ function PaginatedItems({items, itemsPerPage, filterFunction }) {
         setItemOffset(newOffset);
     };
 
+    useEffect(() => {setItemOffset(0);}, [items]);
+
     return (
         <>
             <Items currentItems={currentItems} filterFunction={filterFunction}/>
@@ -220,6 +239,7 @@ function PaginatedItems({items, itemsPerPage, filterFunction }) {
 }
 
 function BuyOrdersTab() {
+    const [allOrders, setAllOrders] = useState(dataRaw);
     const [orders, setOrders] = useState(dataRaw);
     let searchValue = '';
     let dateValue = 1;
@@ -228,8 +248,10 @@ function BuyOrdersTab() {
     function FilterOrders(searchVal, statusVal, dateVal ) {
         statusValue = statusVal; 
         searchValue = searchVal;
-        let arr = dataRaw.filter(FilterByStatus);
+        dateValue = dateVal;
+        let arr = allOrders.filter(FilterByStatus);
         arr = arr.filter(FilterByName);
+        arr = arr.filter(FilterByDate);
         setOrders(arr);
     }
 
@@ -240,14 +262,37 @@ function BuyOrdersTab() {
     }
 
     function FilterByStatus(item) {
-        console.log(item.status, statusValue);
         if (statusValue === 1) return true;
         return ((item.status + 1) === statusValue);
     }
 
+    function FilterByDate(item) {
+        if (dateValue === 1) return true;
+        const today = new Date();
+        const milisecondsInDay = 1000*60*60*24;
+        if (dateValue === 2) 
+        {
+            const daySubtract = Math.abs(today - item.orderDate);
+            return (daySubtract <= milisecondsInDay);
+        } 
+        if (dateValue === 3) 
+        {
+            const daySubtract = Math.abs(today - item.orderDate);
+            return (daySubtract <= milisecondsInDay*7);
+        } 
+        if (dateValue === 4) 
+        {
+            return (today.getFullYear() === item.orderDate.getFullYear() && today.getMonth() === item.orderDate.getMonth());
+        } 
+        if (dateValue === 5) 
+        {
+            return (today.getFullYear() === item.orderDate.getFullYear());
+        } 
+    }
+
     return (
         <div className='BuyOrdersTab'>
-            <PaginatedItems items={orders} itemsPerPage={5} filterFunction={FilterOrders} />
+            <PaginatedItems items={orders} itemsPerPage={4} filterFunction={FilterOrders}/>
         </div>
     )
 }

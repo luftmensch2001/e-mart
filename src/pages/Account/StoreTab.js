@@ -4,6 +4,9 @@ import { AiOutlineSearch } from "react-icons/ai";
 import ReactPaginate from 'react-paginate';
 
 import productImage from '../../assets/images/products/5.jpg'
+import productImage2 from '../../assets/images/products/4.jpg'
+import productImage3 from '../../assets/images/products/6.jpg'
+import productImage4 from '../../assets/images/products/3.jpg'
 import starImg from '../../assets/images/reviews/4.png'
 
 const items = [
@@ -16,7 +19,7 @@ const items = [
         productStar: starImg
     },
     {
-        productImg: productImage,
+        productImg: productImage2,
         productName: 'Nước hoa Pháp cao cấp 2',
         productPrice: '$24',
         productOldPrice: '$32',
@@ -24,7 +27,7 @@ const items = [
         productStar: starImg
     },
     {
-        productImg: productImage,
+        productImg: productImage3,
         productName: 'Nước hoa Pháp cao cấp 3',
         productPrice: '$24',
         productOldPrice: '$32',
@@ -32,7 +35,7 @@ const items = [
         productStar: starImg
     },
     {
-        productImg: productImage,
+        productImg: productImage4,
         productName: 'Nước hoa Pháp cao cấp 4',
         productPrice: '$24',
         productOldPrice: '$32',
@@ -48,7 +51,7 @@ const items = [
         productStar: starImg
     },
     {
-        productImg: productImage,
+        productImg: productImage2,
         productName: 'Nước hoa Pháp cao cấp 6',
         productPrice: '$24',
         productOldPrice: '$32',
@@ -56,7 +59,7 @@ const items = [
         productStar: starImg
     },
     {
-        productImg: productImage,
+        productImg: productImage3,
         productName: 'Nước hoa Pháp cao cấp 7',
         productPrice: '$24',
         productOldPrice: '$32',
@@ -64,7 +67,7 @@ const items = [
         productStar: starImg
     },
     {
-        productImg: productImage,
+        productImg: productImage4,
         productName: 'Nước hoa Pháp cao cấp 8',
         productPrice: '$24',
         productOldPrice: '$32',
@@ -80,7 +83,47 @@ const items = [
         productStar: starImg
     },
     {
-        productImg: productImage,
+        productImg: productImage2,
+        productName: 'Nước hoa Pháp cao cấp 8',
+        productPrice: '$24',
+        productOldPrice: '$32',
+        productStarNumber: 4,
+        productStar: starImg
+    },
+    {
+        productImg: productImage3,
+        productName: 'Nước hoa Pháp cao cấp 8',
+        productPrice: '$24',
+        productOldPrice: '$32',
+        productStarNumber: 4,
+        productStar: starImg
+    },
+    {
+        productImg: productImage4,
+        productName: 'Nước hoa Pháp cao cấp 8',
+        productPrice: '$24',
+        productOldPrice: '$32',
+        productStarNumber: 4,
+        productStar: starImg
+    },
+    {
+        productImg: productImage2,
+        productName: 'Nước hoa Pháp cao cấp 8',
+        productPrice: '$24',
+        productOldPrice: '$32',
+        productStarNumber: 4,
+        productStar: starImg
+    },
+    {
+        productImg: productImage3,
+        productName: 'Nước hoa Pháp cao cấp 8',
+        productPrice: '$24',
+        productOldPrice: '$32',
+        productStarNumber: 4,
+        productStar: starImg
+    },
+    {
+        productImg: productImage4,
         productName: 'Nước hoa Pháp cao cấp 8',
         productPrice: '$24',
         productOldPrice: '$32',
@@ -96,47 +139,7 @@ const items = [
         productStar: starImg
     },
     {
-        productImg: productImage,
-        productName: 'Nước hoa Pháp cao cấp 8',
-        productPrice: '$24',
-        productOldPrice: '$32',
-        productStarNumber: 4,
-        productStar: starImg
-    },
-    {
-        productImg: productImage,
-        productName: 'Nước hoa Pháp cao cấp 8',
-        productPrice: '$24',
-        productOldPrice: '$32',
-        productStarNumber: 4,
-        productStar: starImg
-    },
-    {
-        productImg: productImage,
-        productName: 'Nước hoa Pháp cao cấp 8',
-        productPrice: '$24',
-        productOldPrice: '$32',
-        productStarNumber: 4,
-        productStar: starImg
-    },
-    {
-        productImg: productImage,
-        productName: 'Nước hoa Pháp cao cấp 8',
-        productPrice: '$24',
-        productOldPrice: '$32',
-        productStarNumber: 4,
-        productStar: starImg
-    },
-    {
-        productImg: productImage,
-        productName: 'Nước hoa Pháp cao cấp 8',
-        productPrice: '$24',
-        productOldPrice: '$32',
-        productStarNumber: 4,
-        productStar: starImg
-    },
-    {
-        productImg: productImage,
+        productImg: productImage2,
         productName: 'Nước hoa Pháp cao cấp 3',
         productPrice: '$24',
         productOldPrice: '$32',
@@ -144,7 +147,7 @@ const items = [
         productStar: starImg
     },
     {
-        productImg: productImage,
+        productImg: productImage3,
         productName: 'Nước hoa Pháp cao cấp 4',
         productPrice: '$24',
         productOldPrice: '$32',
@@ -152,7 +155,7 @@ const items = [
         productStar: starImg
     },
     {
-        productImg: productImage,
+        productImg: productImage4,
         productName: 'Nước hoa Pháp cao cấp 5',
         productPrice: '$24',
         productOldPrice: '$32',
@@ -168,7 +171,7 @@ const items = [
         productStar: starImg
     },
     {
-        productImg: productImage,
+        productImg: productImage2,
         productName: 'Nước hoa Pháp cao cấp 7',
         productPrice: '$24',
         productOldPrice: '$32',
@@ -176,7 +179,7 @@ const items = [
         productStar: starImg
     },
     {
-        productImg: productImage,
+        productImg: productImage3,
         productName: 'Nước hoa Pháp cao cấp 8',
         productPrice: '$24',
         productOldPrice: '$32',
@@ -184,7 +187,7 @@ const items = [
         productStar: starImg
     },
     {
-        productImg: productImage,
+        productImg: productImage4,
         productName: 'Nước hoa Pháp cao cấp 9',
         productPrice: '$24',
         productOldPrice: '$32',
@@ -192,7 +195,23 @@ const items = [
         productStar: starImg
     },
     {
-        productImg: productImage,
+        productImg: productImage2,
+        productName: 'Nước hoa Pháp cao cấp 8',
+        productPrice: '$24',
+        productOldPrice: '$32',
+        productStarNumber: 4,
+        productStar: starImg
+    },
+    {
+        productImg: productImage3,
+        productName: 'Nước hoa Pháp cao cấp 8',
+        productPrice: '$24',
+        productOldPrice: '$32',
+        productStarNumber: 4,
+        productStar: starImg
+    },
+    {
+        productImg: productImage4,
         productName: 'Nước hoa Pháp cao cấp 8',
         productPrice: '$24',
         productOldPrice: '$32',
@@ -208,7 +227,7 @@ const items = [
         productStar: starImg
     },
     {
-        productImg: productImage,
+        productImg: productImage2,
         productName: 'Nước hoa Pháp cao cấp 8',
         productPrice: '$24',
         productOldPrice: '$32',
@@ -216,7 +235,7 @@ const items = [
         productStar: starImg
     },
     {
-        productImg: productImage,
+        productImg: productImage3,
         productName: 'Nước hoa Pháp cao cấp 8',
         productPrice: '$24',
         productOldPrice: '$32',
@@ -224,23 +243,7 @@ const items = [
         productStar: starImg
     },
     {
-        productImg: productImage,
-        productName: 'Nước hoa Pháp cao cấp 8',
-        productPrice: '$24',
-        productOldPrice: '$32',
-        productStarNumber: 4,
-        productStar: starImg
-    },
-    {
-        productImg: productImage,
-        productName: 'Nước hoa Pháp cao cấp 8',
-        productPrice: '$24',
-        productOldPrice: '$32',
-        productStarNumber: 4,
-        productStar: starImg
-    },
-    {
-        productImg: productImage,
+        productImg: productImage4,
         productName: 'Nước hoa Pháp cao cấp 3',
         productPrice: '$24',
         productOldPrice: '$32',
@@ -256,7 +259,7 @@ const items = [
         productStar: starImg
     },
     {
-        productImg: productImage,
+        productImg: productImage2,
         productName: 'Nước hoa Pháp cao cấp 5',
         productPrice: '$24',
         productOldPrice: '$32',
@@ -264,7 +267,7 @@ const items = [
         productStar: starImg
     },
     {
-        productImg: productImage,
+        productImg: productImage3,
         productName: 'Nước hoa Pháp cao cấp 6',
         productPrice: '$24',
         productOldPrice: '$32',
@@ -272,7 +275,7 @@ const items = [
         productStar: starImg
     },
     {
-        productImg: productImage,
+        productImg: productImage4,
         productName: 'Nước hoa Pháp cao cấp 7',
         productPrice: '$24',
         productOldPrice: '$32',
@@ -288,7 +291,7 @@ const items = [
         productStar: starImg
     },
     {
-        productImg: productImage,
+        productImg: productImage2,
         productName: 'Nước hoa Pháp cao cấp 9',
         productPrice: '$24',
         productOldPrice: '$32',
@@ -304,7 +307,15 @@ const items = [
         productStar: starImg
     },
     {
-        productImg: productImage,
+        productImg: productImage3,
+        productName: 'Nước hoa Pháp cao cấp 8',
+        productPrice: '$24',
+        productOldPrice: '$32',
+        productStarNumber: 4,
+        productStar: starImg
+    },
+    {
+        productImg: productImage4,
         productName: 'Nước hoa Pháp cao cấp 8',
         productPrice: '$24',
         productOldPrice: '$32',
@@ -320,7 +331,7 @@ const items = [
         productStar: starImg
     },
     {
-        productImg: productImage,
+        productImg: productImage2,
         productName: 'Nước hoa Pháp cao cấp 8',
         productPrice: '$24',
         productOldPrice: '$32',
@@ -328,15 +339,7 @@ const items = [
         productStar: starImg
     },
     {
-        productImg: productImage,
-        productName: 'Nước hoa Pháp cao cấp 8',
-        productPrice: '$24',
-        productOldPrice: '$32',
-        productStarNumber: 4,
-        productStar: starImg
-    },
-    {
-        productImg: productImage,
+        productImg: productImage3,
         productName: 'Nước hoa Pháp cao cấp 8',
         productPrice: '$24',
         productOldPrice: '$32',
@@ -398,10 +401,8 @@ function PaginatedItems({ itemsPerPage }) {
   
     const handlePageClick = (event) => {
       const newOffset = (event.selected * itemsPerPage) % items.length;
-      console.log(
-        `User requested page number ${event.selected}, which is offset ${newOffset}`
-      );
       setItemOffset(newOffset);
+      window.scrollTo(0, 0);
     };
   
     return (

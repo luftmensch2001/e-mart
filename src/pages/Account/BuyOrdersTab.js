@@ -13,7 +13,7 @@ let day3 = new Date(2022, 10, 2);
 let day4 = new Date(2022, 8, 22);
 let day5 = new Date(2020, 7, 1);
 
-const dataRaw = [
+let dataRaw = [
     {
         orderDate: day1,
         productName: 'Bình Giữ Nhiệt Lock&Lock 450ML',
@@ -71,6 +71,8 @@ const dataRaw = [
         status: 3
     }
 ]
+
+dataRaw = dataRaw.concat(dataRaw);
 
 function Items({ currentItems, filterFunction }) {
 
@@ -207,6 +209,7 @@ function PaginatedItems({items, itemsPerPage, filterFunction }) {
     const handlePageClick = (event) => {
         const newOffset = (event.selected * itemsPerPage) % items.length;
         setItemOffset(newOffset);
+        window.scrollTo(0,160);
     };
 
     useEffect(() => {setItemOffset(0);}, [items]);

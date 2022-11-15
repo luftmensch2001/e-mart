@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const schema = mongoose.Schema;
 
-const ColorsSchema = new schema({
+const BillsSchema = new schema({
   accountId: {
     type: schema.Types.ObjectId,
     ref: "accounts",
@@ -12,7 +12,7 @@ const ColorsSchema = new schema({
   },
   code: {
     type: String,
-    require: true,
+    require: false
   },
   state: {
     type: String,
@@ -28,4 +28,4 @@ const ColorsSchema = new schema({
   },
 });
 
-module.exports = mongoose.model("colors", ColorsSchema);
+module.exports = mongoose.model("bills", ColorsSchema);

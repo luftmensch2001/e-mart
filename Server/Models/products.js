@@ -5,6 +5,7 @@ const ProductsSchema = new schema({
   nameProduct: {
     type: String,
     require: true,
+    unique: true,
   },
   accountId: {
     type: schema.Types.ObjectId,
@@ -16,15 +17,15 @@ const ProductsSchema = new schema({
   },
   countSold: {
     type: Long,
-    require: true,
+    default: 0,
   },
   countAvailability: {
     type: Long,
-    require: true,
+    default: 0,
   },
   countStar: {
     type: Double,
-    require: true,
+    default: 0,
   },
   describe: {
     type: String,

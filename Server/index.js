@@ -2,7 +2,8 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 
-const authRouter = require("./routes/auth");
+const accountRouter = require("./routes/account");
+//const colorRouter = require("./routes/color");
 
 console.log(process.env.DB_USERNAME);
 
@@ -28,7 +29,8 @@ const app = express();
 
 app.use(express.json());
 
-app.use("/api/auth", authRouter);
+app.use("/api/account", accountRouter);
+//app.use("/api/color", colorRouter);
 
 const PORT = 5000;
 

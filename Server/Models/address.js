@@ -14,15 +14,15 @@ const AddressSchema = new schema({
     type: String,
     require: true,
   },
-  level1: {
+  city: {
     type: String,
     require: true,
   },
-  level2: {
+  district: {
     type: String,
     require: true,
   },
-  level3: {
+  ward: {
     type: String,
     require: true,
   },

@@ -1,15 +1,23 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import './index.css';
 import App from './App';
 import { ToastContainer } from 'react-toastify';
 import reportWebVitals from './reportWebVitals';
 import 'react-toastify/dist/ReactToastify.css';
+import Login from './pages/LoginRegister/Login';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <BrowserRouter>
+      {/* <Routes>
+        <Route path='/' element={<App/>} />
+        <Route path='/login' element={<Login/>} />
+      </Routes> */}
+        <App /> 
+    </BrowserRouter>
     <ToastContainer
       bodyClassName="toastBody"
       position="bottom-right"

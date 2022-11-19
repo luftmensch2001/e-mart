@@ -13,9 +13,12 @@
     align-items: center;
 }
 
+.navbar-logo-link {
+    flex: 1;
+}
+
 .navbar-logo {
     cursor: pointer;
-    flex: 1;
     font-size: 4rem;
     font-weight: 600;
 }

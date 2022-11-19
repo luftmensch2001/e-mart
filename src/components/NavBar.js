@@ -1,9 +1,11 @@
 import React, {useState} from 'react';
+import {Link} from 'react-router-dom';
 import './NavBar.css';
 
 import { AiOutlineSearch, AiOutlineHeart, AiOutlineShoppingCart, AiOutlineUser } from "react-icons/ai";
 import { TiSocialFacebookCircular, TiSocialInstagram, TiSocialTwitterCircular, TiSocialYoutubeCircular } from "react-icons/ti";
 import { FiPhoneCall } from "react-icons/fi";
+
 
 function NavBar() {
     const [wishlistCount, setWishlistCount] = useState(8);
@@ -13,7 +15,9 @@ function NavBar() {
         <div className='NavBar'>
             <div className='navbar-full-width'>
                 <div className='content navbar-container'>
-                    <span className='navbar-logo'>E-<span className='green-text'>Mart</span></span>
+                    <Link to='/' className='navbar-logo-link'>
+                        <span className='navbar-logo'>E-<span className='green-text'>Mart</span></span>
+                    </Link>
                     <div className='navbar-search-container'>
                         <select className='navbar-category-select'>
                             <option>Tất cả danh mục</option>
@@ -33,19 +37,27 @@ function NavBar() {
                             <AiOutlineShoppingCart className='navbar-controller-icon' />
                             { cartCount > 0 && <p className='navbar-controller-count'>{cartCount}</p>}
                         </div>
-                        <div className='navbar-controller-item'>
+                        <Link to='/account' className='navbar-controller-item'>
                             <AiOutlineUser className='navbar-controller-icon'/>
-                        </div>
+                        </Link>
                     </div>
                 </div>
             </div>
             <div className='navbar-full-width height-60'>
                 <div className='content navbar-menu-container'>
                     <ul className='navbar-menu-list'>
-                        <li className='navbar-menu-item'>Trang chủ</li>
-                        <li className='navbar-menu-item'>Đơn mua</li>
-                        <li className='navbar-menu-item'>Đơn bán</li>
-                        <li className='navbar-menu-item'>Cửa hàng</li>
+                        <Link to='/'>
+                            <li className='navbar-menu-item'>Trang chủ</li>
+                        </Link>
+                        <Link to='/account/buy-orders'>
+                            <li className='navbar-menu-item'>Đơn mua</li>
+                        </Link>
+                        <Link to='/account/sell-orders'>
+                            <li className='navbar-menu-item'>Đơn bán</li>
+                        </Link>
+                        <Link to='/account/store'>
+                            <li className='navbar-menu-item'>Cửa hàng</li>
+                        </Link>
                         <li className='navbar-menu-item'>Giới thiệu</li>
                         <li className='navbar-menu-item'>Liên hệ</li>
                     </ul>

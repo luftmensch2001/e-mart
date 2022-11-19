@@ -37,7 +37,7 @@ function NavBar() {
                             <AiOutlineShoppingCart className='navbar-controller-icon' />
                             { cartCount > 0 && <p className='navbar-controller-count'>{cartCount}</p>}
                         </div>
-                        <Link to='/account' className='navbar-controller-item'>
+                        <Link to='/account/profile' className='navbar-controller-item'>
                             <AiOutlineUser className='navbar-controller-icon'/>
                         </Link>
                     </div>

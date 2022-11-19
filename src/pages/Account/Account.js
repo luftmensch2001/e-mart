@@ -68,12 +68,14 @@ function Account(props) {
                             Tài khoản
                         </button>
                     </Link>
+                    <Link to='/login'>
+                        <button className = {selectedTab !== 6 ? 'account-side-bar-button' : 'account-side-bar-button account-tab-active'}
+                                onClick={() => setSelectedTab(6)}>
+                            <MdLogout className='account-side-bar-icon' />
+                            Đăng xuất
+                        </button>
+                    </Link>
 
-                    <button className = {selectedTab !== 6 ? 'account-side-bar-button' : 'account-side-bar-button account-tab-active'}
-                            onClick={() => setSelectedTab(6)}>
-                        <MdLogout className='account-side-bar-icon' />
-                        Đăng xuất
-                    </button>
                 </div>
                 <Outlet />
             </div>

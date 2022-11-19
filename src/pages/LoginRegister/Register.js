@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import './Register.css'
 import background from '../../assets/images/background/1_auto_x2.jpg'
 
@@ -14,8 +15,14 @@ function Register() {
                 <input className='register-input' type='text' placeholder='Tên đăng nhập' /> 
                 <input className='register-input' type='password' placeholder='Mật khẩu' /> 
                 <input className='register-input' type='password' placeholder='Nhập lại mật khẩu' /> 
-                <button className='register-button primary-button'>Đăng Ký</button>
-                <span className='register-second-text'>Bạn đã có tài khoản ? <span className='register-bold-text'>Đăng nhập ngay</span></span>
+                <Link to='/'>
+                    <button className='register-button primary-button'>Đăng Ký</button>
+                </Link>
+                <span className='register-second-text'>Bạn đã có tài khoản ? 
+                    <Link to='/login'>
+                        <span className='register-bold-text'> Đăng nhập ngay</span>
+                    </Link>
+                </span> 
             </div>
         </div>
     )

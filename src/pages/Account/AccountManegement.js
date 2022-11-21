@@ -19,11 +19,11 @@ function AccountManagement() {
                     </div>
                     <div className='account-change-item'>
                         <label for='password'>Mật khẩu hiện tại</label>
-                        <input className='accout-input' type='password' id='password' placeholder='Nhập mật khẩu hiện tại'/> 
+                        <input className='accout-input' type='password' id='password' placeholder='Mật khẩu hiện tại'/> 
                     </div>
                     <div className='account-change-item'>
                         <label for='new-password'>Mật khẩu mới</label>
-                        <input className='accout-input' type='password' id='new-password' placeholder='Nhập mật khẩu mới'/> 
+                        <input className='accout-input' type='password' id='new-password' placeholder='Mật khẩu mới'/> 
                     </div>
                     <div className='account-change-item'>
                         <label for='re-new-password'>Nhập lại mật khẩu mới</label>

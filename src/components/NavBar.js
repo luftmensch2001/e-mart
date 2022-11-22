@@ -53,14 +53,16 @@ function NavBar() {
                                 )}
                             </div>
                         </Link>
-                        <div className="navbar-controller-item">
-                            <AiOutlineShoppingCart className="navbar-controller-icon" />
-                            {cartCount > 0 && (
-                                <p className="navbar-controller-count">
-                                    {cartCount}
-                                </p>
-                            )}
-                        </div>
+                        <Link to="/cart">
+                            <div className="navbar-controller-item">
+                                <AiOutlineShoppingCart className="navbar-controller-icon" />
+                                {cartCount > 0 && (
+                                    <p className="navbar-controller-count">
+                                        {cartCount}
+                                    </p>
+                                )}
+                            </div>
+                        </Link>
                         <Link
                             to="/account/profile"
                             className="navbar-controller-item"

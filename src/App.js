@@ -13,6 +13,7 @@ import StoreTab from "./pages/Account/StoreTab";
 import ProfileTab from "./pages/Account/ProfileTab";
 import AccountManagement from "./pages/Account/AccountManegement";
 import Wishlist from "./pages/Wishlist/Wishlist";
+import Cart from "./pages/Cart/Cart";
 
 function App() {
     const location = useLocation().pathname;
@@ -28,6 +29,7 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/wishlist" element={<Wishlist />} />
+                <Route path="/cart" element={<Cart />} />
                 <Route path="/account" element={<Account tabIndex={1} />}>
                     <Route
                         path="/account/buy-orders"

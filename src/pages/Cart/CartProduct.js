@@ -38,7 +38,12 @@ const CartProduct = ({ data }) => {
         <div className="CartProduct">
             <div className="cart-product-info">
                 <img className="cart-product-img" src={data.image} />
-                <span className="cart-product-name">{data.name}</span>
+                <div className="cart-product-name-type">
+                    <span className="cart-product-name">{data.name}</span>
+                    <span className="cart-product-type">
+                        Phân loại: {data.type}
+                    </span>
+                </div>
             </div>
             <span className="cart-product-price">{data.price} đ</span>
             <div className="cart-product-quantity">

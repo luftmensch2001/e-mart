@@ -7,7 +7,7 @@ import { HiOutlineRefresh } from "react-icons/hi";
 import { BsArrowLeft, BsCartCheck } from "react-icons/bs";
 import { FaMoneyBillWave } from "react-icons/fa";
 
-const products = [
+let products = [
     {
         image: productImg,
         name: "iPhone 14 Pro Max",
@@ -108,10 +108,12 @@ const Cart = () => {
                                 27,880,000 đ
                             </span>
                         </div>
-                        <button className="checkout-button primary-button">
-                            <BsCartCheck className="checkout-button-icon" />
-                            Thanh toán
-                        </button>
+                        <Link to="/checkout">
+                            <button className="checkout-button primary-button">
+                                <BsCartCheck className="checkout-button-icon" />
+                                Thanh toán
+                            </button>
+                        </Link>
                     </div>
                     <div className="coupon-wrapper">
                         <input

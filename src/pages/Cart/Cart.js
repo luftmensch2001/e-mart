@@ -109,7 +109,10 @@ const Cart = () => {
                             </span>
                         </div>
                         <Link to="/checkout">
-                            <button className="checkout-button primary-button">
+                            <button
+                                className="checkout-button primary-button"
+                                onClick={() => window.scrollTo(0, 0)}
+                            >
                                 <BsCartCheck className="checkout-button-icon" />
                                 Thanh toán
                             </button>

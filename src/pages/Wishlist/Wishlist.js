@@ -58,7 +58,9 @@ function Items({ currentItems, filterFunction }) {
     }
     return (
         <div className="Wishlist content">
-            <span className="page-title title-text">Danh Sách Yêu Thích</span>
+            <span className="page-title title-text">
+                Danh Sách <span className="green-text">Yêu Thích</span>
+            </span>
             <span className="total-count-label">
                 Hiện có
                 <span className="green-text"> {products.length} sản phẩm </span>

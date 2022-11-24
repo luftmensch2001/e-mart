@@ -3,10 +3,44 @@ import "./Checkout.css";
 import paypal from "../../assets/images/paypal.png";
 import cod from "../../assets/images/cash-on-delivery.png";
 import { BsCheckCircleFill } from "react-icons/bs";
+import productImg from "../../assets/images/products/1.png";
+
+let products = [
+    {
+        image: productImg,
+        name: "iPhone 14 Pro Max",
+        type: "Màu xanh",
+        quantity: 1,
+        price: 28000000,
+    },
+    {
+        image: productImg,
+        name: "iPhone 14 Pro Max",
+        type: "Màu đỏ",
+        quantity: 3,
+        price: 28000000,
+    },
+    {
+        image: productImg,
+        name: "iPhone 14 Pro Max",
+        type: "Màu xanh",
+        quantity: 2,
+        price: 28000000,
+    },
+    {
+        image: productImg,
+        name: "iPhone 14 Pro Max",
+        type: "Màu tím",
+        quantity: 1,
+        price: 28000000,
+    },
+];
 
 const Checkout = () => {
     const [orderFor, setOrderFor] = useState(false);
     const [paymentMethod, setPaymentMethod] = useState(0); // 0 is Paypal
+    const [data, setData] = useState(products);
+
     return (
         <div className="Checkout content">
             <span className="page-title title-text">
@@ -131,11 +165,58 @@ const Checkout = () => {
                     </div>
                     <div className="input-row">
                         <button className="complete-button primary-button">
-                            Hoàn tất đặt hàng
+                            Hoàn tất Đặt hàng
                         </button>
                     </div>
                 </div>
-                <div className="checkout-bill-container"></div>
+                <div className="checkout-bill-container">
+                    <div className="bill-product-container">
+                        {data.map((item) => (
+                            <div className="bill-product-item">
+                                <div className="bill-product-info">
+                                    <img
+                                        className="bill-product-img"
+                                        src={item.image}
+                                    />
+                                    <div className="bill-product-detail">
+                                        <span className="bill-product-name">
+                                            {item.name}
+                                        </span>
+                                        <span className="bill-product-quantity">
+                                            Số lượng: {item.quantity}
+                                        </span>
+                                    </div>
+                                </div>
+                                <span className="bill-product-total">
+                                    {item.price * item.quantity} đ
+                                </span>
+                            </div>
+                        ))}
+                    </div>
+                    <div className="bill-money-container">
+                        <div className="bill-row">
+                            <span className="label">Tổng tiền hàng</span>
+                            <span className="value">28000000 đ</span>
+                        </div>
+                        <div className="bill-row">
+                            <span className="label">Phí vận chuyển</span>
+                            <span className="value">Free</span>
+                        </div>
+                        <div className="bill-row">
+                            <span className="label">Giảm giá</span>
+                            <span className="value">1200000 đ</span>
+                        </div>
+                        <div className="bill-row">
+                            <span className="label">Thành tiền</span>
+                            <span
+                                className="label"
+                                style={{ fontSize: "1.7rem" }}
+                            >
+                                27880000 đ
+                            </span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );

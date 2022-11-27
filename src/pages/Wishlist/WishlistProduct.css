@@ -58,7 +58,7 @@
 .WishlistProduct .wl-product-price {
     font-size: 1.5rem;
     font-weight: 600;
-    color: red;
+    color: var(--text-color-primary);
     text-align: center;
 }
 
@@ -71,37 +71,35 @@
     width: 50px;
     height: 45px;
     border-radius: 12px;
-    border: none;
-    background-color: #daffe9;
-    color: #2d9367;
+    border: 2px solid var(--primary-color);
+    background-color: transparent;
+    color: var(--primary-color);
 }
 
 .WishlistProduct .wl-product-cart-button:hover {
     cursor: pointer;
-    background-color: rgb(119, 229, 119);
+    background-color: #daffe9;
     transition: 0.2s;
-    color: #fff;
 }
 
 .WishlistProduct .wl-product-remove-button {
     width: 50px;
     height: 45px;
     border-radius: 12px;
-    border: none;
-    background-color: #fef2f2;
+    border: 2px solid #ff4838;
+    background-color: transparent;
     color: #fd2e1b;
 }
 
 .WishlistProduct .wl-product-remove-button:hover {
     cursor: pointer;
-    background-color: rgb(253, 78, 78);
+    background-color: #fef2f2;
     transition: 0.2s;
-    color: #fff;
 }
 
 .WishlistProduct .wl-product-button-icon {
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
 }
 
 .WishlistProduct {

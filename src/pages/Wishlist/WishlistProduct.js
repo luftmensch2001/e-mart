@@ -10,13 +10,13 @@ function WishlistProduct(props) {
     return (
         <div className="WishlistProduct">
             <div className="wl-product-info c1">
-                <img className="wl-product-image" src={data.image} />
+                <img className="wl-product-image" src={data.image} alt="" />
                 <span className="wl-product-name">{data.name}</span>
             </div>
 
             <span className="wl-product-type c2">{data.type}</span>
 
-            <span className="wl-product-price c3">{data.price}</span>
+            <span className="wl-product-price c3">{data.price} đ</span>
 
             <div className="wl-product-buttons c4">
                 <button className="wl-product-cart-button">

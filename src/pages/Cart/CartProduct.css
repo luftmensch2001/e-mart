@@ -5,11 +5,14 @@
     border-bottom: 1px solid lightgray;
 }
 
+.CartProduct .cart-link-product {
+    width: 40%;
+}
+
 .CartProduct .cart-product-info {
     display: flex;
     align-items: center;
     padding-right: 8px;
-    width: 40%;
 }
 
 .CartProduct .cart-product-img {

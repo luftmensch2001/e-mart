@@ -3,6 +3,7 @@ import "./CartProduct.css";
 import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
 const CartProduct = ({ data }) => {
     const [quantity, setQuantity] = useState(data.quantity);
@@ -36,15 +37,17 @@ const CartProduct = ({ data }) => {
 
     return (
         <div className="CartProduct">
-            <div className="cart-product-info">
-                <img className="cart-product-img" src={data.image} />
-                <div className="cart-product-name-type">
-                    <span className="cart-product-name">{data.name}</span>
-                    <span className="cart-product-type">
-                        Phân loại: {data.type}
-                    </span>
+            <Link to="/product" className="cart-link-product">
+                <div className="cart-product-info">
+                    <img className="cart-product-img" src={data.image} />
+                    <div className="cart-product-name-type">
+                        <span className="cart-product-name">{data.name}</span>
+                        <span className="cart-product-type">
+                            Phân loại: {data.type}
+                        </span>
+                    </div>
                 </div>
-            </div>
+            </Link>
             <span className="cart-product-price">{data.price} đ</span>
             <div className="cart-product-quantity">
                 <div style={{ position: "relative", width: "80px" }}>

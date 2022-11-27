@@ -159,7 +159,7 @@ function Wishlist() {
         <div className="BuyOrdersTab">
             <PaginatedItems
                 items={data}
-                itemsPerPage={6}
+                itemsPerPage={4}
                 filterFunction={FilterProduct}
             />
         </div>

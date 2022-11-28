@@ -196,11 +196,38 @@
     height: 16px;
 }
 
-.Cart {
+.EmptyCart {
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
-.Cart {
+.EmptyCart img {
+    height: 300px;
 }
 
-.Cart {
+.EmptyCart .text-content {
+    margin-top: 30px;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--text-color-secondary);
+}
+
+.EmptyCart .cart-continue-shopping-button {
+    cursor: pointer;
+    margin-top: 30px;
+    height: 45px;
+    font-size: 1.4rem;
+    font-weight: 800;
+    display: flex;
+    padding: 0 12px;
+    border: none;
+    border-radius: 6px;
+    align-items: center;
+    background-color: #e4f6ed;
+    color: var(--primary-color);
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 10px -3px,
+        rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
 }

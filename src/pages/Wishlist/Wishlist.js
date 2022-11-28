@@ -4,6 +4,8 @@ import ReactPaginate from "react-paginate";
 import WishlistProduct from "./WishlistProduct";
 import productImage from "../../assets/images/products/4.jpg";
 import { AiOutlineSearch } from "react-icons/ai";
+import { BsArrowLeft } from "react-icons/bs";
+import { Link } from "react-router-dom";
 
 const products = [
     {
@@ -154,16 +156,40 @@ function Wishlist() {
         const arr = allProduct.filter(FilterByName);
         setData(arr);
     }
+    if (data.length > 0)
+        return (
+            <div className="BuyOrdersTab">
+                <PaginatedItems
+                    items={data}
+                    itemsPerPage={4}
+                    filterFunction={FilterProduct}
+                />
+            </div>
+        );
+    else return <EmptyWishlist />;
+}
 
+const EmptyWishlist = () => {
     return (
-        <div className="BuyOrdersTab">
-            <PaginatedItems
-                items={data}
-                itemsPerPage={4}
-                filterFunction={FilterProduct}
-            />
+        <div className="EmptyWishlist content">
+            <span className="title-text">
+                Danh Sách Yêu Thích{" "}
+                <span className="green-text">Đang Trống</span>
+            </span>
+            <span className="text-content">
+                Thêm sản phẩm vào Danh Sách Yêu Thích để có thể mua lại khi muốn
+            </span>
+            <Link to="/">
+                <button
+                    className="cart-continue-shopping-button"
+                    onClick={() => window.scrollTo(0, 0)}
+                >
+                    <BsArrowLeft className="cart-button-icon" />
+                    Tiếp tục mua sắm
+                </button>
+            </Link>
         </div>
     );
-}
+};
 
 export default Wishlist;

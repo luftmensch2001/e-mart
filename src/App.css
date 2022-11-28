@@ -1,11 +1,11 @@
 * {
-    font-family: 'Quicksand', sans-serif;
+    font-family: "Quicksand", sans-serif;
     font-weight: 500;
 }
 
 :root {
     --primary-color: #44de87;
-    /* --primary-color: #fb836d; */ 
+    /* --primary-color: #fb836d; */
     --text-color-primary: #273f50;
     --text-color-secondary: #9b9b9b;
 }
@@ -20,7 +20,6 @@ html {
 }
 
 .App {
-
 }
 
 .content {
@@ -46,7 +45,7 @@ html {
     background-color: var(--primary-color);
     border: none;
     outline: none;
-    color: #FFF;
+    color: #fff;
     height: 45px;
 }
 
@@ -59,13 +58,13 @@ html {
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 /* Firefox */
-input[type=number] {
-  -moz-appearance: textfield;
+input[type="number"] {
+    -moz-appearance: textfield;
 }
 
 .toastBody {
@@ -86,7 +85,7 @@ input[type=number] {
 .pag-li {
     margin: 0 16px;
     border: 1px solid lightgray;
-    border-radius: 6px;
+    border-radius: 50%;
     width: 36px;
     height: 36px;
     display: flex;
@@ -102,12 +101,13 @@ input[type=number] {
     height: 36px;
     text-align: center;
     padding-top: 14px;
+    border-radius: 50%;
 }
 
 .pag-previous {
     margin: 0 16px;
     border: 1px solid lightgray;
-    border-radius: 6px;
+    border-radius: 50%;
     width: 36px;
     height: 36px;
     display: flex;
@@ -123,13 +123,14 @@ input[type=number] {
     text-align: center;
     padding-top: 14px;
     font-weight: 700;
+    border-radius: 50%;
     user-select: none;
 }
 
 .pag-next {
     margin: 0 16px;
     border: 1px solid lightgray;
-    border-radius: 6px;
+    border-radius: 50%;
     width: 36px;
     height: 36px;
     display: flex;
@@ -142,6 +143,7 @@ input[type=number] {
     display: block;
     width: 36px;
     height: 36px;
+    border-radius: 50%;
     text-align: center;
     font-weight: 700;
     user-select: none;
@@ -150,7 +152,7 @@ input[type=number] {
 
 .pag-active {
     background-color: #44de87;
-    color: #FFF;
+    color: #fff;
 }
 
 .pag-break {

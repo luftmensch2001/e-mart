@@ -532,3 +532,20 @@
         transform: translateY(-0.1em);
     }
 }
+
+/* No Review */
+.NoReviewYet {
+    width: 100%;
+    height: 70%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.NoReviewYet .text-content {
+    margin-top: 30px;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--text-color-secondary);
+}

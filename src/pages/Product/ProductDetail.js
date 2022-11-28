@@ -229,7 +229,10 @@ const ProductDetail = () => {
                     <span className="review-title">
                         Đánh giá của khách hàng
                     </span>
-                    <PaginatedItems items={reviewData} itemsPerPage={5} />
+                    {reviewData.length > 0 && (
+                        <PaginatedItems items={reviewData} itemsPerPage={5} />
+                    )}
+                    {reviewData.length === 0 && <NoReviewYet />}
                 </div>
                 <div className="review-right">
                     <span className="review-title">Gửi đánh giá</span>
@@ -322,7 +325,6 @@ function PaginatedItems({ items, itemsPerPage }) {
     const handlePageClick = (event) => {
         const newOffset = (event.selected * itemsPerPage) % items.length;
         setItemOffset(newOffset);
-        window.scrollTo(0, 160);
     };
 
     return (
@@ -349,6 +351,20 @@ function PaginatedItems({ items, itemsPerPage }) {
                 breakLinkClassName="pag-link-break"
             />
         </>
+    );
+}
+
+function NoReviewYet() {
+    return (
+        <div className="NoReviewYet">
+            <span className="title-text">
+                Chưa Có <span className="green-text">Đánh Giá</span>
+            </span>
+            <span className="text-content">
+                Hãy để lại trải nghiệm của bạn về sản phẩm bằng cách gửi đánh
+                giá ngay
+            </span>
+        </div>
     );
 }
 

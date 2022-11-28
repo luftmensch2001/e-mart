@@ -20,8 +20,6 @@ import ProductDetail from "./pages/Product/ProductDetail";
 function App() {
     const location = useLocation().pathname;
     const hideHeaderFooter = location === "/login" || location === "/register";
-    console.log("location: ", location);
-    console.log("hideHeaderFooter: ", hideHeaderFooter);
 
     return (
         <div className="App">

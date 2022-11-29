@@ -1,7 +1,12 @@
 import { React, useState } from "react";
 import "./StoreTab.css";
-import { AiOutlineSearch } from "react-icons/ai";
+import {
+    AiOutlineSearch,
+    AiOutlineEdit,
+    AiOutlineDelete,
+} from "react-icons/ai";
 import ReactPaginate from "react-paginate";
+import { Link } from "react-router-dom";
 
 import productImage from "../../assets/images/products/5.jpg";
 import productImage2 from "../../assets/images/products/4.jpg";
@@ -12,337 +17,91 @@ import starImg from "../../assets/images/reviews/4.png";
 const items = [
     {
         productImg: productImage,
-        productName: "Nước hoa Pháp cao cấp 1",
-        productPrice: "$24",
-        productOldPrice: "$32",
+        sell: 1430,
+        productName: "Nước hoa Pháp cao cấp 450ML Lưu hương 24h",
+        productPrice: 570000,
+        productOldPrice: 620000,
         productStarNumber: 4,
         productStar: starImg,
     },
     {
         productImg: productImage2,
-        productName: "Nước hoa Pháp cao cấp 2",
-        productPrice: "$24",
-        productOldPrice: "$32",
-        productStarNumber: 4,
-        productStar: starImg,
-    },
-    {
-        productImg: productImage3,
-        productName: "Nước hoa Pháp cao cấp 3",
-        productPrice: "$24",
-        productOldPrice: "$32",
-        productStarNumber: 4,
-        productStar: starImg,
-    },
-    {
-        productImg: productImage4,
-        productName: "Nước hoa Pháp cao cấp 4",
-        productPrice: "$24",
-        productOldPrice: "$32",
+        sell: 710,
+        productName: "Apple iPhone 14 Pro Max 1TB Chính Hãng VN/A",
+        productPrice: 28000000,
+        productOldPrice: 32500000,
         productStarNumber: 4,
         productStar: starImg,
     },
     {
         productImg: productImage,
-        productName: "Nước hoa Pháp cao cấp 5",
-        productPrice: "$24",
-        productOldPrice: "$32",
+        sell: 1430,
+        productName: "Nước hoa Pháp cao cấp 450ML Lưu hương 24h",
+        productPrice: 570000,
+        productOldPrice: 620000,
         productStarNumber: 4,
         productStar: starImg,
     },
     {
         productImg: productImage2,
-        productName: "Nước hoa Pháp cao cấp 6",
-        productPrice: "$24",
-        productOldPrice: "$32",
-        productStarNumber: 4,
-        productStar: starImg,
-    },
-    {
-        productImg: productImage3,
-        productName: "Nước hoa Pháp cao cấp 7",
-        productPrice: "$24",
-        productOldPrice: "$32",
-        productStarNumber: 4,
-        productStar: starImg,
-    },
-    {
-        productImg: productImage4,
-        productName: "Nước hoa Pháp cao cấp 8",
-        productPrice: "$24",
-        productOldPrice: "$32",
+        sell: 710,
+        productName: "Apple iPhone 14 Pro Max 1TB Chính Hãng VN/A",
+        productPrice: 28000000,
+        productOldPrice: 32500000,
         productStarNumber: 4,
         productStar: starImg,
     },
     {
         productImg: productImage,
-        productName: "Nước hoa Pháp cao cấp 9",
-        productPrice: "$24",
-        productOldPrice: "$32",
+        sell: 1430,
+        productName: "Nước hoa Pháp cao cấp 450ML Lưu hương 24h",
+        productPrice: 570000,
+        productOldPrice: 620000,
         productStarNumber: 4,
         productStar: starImg,
     },
     {
         productImg: productImage2,
-        productName: "Nước hoa Pháp cao cấp 8",
-        productPrice: "$24",
-        productOldPrice: "$32",
-        productStarNumber: 4,
-        productStar: starImg,
-    },
-    {
-        productImg: productImage3,
-        productName: "Nước hoa Pháp cao cấp 8",
-        productPrice: "$24",
-        productOldPrice: "$32",
-        productStarNumber: 4,
-        productStar: starImg,
-    },
-    {
-        productImg: productImage4,
-        productName: "Nước hoa Pháp cao cấp 8",
-        productPrice: "$24",
-        productOldPrice: "$32",
-        productStarNumber: 4,
-        productStar: starImg,
-    },
-    {
-        productImg: productImage2,
-        productName: "Nước hoa Pháp cao cấp 8",
-        productPrice: "$24",
-        productOldPrice: "$32",
-        productStarNumber: 4,
-        productStar: starImg,
-    },
-    {
-        productImg: productImage3,
-        productName: "Nước hoa Pháp cao cấp 8",
-        productPrice: "$24",
-        productOldPrice: "$32",
-        productStarNumber: 4,
-        productStar: starImg,
-    },
-    {
-        productImg: productImage4,
-        productName: "Nước hoa Pháp cao cấp 8",
-        productPrice: "$24",
-        productOldPrice: "$32",
+        sell: 710,
+        productName: "Apple iPhone 14 Pro Max 1TB Chính Hãng VN/A",
+        productPrice: 28000000,
+        productOldPrice: 32500000,
         productStarNumber: 4,
         productStar: starImg,
     },
     {
         productImg: productImage,
-        productName: "Nước hoa Pháp cao cấp 8",
-        productPrice: "$24",
-        productOldPrice: "$32",
+        sell: 1430,
+        productName: "Nước hoa Pháp cao cấp 450ML Lưu hương 24h",
+        productPrice: 570000,
+        productOldPrice: 620000,
         productStarNumber: 4,
         productStar: starImg,
     },
     {
         productImg: productImage2,
-        productName: "Nước hoa Pháp cao cấp 3",
-        productPrice: "$24",
-        productOldPrice: "$32",
-        productStarNumber: 4,
-        productStar: starImg,
-    },
-    {
-        productImg: productImage3,
-        productName: "Nước hoa Pháp cao cấp 4",
-        productPrice: "$24",
-        productOldPrice: "$32",
-        productStarNumber: 4,
-        productStar: starImg,
-    },
-    {
-        productImg: productImage4,
-        productName: "Nước hoa Pháp cao cấp 5",
-        productPrice: "$24",
-        productOldPrice: "$32",
+        sell: 710,
+        productName: "Apple iPhone 14 Pro Max 1TB Chính Hãng VN/A",
+        productPrice: 28000000,
+        productOldPrice: 32500000,
         productStarNumber: 4,
         productStar: starImg,
     },
     {
         productImg: productImage,
-        productName: "Nước hoa Pháp cao cấp 6",
-        productPrice: "$24",
-        productOldPrice: "$32",
+        sell: 1430,
+        productName: "Nước hoa Pháp cao cấp 450ML Lưu hương 24h",
+        productPrice: 570000,
+        productOldPrice: 620000,
         productStarNumber: 4,
         productStar: starImg,
     },
     {
         productImg: productImage2,
-        productName: "Nước hoa Pháp cao cấp 7",
-        productPrice: "$24",
-        productOldPrice: "$32",
-        productStarNumber: 4,
-        productStar: starImg,
-    },
-    {
-        productImg: productImage3,
-        productName: "Nước hoa Pháp cao cấp 8",
-        productPrice: "$24",
-        productOldPrice: "$32",
-        productStarNumber: 4,
-        productStar: starImg,
-    },
-    {
-        productImg: productImage4,
-        productName: "Nước hoa Pháp cao cấp 9",
-        productPrice: "$24",
-        productOldPrice: "$32",
-        productStarNumber: 4,
-        productStar: starImg,
-    },
-    {
-        productImg: productImage2,
-        productName: "Nước hoa Pháp cao cấp 8",
-        productPrice: "$24",
-        productOldPrice: "$32",
-        productStarNumber: 4,
-        productStar: starImg,
-    },
-    {
-        productImg: productImage3,
-        productName: "Nước hoa Pháp cao cấp 8",
-        productPrice: "$24",
-        productOldPrice: "$32",
-        productStarNumber: 4,
-        productStar: starImg,
-    },
-    {
-        productImg: productImage4,
-        productName: "Nước hoa Pháp cao cấp 8",
-        productPrice: "$24",
-        productOldPrice: "$32",
-        productStarNumber: 4,
-        productStar: starImg,
-    },
-    {
-        productImg: productImage,
-        productName: "Nước hoa Pháp cao cấp 8",
-        productPrice: "$24",
-        productOldPrice: "$32",
-        productStarNumber: 4,
-        productStar: starImg,
-    },
-    {
-        productImg: productImage2,
-        productName: "Nước hoa Pháp cao cấp 8",
-        productPrice: "$24",
-        productOldPrice: "$32",
-        productStarNumber: 4,
-        productStar: starImg,
-    },
-    {
-        productImg: productImage3,
-        productName: "Nước hoa Pháp cao cấp 8",
-        productPrice: "$24",
-        productOldPrice: "$32",
-        productStarNumber: 4,
-        productStar: starImg,
-    },
-    {
-        productImg: productImage4,
-        productName: "Nước hoa Pháp cao cấp 3",
-        productPrice: "$24",
-        productOldPrice: "$32",
-        productStarNumber: 4,
-        productStar: starImg,
-    },
-    {
-        productImg: productImage,
-        productName: "Nước hoa Pháp cao cấp 4",
-        productPrice: "$24",
-        productOldPrice: "$32",
-        productStarNumber: 4,
-        productStar: starImg,
-    },
-    {
-        productImg: productImage2,
-        productName: "Nước hoa Pháp cao cấp 5",
-        productPrice: "$24",
-        productOldPrice: "$32",
-        productStarNumber: 4,
-        productStar: starImg,
-    },
-    {
-        productImg: productImage3,
-        productName: "Nước hoa Pháp cao cấp 6",
-        productPrice: "$24",
-        productOldPrice: "$32",
-        productStarNumber: 4,
-        productStar: starImg,
-    },
-    {
-        productImg: productImage4,
-        productName: "Nước hoa Pháp cao cấp 7",
-        productPrice: "$24",
-        productOldPrice: "$32",
-        productStarNumber: 4,
-        productStar: starImg,
-    },
-    {
-        productImg: productImage,
-        productName: "Nước hoa Pháp cao cấp 8",
-        productPrice: "$24",
-        productOldPrice: "$32",
-        productStarNumber: 4,
-        productStar: starImg,
-    },
-    {
-        productImg: productImage2,
-        productName: "Nước hoa Pháp cao cấp 9",
-        productPrice: "$24",
-        productOldPrice: "$32",
-        productStarNumber: 4,
-        productStar: starImg,
-    },
-    {
-        productImg: productImage,
-        productName: "Nước hoa Pháp cao cấp 8",
-        productPrice: "$24",
-        productOldPrice: "$32",
-        productStarNumber: 4,
-        productStar: starImg,
-    },
-    {
-        productImg: productImage3,
-        productName: "Nước hoa Pháp cao cấp 8",
-        productPrice: "$24",
-        productOldPrice: "$32",
-        productStarNumber: 4,
-        productStar: starImg,
-    },
-    {
-        productImg: productImage4,
-        productName: "Nước hoa Pháp cao cấp 8",
-        productPrice: "$24",
-        productOldPrice: "$32",
-        productStarNumber: 4,
-        productStar: starImg,
-    },
-    {
-        productImg: productImage,
-        productName: "Nước hoa Pháp cao cấp 8",
-        productPrice: "$24",
-        productOldPrice: "$32",
-        productStarNumber: 4,
-        productStar: starImg,
-    },
-    {
-        productImg: productImage2,
-        productName: "Nước hoa Pháp cao cấp 8",
-        productPrice: "$24",
-        productOldPrice: "$32",
-        productStarNumber: 4,
-        productStar: starImg,
-    },
-    {
-        productImg: productImage3,
-        productName: "Nước hoa Pháp cao cấp 8",
-        productPrice: "$24",
-        productOldPrice: "$32",
+        sell: 710,
+        productName: "Apple iPhone 14 Pro Max 1TB Chính Hãng VN/A",
+        productPrice: 28000000,
+        productOldPrice: 32500000,
         productStarNumber: 4,
         productStar: starImg,
     },
@@ -358,8 +117,13 @@ function Items({ currentItems }) {
     return (
         <div>
             <div className="store-top">
-                <button className="store-add-product-button primary-button">
-                    Thêm sản phẩm
+                <Link to="/add-product">
+                    <button className="store-add-product-button primary-button">
+                        Thêm Sản phẩm
+                    </button>
+                </Link>
+                <button className="store-voucher-button primary-button">
+                    Quản lý Mã Giảm Giá
                 </button>
                 <div className="store-search-container">
                     <input
@@ -377,30 +141,40 @@ function Items({ currentItems }) {
             <div className="store-product-container">
                 {currentItems &&
                     currentItems.map((item) => (
-                        <div className="product-item store-product-item">
-                            <img
-                                className="product-img"
-                                src={item.productImg}
-                                alt=""
-                            />
-                            <div className="product-info">
-                                <p className="product-name">
-                                    {item.productName}
-                                </p>
-                                <div className="product-star store-product-star">
-                                    <img src={item.productStar} alt="" />
-                                    <span>({item.productStarNumber})</span>
-                                </div>
-                                <div className="product-price-container store-product-price">
-                                    <span className="product-sale-price">
-                                        {item.productPrice}
-                                    </span>
-                                    {item.productOldPrice !== -1 && (
-                                        <span className="product-old-price">
-                                            {item.productOldPrice}
+                        <div className="product-item">
+                            <Link to="/product">
+                                <img src={item.productImg} />
+                            </Link>
+                            <Link to="/product">
+                                <div className="product-info">
+                                    <div className="product-head-info">
+                                        <span className="product-sell">
+                                            <span className="green-text">
+                                                Đã bán:{" "}
+                                            </span>
+                                            {item.sell}
                                         </span>
-                                    )}
+                                        <span className="product-name">
+                                            {item.productName}
+                                        </span>
+                                    </div>
+                                    <div className="product-all-price">
+                                        <span className="product-price">
+                                            {item.productPrice} đ
+                                        </span>
+                                        <span className="product-old-price">
+                                            {item.productOldPrice} đ
+                                        </span>
+                                    </div>
                                 </div>
+                            </Link>
+                            <div className="product-bottom-buttons">
+                                <button>
+                                    <AiOutlineEdit className="icon" />
+                                </button>
+                                <button>
+                                    <AiOutlineDelete className="icon" />
+                                </button>
                             </div>
                         </div>
                     ))}
@@ -452,7 +226,7 @@ function PaginatedItems({ itemsPerPage }) {
 function StoreTab() {
     return (
         <div className="StoreTab">
-            <PaginatedItems itemsPerPage={9} />
+            <PaginatedItems itemsPerPage={6} />
         </div>
     );
 }

@@ -35,7 +35,7 @@
 .AddProduct .product-info-label span {
     font-size: 1.3rem;
     font-weight: 700;
-    color: rgb(249, 62, 62);
+    color: var(--primary-color);
 }
 
 .AddProduct .product-info-input {
@@ -86,7 +86,16 @@
 
 .AddProduct .product-type-wrapper .type-container {
     display: flex;
-    flex-direction: column;
+    width: 600px;
+    flex-wrap: wrap;
+}
+
+.AddProduct .product-type-wrapper .type-container .no-type {
+    font-size: 1.7rem;
+    font-weight: 500;
+    color: var(--text-color-primary);
+    padding: 20px 6px;
+    opacity: 0.6;
 }
 
 .AddProduct .product-type-wrapper .type-item {
@@ -94,6 +103,7 @@
     width: fit-content;
     min-width: 150px;
     margin: 10px 0;
+    margin-right: 20px;
     padding: 0 12px;
     display: flex;
     align-items: center;
@@ -133,7 +143,7 @@
 }
 
 .AddProduct .product-type-wrapper .add-type-container input {
-    width: 250px;
+    width: 290px;
     font-size: 1.5rem;
     font-weight: 600;
     color: var(--text-color-primary);
@@ -149,17 +159,79 @@
     margin-left: 8px;
 }
 
-.AddProduct .product-type-wrapper {
+.AddProduct .product-image-container {
+    margin-top: 20px;
+    border-radius: 16px;
+    height: fit-content;
+    padding: 10px 20px 10px 10px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 
-.AddProduct {
+.AddProduct .product-image-container .title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-color-primary);
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 30px;
+    text-align: center;
 }
 
-.AddProduct {
+.AddProduct .product-image-container .row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 50px;
 }
 
-.AddProduct {
+.AddProduct .product-image-container .label {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-color-primary);
+    display: block;
+    text-align: center;
+    width: 30%;
+    text-align: left;
 }
 
-.AddProduct {
+.AddProduct .product-image-container .image-container {
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+}
+
+.AddProduct .product-image-container .main-image {
+    width: 100%;
+    border-radius: 8px;
+    max-height: 300px;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+
+.AddProduct .product-image-container .other-image {
+    width: 40%;
+    height: 120px;
+    border-radius: 8px;
+    object-fit: cover;
+    margin: 0 20px 20px 0;
+}
+
+.AddProduct .product-image-container .remove-other-image {
+    border-radius: 8px;
+    margin: 15px 0;
+}
+
+.AddProduct .complete-button {
+    margin-top: 50px;
+    padding: 28px;
+    border-radius: 32px;
+    display: flex;
+    align-items: center;
+    font-size: 1.6rem;
+    font-weight: 600;
+}
+
+.AddProduct .complete-button .icon {
+    width: 18px;
+    height: 18px;
+    margin-right: 8px;
 }

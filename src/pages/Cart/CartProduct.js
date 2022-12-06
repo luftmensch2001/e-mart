@@ -4,6 +4,7 @@ import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
+import ThousandSeparator from "../../components/ThousandSeparator";
 
 const CartProduct = ({ data }) => {
     const [quantity, setQuantity] = useState(data.quantity);
@@ -48,7 +49,9 @@ const CartProduct = ({ data }) => {
                     </div>
                 </div>
             </Link>
-            <span className="cart-product-price">{data.price} đ</span>
+            <span className="cart-product-price">
+                {ThousandSeparator(data.price)} đ
+            </span>
             <div className="cart-product-quantity">
                 <div style={{ position: "relative", width: "80px" }}>
                     <input
@@ -71,7 +74,7 @@ const CartProduct = ({ data }) => {
                 </div>
             </div>
             <span className="cart-product-total">
-                {data.price * quantity} đ
+                {ThousandSeparator(data.price * quantity)} đ
             </span>
             <div className="cart-product-delete">
                 <button>

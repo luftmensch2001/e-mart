@@ -213,7 +213,7 @@ const AddProduct = () => {
                                 <h2
                                     style={{
                                         textAlign: "center",
-                                        margin: "60px 0",
+                                        margin: "80px 0",
                                         display: "block",
                                         lineHeight: "30px",
                                         opacity: "0.7",

@@ -5,6 +5,8 @@ import {
     AiOutlineEdit,
     AiOutlineDelete,
 } from "react-icons/ai";
+import { MdAdd } from "react-icons/md";
+import { FaMoneyBillWave } from "react-icons/fa";
 import ReactPaginate from "react-paginate";
 import { Link } from "react-router-dom";
 
@@ -13,6 +15,7 @@ import productImage2 from "../../assets/images/products/4.jpg";
 import productImage3 from "../../assets/images/products/6.jpg";
 import productImage4 from "../../assets/images/products/3.jpg";
 import starImg from "../../assets/images/reviews/4.png";
+import ThousandSeparator from "../../components/ThousandSeparator";
 
 const items = [
     {
@@ -119,12 +122,16 @@ function Items({ currentItems }) {
             <div className="store-top">
                 <Link to="/add-product">
                     <button className="store-add-product-button primary-button">
+                        <MdAdd className="icon" />
                         Thêm Sản phẩm
                     </button>
                 </Link>
-                <button className="store-voucher-button primary-button">
-                    Quản lý Mã Giảm Giá
-                </button>
+                <Link to="/voucher">
+                    <button className="store-voucher-button primary-button">
+                        <FaMoneyBillWave className="icon" />
+                        Mã Giảm Giá
+                    </button>
+                </Link>
                 <div className="store-search-container">
                     <input
                         type="text"
@@ -160,10 +167,16 @@ function Items({ currentItems }) {
                                     </div>
                                     <div className="product-all-price">
                                         <span className="product-price">
-                                            {item.productPrice} đ
+                                            {ThousandSeparator(
+                                                item.productPrice
+                                            )}{" "}
+                                            đ
                                         </span>
                                         <span className="product-old-price">
-                                            {item.productOldPrice} đ
+                                            {ThousandSeparator(
+                                                item.productOldPrice
+                                            )}{" "}
+                                            đ
                                         </span>
                                     </div>
                                 </div>
@@ -186,7 +199,6 @@ function Items({ currentItems }) {
 function PaginatedItems({ itemsPerPage }) {
     const [itemOffset, setItemOffset] = useState(0);
     const endOffset = itemOffset + itemsPerPage;
-    console.log(`Loading items from ${itemOffset} to ${endOffset}`);
     const currentItems = items.slice(itemOffset, endOffset);
     const pageCount = Math.ceil(items.length / itemsPerPage);
 

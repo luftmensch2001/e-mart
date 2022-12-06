@@ -12,14 +12,25 @@
     border-radius: 8px;
     padding: 0 12px;
     height: 45px;
+    display: flex;
+    align-items: center;
 }
 
 .store-voucher-button {
     border-radius: 8px;
-    padding: 0 12px;
+    padding: 0 16px;
     height: 45px;
     margin-left: 30px;
+    display: flex;
+    align-items: center;
     background-color: rgb(91, 182, 244);
+}
+
+.store-add-product-button .icon,
+.store-voucher-button .icon {
+    width: 18px;
+    height: 18px;
+    margin-right: 6px;
 }
 
 .store-search-container {

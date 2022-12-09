@@ -5,7 +5,9 @@ import { AiOutlineFilter } from "react-icons/ai";
 import productImage from "../../assets/images/products/4.jpg";
 import starImg from "../../assets/images/reviews/4.png";
 import { MdKeyboardArrowDown } from "react-icons/md";
+import { BsCartPlus } from "react-icons/bs";
 import ReactPaginate from "react-paginate";
+import ThousandSeparator from "../../components/ThousandSeparator";
 
 const sortOptions = [
     { value: "1", label: "Mới nhất trước" },
@@ -13,6 +15,14 @@ const sortOptions = [
     { value: "3", label: "Giá tăng dần" },
     { value: "4", label: "Giá giảm dần" },
     { value: "5", label: "Mua nhiều nhất" },
+];
+
+const countOptions = [
+    { value: 9, label: "9 sản phẩm" },
+    { value: 12, label: "12 sản phẩm" },
+    { value: 15, label: "15 sản phẩm" },
+    { value: 18, label: "18 sản phẩm" },
+    { value: 21, label: "21 sản phẩm" },
 ];
 
 const categories = [
@@ -183,6 +193,7 @@ const products = [
 const ProductList = ({ keyword }) => {
     keyword = "Quần Jeans Slim Fit Dành Cho Nam";
     const [sortOption, setSortOption] = useState(null);
+    const [countOption, setCountOption] = useState(countOptions[1]);
     const [selectedCategory, setSelectedCategory] = useState(0);
     const [showCategories, setShowCategories] = useState(false);
 
@@ -193,31 +204,45 @@ const ProductList = ({ keyword }) => {
                 <br />
                 <span className="green-text">"{keyword}"</span>
             </span>
-            <Select
-                className="sort-filter-select"
-                defaultValue={sortOption}
-                onChange={setSortOption}
-                options={sortOptions}
-                placeholder="Sắp xếp theo"
-                theme={(theme) => ({
-                    ...theme,
-                    colors: {
-                        ...theme.colors,
-                        primary: "var(--primary-color)",
-                    },
-                })}
-            />
+            <div className="selects-wrapper">
+                <Select
+                    className="count-select"
+                    defaultValue={countOption}
+                    onChange={setCountOption}
+                    options={countOptions}
+                    placeholder="Hiển thị"
+                    theme={(theme) => ({
+                        ...theme,
+                        colors: {
+                            ...theme.colors,
+                            primary: "var(--primary-color)",
+                        },
+                    })}
+                />
+                <Select
+                    className="sort-filter-select"
+                    defaultValue={sortOption}
+                    onChange={setSortOption}
+                    options={sortOptions}
+                    placeholder="Sắp xếp theo"
+                    theme={(theme) => ({
+                        ...theme,
+                        colors: {
+                            ...theme.colors,
+                            primary: "var(--primary-color)",
+                        },
+                    })}
+                />
+            </div>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <div className="filter-container">
                     <div className="filter-item">
-                        <span className="filter-label categories">
+                        <span
+                            className="filter-label categories"
+                            onClick={() => setShowCategories(!showCategories)}
+                        >
                             Danh mục
-                            <MdKeyboardArrowDown
-                                className="arrow-icon"
-                                onClick={() =>
-                                    setShowCategories(!showCategories)
-                                }
-                            />
+                            <MdKeyboardArrowDown className="arrow-icon" />
                         </span>
                         {showCategories && (
                             <div className="filter-content categories-dropdown">
@@ -308,7 +333,10 @@ const ProductList = ({ keyword }) => {
                     </div>
                 </div>
                 <div className="products-container">
-                    <PaginatedItems items={products} itemsPerPage={12} />
+                    <PaginatedItems
+                        items={products}
+                        itemsPerPage={countOption.value}
+                    />
                 </div>
             </div>
         </div>
@@ -324,6 +352,7 @@ function PaginatedItems({ items, itemsPerPage }) {
     const handlePageClick = (event) => {
         const newOffset = (event.selected * itemsPerPage) % items.length;
         setItemOffset(newOffset);
+        window.scrollTo(0, 140);
     };
 
     return (
@@ -357,18 +386,76 @@ function Items({ currentItems }) {
     return (
         <div className="product-list">
             {currentItems.map((item) => (
-                <div className="product-item">
-                    <img src={item.image} className="product-image" />
-                    <span className="product-category">{item.category}</span>
-                    <span className="product-name">{item.name}</span>
-                    <div className="product-star-wrapper">
-                        <img src={item.starImage} />
-                        <span>({item.starNumber})</span>
-                    </div>
-                </div>
+                <ProductCard item={item} />
             ))}
         </div>
     );
 }
+
+const ProductCard = ({ item }) => {
+    const [isFavorite, setIsFavorite] = useState(false);
+
+    return (
+        <div className="product-item">
+            <img src={item.image} className="product-image" />
+            <span className="product-category">{item.category}</span>
+            <span className="product-name">{item.name}</span>
+            <div className="product-star-wrapper">
+                <img src={item.starImage} />
+                <span>({item.starNumber})</span>
+            </div>
+            <div className="product-price-wrapper">
+                <span className="price">{ThousandSeparator(item.price)} đ</span>
+                <span className="old-price">
+                    {ThousandSeparator(item.oldPrice)} đ
+                </span>
+            </div>
+            <div className="buttons-wrapper">
+                <button className="add-to-cart-button primary-button">
+                    <BsCartPlus
+                        style={{
+                            width: "22px",
+                            height: "22px",
+                            marginRight: "6px",
+                        }}
+                    />{" "}
+                    Thêm vào Giỏ
+                </button>
+                <div className="add-to-wishlist-wrapper">
+                    <input
+                        type="checkbox"
+                        checked={isFavorite}
+                        id="favorite"
+                        name="favorite-checkbox"
+                        value="favorite-button"
+                        className="atw-input"
+                    />
+                    <label
+                        for="favorite"
+                        className="container"
+                        onClick={() => setIsFavorite(!isFavorite)}
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            style={{
+                                width: "24",
+                                height: "24",
+                                viewBox: "0 0 24 24",
+                                fill: "none",
+                                stroke: "currentColor",
+                                strokeWidth: "2",
+                                strokeLinecap: "round",
+                                strokeLinejoin: "round",
+                            }}
+                            className="feather feather-heart"
+                        >
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                        </svg>
+                    </label>
+                </div>
+            </div>
+        </div>
+    );
+};
 
 export default ProductList;

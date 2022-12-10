@@ -9,14 +9,14 @@ const Evalute = require("../models/evalutes");
 router.get("/", async (req, res) => {
   try {
     const evalutes = await Color.find({ productId: req.productId });
-    res.json({ success: true, posts });
+    res.json({ success: true, evalutes });
   } catch (error) {
     console.log(error);
     res.status(500).json({ success: false, message: " Internal server error" });
   }
 });
 
-// @route POST api/colors/create
+// @route POST api/evalutes/create
 // @desc create color
 // @access Public
 router.post("/create", async (req, res) => {
@@ -27,7 +27,7 @@ router.post("/create", async (req, res) => {
       .status(400)
       .json({ success: false, message: "Missing information" });
   try {
-    // Check for existing color
+    // Check for existing evalute
     const color = await User.findOne({ productId, accountId });
     if (color)
       return res
@@ -53,7 +53,7 @@ router.delete("/", async (req, res) => {
       productId: req.productId,
       accountId: req.accountId,
     });
-    const deleteEvalute = await colors.findAndDelete(colors);
+    const deleteEvalute = await colors.findAndDelete(evalutes);
     if (!deleteEvalute)
       res.status(500).json({ success: false, message: "Evalute not found" });
     res.json({ success: true, message: "Deleted evalute" });

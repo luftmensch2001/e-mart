@@ -1,15 +1,15 @@
 const express = require("express");
 const router = express.Router();
 
-const Product = require("../models/product");
+const Product = require("../models/products");
 
 router.get("/", (req, res) => res.send("PRODUCT ROUTE"));
 
-// @route POST api/product/create
-// @desc Create account
+// @route POST api/products/create
+// @desc Create product
 // @access Public
-router.post("/register", async (req, res) => {
-  const { nameProduct, price, describe, type } = req.body;
+router.post("/create", async (req, res) => {
+  const { accountId, nameProduct, price, describe, type } = req.body;
   // Simple validation
   if (!nameProduct || !price || !describe || !type)
     return res
@@ -18,12 +18,13 @@ router.post("/register", async (req, res) => {
   //All good
   try {
     const newProduct = new Product({
+      accountId,
       nameProduct,
       price,
       describe,
       type,
     });
-    await newAccount.save();
+    await newProduct.save();
     res.json({ success: true, message: "Product created successfully" });
   } catch (error) {
     console.log(error);
@@ -31,7 +32,7 @@ router.post("/register", async (req, res) => {
   }
 });
 
-// @route GET api/product/all
+// @route GET api/products/all
 // @desc Get ALL Product
 // @access Public
 router.get("/", async (req, res) => {

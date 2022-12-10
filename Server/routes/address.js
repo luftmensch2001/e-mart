@@ -9,14 +9,14 @@ const Address = require("../models/address");
 router.get("/", async (req, res) => {
   try {
     const address = await Address.find({ accountId: req.accountId });
-    res.json({ success: true, posts });
+    res.json({ success: true, address });
   } catch (error) {
     console.log(error);
     res.status(500).json({ success: false, message: " Internal server error" });
   }
 });
 
-// @route GET api/address/create
+// @route POST api/address/create
 // @desc create address
 // @access Public
 router.post("/create", async (req, res) => {

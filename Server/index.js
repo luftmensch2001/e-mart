@@ -29,7 +29,7 @@ const app = express();
 
 app.use(express.json());
 
-app.use("/api/account", accountRouter);
+app.use("/api/accounts", accountRouter);
 //app.use("/api/color", colorRouter);
 
 const PORT = 5000;

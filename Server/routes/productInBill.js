@@ -8,7 +8,7 @@ const ProductInBill = require("../models/productInBills");
 // @access Public
 router.get("/", async (req, res) => {
   try {
-    const productInBill = await Color.find({ productId: req.billId });
+    const productInBill = await ProductInBill.find({ productId: req.billId });
     res.json({ success: true, productInBill });
   } catch (error) {
     console.log(error);
@@ -16,21 +16,22 @@ router.get("/", async (req, res) => {
   }
 });
 
-// @route POST api/productInFavorites/create
+// @route POST api/productInBills/create
 // @desc create productInFavorite
 // @access Public
 router.post("/create", async (req, res) => {
   const { billId, productId, count } = req.body;
 
-  if (!productId || !accountId)
+  if (!productId)
     return res
       .status(400)
       .json({ success: false, message: "Missing information" });
   try {
     // All Good
-    const newProductInBill = new ProductInFavorite({
+    const newProductInBill = new ProductInBill({
       productId,
-      accountId,
+      billId,
+      count,
     });
     await newProductInBill.save();
     return res
@@ -47,7 +48,7 @@ router.post("/create", async (req, res) => {
 // @access Public
 router.delete("/", async (req, res) => {
   try {
-    const productInBills = await ProductInFavorite.find({
+    const productInBills = await ProductInBills.find({
       billId: req.billId,
     });
     const deleteProductInBill = await colors.findAndDelete(productInBills);

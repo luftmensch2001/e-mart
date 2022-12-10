@@ -63,7 +63,7 @@ router.post("/create", async (req, res) => {
 router.delete("/", async (req, res) => {
   try {
     const bills = await Bill.find({ accountId: req.accountId });
-    const deleteBill = await colors.findAndDelete(colors);
+    const deleteBill = await colors.findAndDelete(bills);
     if (!deleteBill)
       res.status(500).json({ success: false, message: "Bill not found" });
     res.json({ success: true, message: "Deleted bill" });

@@ -22,7 +22,7 @@ router.get("/", async (req, res) => {
 router.post("/create", async (req, res) => {
   const { productId, imageURL } = req.body;
   try {
-    // Check for existing color
+    // Check for existing image
     const image = await User.findOne({ productId, imageURL });
     if (image)
       return res

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import "./Register.css";
-import background from "../../assets/images/background/1_auto_x2.jpg";
 import { toast } from "react-toastify";
 import axios from "axios";
 
@@ -12,9 +11,11 @@ function Register() {
     const [fullName, setFullName] = useState("");
     const [email, setEmail] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
+    const [registerSuccess, setRegisterSuccess] = useState(false);
     const gender = "MALE";
 
     const HandleClickRegister = () => {
+        setRegisterSuccess(false);
         if (password !== rePassword) {
             toast.error("Mật khẩu không khớp!", {
                 position: "bottom-right",
@@ -38,7 +39,6 @@ function Register() {
                 sex: gender,
             })
             .then((res) => {
-                console.log("res: ", res);
                 toast.success("Đăng ký thành công!", {
                     position: "bottom-right",
                     autoClose: 5000,
@@ -49,9 +49,9 @@ function Register() {
                     progress: undefined,
                     theme: "light",
                 });
+                setRegisterSuccess(true);
             })
             .catch((err) => {
-                console.log(err.response.data.message);
                 if (err.response.data.message === "Username already")
                     toast.error("Tài khoản đã tồn tại!", {
                         position: "bottom-right",
@@ -90,6 +90,7 @@ function Register() {
 
     return (
         <div className="Register">
+            {registerSuccess && <Navigate to="/login" />}
             <div className="register-card">
                 <span className="title-text register-logo">
                     E-<span className="green-text">Mart</span>

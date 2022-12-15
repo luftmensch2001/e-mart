@@ -85,9 +85,9 @@ const AddProduct = () => {
     };
 
     const UpLoadImages = (productID) => {
+        // Main Image
         if (!mainImage) return;
         const imageRef = ref(storage, `images/${mainImage.name + v4()}`);
-
         uploadBytes(imageRef, mainImage)
             .then(() => {
                 getDownloadURL(imageRef).then((url) => {
@@ -97,6 +97,7 @@ const AddProduct = () => {
                             {
                                 productId: productID,
                                 imageURL: url,
+                                isMainImage: true,
                             }
                         )
                         .then((res) => console.log(res))
@@ -104,6 +105,28 @@ const AddProduct = () => {
                 });
             })
             .catch((err) => console.log(err));
+        // Other Images
+        console.log("Other image: ", otherImage);
+        otherImage.forEach((item) => {
+            const imageRef = ref(storage, `images/${item.name + v4()}`);
+            uploadBytes(imageRef, item)
+                .then(() => {
+                    getDownloadURL(imageRef).then((url) => {
+                        axios
+                            .post(
+                                "http://localhost:5000/api/imageProducts/create",
+                                {
+                                    productId: productID,
+                                    imageURL: url,
+                                    isMainImage: false,
+                                }
+                            )
+                            .then((res) => console.log(res))
+                            .catch((err) => console.log(err));
+                    });
+                })
+                .catch((err) => console.log(err));
+        });
     };
 
     const AddProductOnClick = () => {

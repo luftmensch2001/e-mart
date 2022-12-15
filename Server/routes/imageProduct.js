@@ -24,17 +24,24 @@ router.get("/", async (req, res) => {
 // @desc create imageProduct
 // @access Public
 router.post("/create", async (req, res) => {
-    const { productId, imageURL } = req.body;
+    const { productId, imageURL, isMainImage } = req.body;
     try {
-        // Check for existing image
-        const image = await ImageProduct.findOne({ productId, imageURL });
-        if (image)
+        // Check for existing main image
+        const image1 = await ImageProduct.findOne({ productId, isMainImage });
+        if (image1 && isMainImage)
             return res
                 .status(400)
-                .json({ success: false, message: "Already exist image" });
+                .json({ success: false, message: "Already exist main image" });
+
+        // Check for existing image
+        // const image2 = await ImageProduct.findOne({ productId, imageURL });
+        // if (image2)
+        //     return res
+        //         .status(400)
+        //         .json({ success: false, message: "Already exist imageURL" });
 
         // All Good
-        const newImage = new ImageProduct({ imageURL, productId });
+        const newImage = new ImageProduct({ imageURL, productId, isMainImage });
         await newImage.save();
         return res.status(200).json({
             success: true,

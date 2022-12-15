@@ -38,15 +38,11 @@ router.post("/register", async (req, res) => {
             sex,
         });
         await newAccount.save();
-        // Return token
-        const accessToken = jwt.sign(
-            { userId: newAccount._id },
-            process.env.ACCESS_TOKEN_SECRET
-        );
+
         res.status(200).json({
             success: true,
             message: " Created",
-            accessToken,
+            userId: user._id,
         });
     } catch (error) {
         console.log(error);
@@ -81,15 +77,10 @@ router.post("/login", async (req, res) => {
             return res
                 .status(400)
                 .json({ success: false, message: "Incorrect  password" });
-        // Return token
-        const accessToken = jwt.sign(
-            { userId: user._id },
-            process.env.ACCESS_TOKEN_SECRET
-        );
         res.json({
             success: true,
             message: "User logged in successfully",
-            accessToken,
+            userId: user._id,
         });
     } catch (error) {
         console.log(error);

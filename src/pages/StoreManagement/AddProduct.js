@@ -4,6 +4,9 @@ import { toast } from "react-toastify";
 import "./AddProduct.css";
 import { BsCheckLg } from "react-icons/bs";
 import axios from "axios";
+import { storage } from "../../components/firebase";
+import { ref, uploadBytes, getDownloadURL, getStorage } from "firebase/storage";
+import { v4 } from "uuid";
 
 const AddProduct = () => {
     const [types, setTypes] = useState([]);
@@ -81,7 +84,91 @@ const AddProduct = () => {
         setOtherImage([...otherImage, ...event.target.files]);
     };
 
-    const AddProductOnClick = () => {};
+    const UpLoadImages = () => {
+        if (!mainImage) return;
+        const imageRef = ref(storage, `images/${mainImage.name + v4()}`);
+
+        uploadBytes(imageRef, mainImage)
+            .then(() => {
+                getDownloadURL(imageRef).then((url) => {
+                    axios
+                        .post(
+                            "http://localhost:5000/api/imageProducts/create",
+                            {
+                                productId: "639ae97803d92cff387d70bc",
+                                imageURL: url,
+                            }
+                        )
+                        .then((res) => console.log(res))
+                        .catch((err) => console.log(err));
+                });
+            })
+            .catch((err) => console.log(err));
+    };
+
+    const AddProductOnClick = () => {
+        if (!mainImage) {
+            toast.warn("Vui lòng thêm hình ảnh cho sản phẩm!", {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+            return;
+        }
+
+        const accountID = localStorage.getItem("accountID");
+
+        axios
+            .post("http://localhost:5000/api/products/create", {
+                accoutId: accountID,
+                nameProduct: productName,
+                price: productPrice,
+                describe: productDescription,
+                type: productCategory,
+            })
+            .then((res) => {
+                UpLoadImages();
+                toast.success("Thêm sản phẩm thành công", {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+            })
+            .catch((err) => {
+                if (err.response.data.message === "Missing information") {
+                    toast.warn("Vui lòng nhập đầy đủ thông tin!", {
+                        position: "bottom-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "light",
+                    });
+                } else
+                    toast.error("Lỗi kết nối!", {
+                        position: "bottom-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "light",
+                    });
+            });
+    };
 
     return (
         <div className="AddProduct content">

@@ -84,7 +84,7 @@ const AddProduct = () => {
         setOtherImage([...otherImage, ...event.target.files]);
     };
 
-    const UpLoadImages = () => {
+    const UpLoadImages = (productID) => {
         if (!mainImage) return;
         const imageRef = ref(storage, `images/${mainImage.name + v4()}`);
 
@@ -95,7 +95,7 @@ const AddProduct = () => {
                         .post(
                             "http://localhost:5000/api/imageProducts/create",
                             {
-                                productId: "639ae97803d92cff387d70bc",
+                                productId: productID,
                                 imageURL: url,
                             }
                         )
@@ -132,7 +132,7 @@ const AddProduct = () => {
                 type: productCategory,
             })
             .then((res) => {
-                UpLoadImages();
+                UpLoadImages(res.data.productID);
                 toast.success("Thêm sản phẩm thành công", {
                     position: "bottom-right",
                     autoClose: 5000,

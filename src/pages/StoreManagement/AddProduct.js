@@ -3,12 +3,17 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { toast } from "react-toastify";
 import "./AddProduct.css";
 import { BsCheckLg } from "react-icons/bs";
+import axios from "axios";
 
 const AddProduct = () => {
     const [types, setTypes] = useState([]);
     const [typeName, setTypeName] = useState("");
     const [mainImage, setMainImage] = useState(null);
     const [otherImage, setOtherImage] = useState([]);
+    const [productName, setProductName] = useState("");
+    const [productCategory, setProductCategory] = useState(1);
+    const [productPrice, setProductPrice] = useState("");
+    const [productDescription, setProductDescription] = useState("");
 
     const TypeNameInputOnchange = (event) => {
         setTypeName(event.target.value);
@@ -76,6 +81,8 @@ const AddProduct = () => {
         setOtherImage([...otherImage, ...event.target.files]);
     };
 
+    const AddProductOnClick = () => {};
+
     return (
         <div className="AddProduct content">
             <span className="title-text">
@@ -91,6 +98,8 @@ const AddProduct = () => {
                             className="product-info-input"
                             type="text"
                             placeholder="Nhập tên sản phẩm"
+                            value={productName}
+                            onChange={(e) => setProductName(e.target.value)}
                         />
                     </div>
                     <div className="product-info-row">
@@ -102,25 +111,38 @@ const AddProduct = () => {
                                 minWidth: "35%",
                                 cursor: "pointer",
                             }}
+                            value={productCategory}
+                            onChange={(e) => setProductCategory(e.target.value)}
                         >
-                            <option>Điện thoại</option>
-                            <option>Laptop</option>
-                            <option>Mỹ phẩm</option>
-                            <option>Thời trang nam</option>
-                            <option>Sách</option>
+                            <option value={1}>Điện thoại</option>
+                            <option value={2}>Laptop</option>
+                            <option value={3}>Mỹ phẩm</option>
+                            <option value={4}>Thời trang nam</option>
+                            <option value={5}>Sách</option>
                         </select>
                     </div>
                     <div className="product-info-row">
                         <span className="product-info-label">
                             Giá <span>(VNĐ)</span>:
                         </span>
-                        <input className="product-info-input" type="number" />
+                        <input
+                            className="product-info-input"
+                            type="number"
+                            value={productPrice}
+                            onChange={(e) => setProductPrice(e.target.value)}
+                        />
                     </div>
                     <div className="product-info-row-detail">
                         <span className="product-info-label">
                             Mô tả sản phẩm:
                         </span>
-                        <textarea placeholder="Mô tả chi tiết sản phẩm" />
+                        <textarea
+                            placeholder="Mô tả chi tiết sản phẩm"
+                            value={productDescription}
+                            onChange={(e) =>
+                                setProductDescription(e.target.value)
+                            }
+                        />
                     </div>
                     <div className="product-type-wrapper">
                         <span className="title">Phân loại sản phẩm:</span>
@@ -240,7 +262,10 @@ const AddProduct = () => {
                     </div>
                 </div>
             </div>
-            <button className="complete-button primary-button">
+            <button
+                className="complete-button primary-button"
+                onClick={AddProductOnClick}
+            >
                 <BsCheckLg className="icon" />
                 Hoàn tất Thêm sản phẩm
             </button>

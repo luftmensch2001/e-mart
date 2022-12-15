@@ -4,6 +4,10 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 
 const accountRouter = require("./routes/account");
+const productRouter = require("./routes/product");
+const imageProductRouter = require("./routes/imageProduct");
+const colorRouter = require("./routes/color");
+
 //const colorRouter = require("./routes/color");
 
 console.log(process.env.DB_USERNAME);
@@ -34,6 +38,9 @@ app.use(express.json());
 
 app.use("/api/accounts", accountRouter);
 //app.use("/api/color", colorRouter);
+app.use("/api/products", productRouter);
+app.use("/api/imageProducts", imageProductRouter);
+app.use("/api/colors", colorRouter);
 
 const PORT = 5000;
 

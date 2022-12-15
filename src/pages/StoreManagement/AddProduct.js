@@ -106,7 +106,6 @@ const AddProduct = () => {
             })
             .catch((err) => console.log(err));
         // Other Images
-        console.log("Other image: ", otherImage);
         otherImage.forEach((item) => {
             const imageRef = ref(storage, `images/${item.name + v4()}`);
             uploadBytes(imageRef, item)
@@ -125,6 +124,18 @@ const AddProduct = () => {
                             .catch((err) => console.log(err));
                     });
                 })
+                .catch((err) => console.log(err));
+        });
+    };
+
+    const UploadColor = (productID) => {
+        types.forEach((item) => {
+            axios
+                .post("http://localhost:5000/api/colors/create", {
+                    productId: productID,
+                    name: item.name,
+                })
+                .then((res) => console.log(res))
                 .catch((err) => console.log(err));
         });
     };
@@ -156,6 +167,7 @@ const AddProduct = () => {
             })
             .then((res) => {
                 UpLoadImages(res.data.productID);
+                UploadColor(res.data.productID);
                 toast.success("Thêm sản phẩm thành công", {
                     position: "bottom-right",
                     autoClose: 5000,

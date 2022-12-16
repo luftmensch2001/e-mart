@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import { React, useEffect, useState } from "react";
 import "./StoreTab.css";
 import {
     AiOutlineSearch,
@@ -9,6 +9,8 @@ import { MdAdd } from "react-icons/md";
 import { FaMoneyBillWave } from "react-icons/fa";
 import ReactPaginate from "react-paginate";
 import { Link } from "react-router-dom";
+import Loading from "../../components/Loading";
+import { toast } from "react-toastify";
 
 import productImage from "../../assets/images/products/5.jpg";
 import productImage2 from "../../assets/images/products/4.jpg";
@@ -16,106 +18,35 @@ import productImage3 from "../../assets/images/products/6.jpg";
 import productImage4 from "../../assets/images/products/3.jpg";
 import starImg from "../../assets/images/reviews/4.png";
 import ThousandSeparator from "../../components/ThousandSeparator";
+import axios from "axios";
 
-const items = [
-    {
-        productImg: productImage,
-        sell: 1430,
-        productName: "Nước hoa Pháp cao cấp 450ML Lưu hương 24h",
-        productPrice: 570000,
-        productOldPrice: 620000,
-        productStarNumber: 4,
-        productStar: starImg,
-    },
-    {
-        productImg: productImage2,
-        sell: 710,
-        productName: "Apple iPhone 14 Pro Max 1TB Chính Hãng VN/A",
-        productPrice: 28000000,
-        productOldPrice: 32500000,
-        productStarNumber: 4,
-        productStar: starImg,
-    },
-    {
-        productImg: productImage,
-        sell: 1430,
-        productName: "Nước hoa Pháp cao cấp 450ML Lưu hương 24h",
-        productPrice: 570000,
-        productOldPrice: 620000,
-        productStarNumber: 4,
-        productStar: starImg,
-    },
-    {
-        productImg: productImage2,
-        sell: 710,
-        productName: "Apple iPhone 14 Pro Max 1TB Chính Hãng VN/A",
-        productPrice: 28000000,
-        productOldPrice: 32500000,
-        productStarNumber: 4,
-        productStar: starImg,
-    },
-    {
-        productImg: productImage,
-        sell: 1430,
-        productName: "Nước hoa Pháp cao cấp 450ML Lưu hương 24h",
-        productPrice: 570000,
-        productOldPrice: 620000,
-        productStarNumber: 4,
-        productStar: starImg,
-    },
-    {
-        productImg: productImage2,
-        sell: 710,
-        productName: "Apple iPhone 14 Pro Max 1TB Chính Hãng VN/A",
-        productPrice: 28000000,
-        productOldPrice: 32500000,
-        productStarNumber: 4,
-        productStar: starImg,
-    },
-    {
-        productImg: productImage,
-        sell: 1430,
-        productName: "Nước hoa Pháp cao cấp 450ML Lưu hương 24h",
-        productPrice: 570000,
-        productOldPrice: 620000,
-        productStarNumber: 4,
-        productStar: starImg,
-    },
-    {
-        productImg: productImage2,
-        sell: 710,
-        productName: "Apple iPhone 14 Pro Max 1TB Chính Hãng VN/A",
-        productPrice: 28000000,
-        productOldPrice: 32500000,
-        productStarNumber: 4,
-        productStar: starImg,
-    },
-    {
-        productImg: productImage,
-        sell: 1430,
-        productName: "Nước hoa Pháp cao cấp 450ML Lưu hương 24h",
-        productPrice: 570000,
-        productOldPrice: 620000,
-        productStarNumber: 4,
-        productStar: starImg,
-    },
-    {
-        productImg: productImage2,
-        sell: 710,
-        productName: "Apple iPhone 14 Pro Max 1TB Chính Hãng VN/A",
-        productPrice: 28000000,
-        productOldPrice: 32500000,
-        productStarNumber: 4,
-        productStar: starImg,
-    },
-];
-
-function Items({ currentItems }) {
+function Items({ currentItems, refetchFunction }) {
     const [searchValue, setSearchValue] = useState("");
 
     function SearchInputOnChange(event) {
         setSearchValue(event.target.value);
     }
+
+    const DeleteProduct = (productID) => {
+        axios
+            .delete("http://localhost:5000/api/products/byProductId", {
+                params: { productId: productID },
+            })
+            .then((res) => {
+                toast.success("Xoá sản phẩm thành công!", {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+                refetchFunction();
+            })
+            .catch((err) => console.log(err));
+    };
 
     return (
         <div>
@@ -145,58 +76,64 @@ function Items({ currentItems }) {
                     </button>
                 </div>
             </div>
-            <div className="store-product-container">
-                {currentItems &&
-                    currentItems.map((item) => (
-                        <div className="product-item">
-                            <Link to="/product">
-                                <img src={item.productImg} />
-                            </Link>
-                            <Link to="/product">
-                                <div className="product-info">
-                                    <div className="product-head-info">
-                                        <span className="product-sell">
-                                            <span className="green-text">
-                                                Đã bán:{" "}
+            {currentItems.length > 0 ? (
+                <div className="store-product-container">
+                    {currentItems &&
+                        currentItems.map((item) => (
+                            <div className="product-item">
+                                <Link to="/product">
+                                    <img src={productImage} />
+                                </Link>
+                                <Link to="/product" style={{ flex: 1 }}>
+                                    <div className="product-info">
+                                        <div className="product-head-info">
+                                            <span className="product-sell">
+                                                <span className="green-text">
+                                                    Đã bán:{" "}
+                                                </span>
+                                                {item.countSold}
                                             </span>
-                                            {item.sell}
-                                        </span>
-                                        <span className="product-name">
-                                            {item.productName}
-                                        </span>
+                                            <span className="product-name">
+                                                {item.nameProduct}
+                                            </span>
+                                        </div>
+                                        <div className="product-all-price">
+                                            <span className="product-price">
+                                                {ThousandSeparator(
+                                                    parseInt(item.price)
+                                                )}{" "}
+                                                đ
+                                            </span>
+                                            <span className="product-old-price">
+                                                {ThousandSeparator(
+                                                    parseInt(item.salePrice)
+                                                )}{" "}
+                                                đ
+                                            </span>
+                                        </div>
                                     </div>
-                                    <div className="product-all-price">
-                                        <span className="product-price">
-                                            {ThousandSeparator(
-                                                item.productPrice
-                                            )}{" "}
-                                            đ
-                                        </span>
-                                        <span className="product-old-price">
-                                            {ThousandSeparator(
-                                                item.productOldPrice
-                                            )}{" "}
-                                            đ
-                                        </span>
-                                    </div>
+                                </Link>
+                                <div className="product-bottom-buttons">
+                                    <button>
+                                        <AiOutlineEdit className="icon" />
+                                    </button>
+                                    <button
+                                        onClick={() => DeleteProduct(item._id)}
+                                    >
+                                        <AiOutlineDelete className="icon" />
+                                    </button>
                                 </div>
-                            </Link>
-                            <div className="product-bottom-buttons">
-                                <button>
-                                    <AiOutlineEdit className="icon" />
-                                </button>
-                                <button>
-                                    <AiOutlineDelete className="icon" />
-                                </button>
                             </div>
-                        </div>
-                    ))}
-            </div>
+                        ))}
+                </div>
+            ) : (
+                <span className="no-product">Chưa có sản phẩm nào</span>
+            )}
         </div>
     );
 }
 
-function PaginatedItems({ itemsPerPage }) {
+function PaginatedItems({ itemsPerPage, items, refetchFunction }) {
     const [itemOffset, setItemOffset] = useState(0);
     const endOffset = itemOffset + itemsPerPage;
     const currentItems = items.slice(itemOffset, endOffset);
@@ -210,7 +147,10 @@ function PaginatedItems({ itemsPerPage }) {
 
     return (
         <>
-            <Items currentItems={currentItems} />
+            <Items
+                currentItems={currentItems}
+                refetchFunction={refetchFunction}
+            />
             <ReactPaginate
                 breakLabel="..."
                 nextLabel=">"
@@ -236,11 +176,48 @@ function PaginatedItems({ itemsPerPage }) {
 }
 
 function StoreTab() {
-    return (
-        <div className="StoreTab">
-            <PaginatedItems itemsPerPage={6} />
-        </div>
-    );
+    const [products, setProducts] = useState([]);
+    const [isLoaded, setIsLoaded] = useState(false);
+    useEffect(() => {
+        setIsLoaded(false);
+        axios
+            .get("http://localhost:5000/api/products/byAccountId", {
+                params: {
+                    accountId: localStorage.getItem("accountID"),
+                },
+            })
+            .then((res) => {
+                setProducts(res.data.products);
+                setIsLoaded(true);
+            })
+            .catch((err) => console.log(err));
+    }, []);
+    const ReFetch = () => {
+        setIsLoaded(false);
+        axios
+            .get("http://localhost:5000/api/products/byAccountId", {
+                params: {
+                    accountId: localStorage.getItem("accountID"),
+                },
+            })
+            .then((res) => {
+                setProducts(res.data.products);
+                setIsLoaded(true);
+            })
+            .catch((err) => console.log(err));
+    };
+
+    if (isLoaded)
+        return (
+            <div className="StoreTab">
+                <PaginatedItems
+                    itemsPerPage={6}
+                    items={products}
+                    refetchFunction={ReFetch}
+                />
+            </div>
+        );
+    else return <Loading />;
 }
 
 export default StoreTab;

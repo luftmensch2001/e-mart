@@ -5,7 +5,6 @@ const ProductsSchema = new schema({
     nameProduct: {
         type: String,
         require: true,
-        unique: true,
     },
     accountId: {
         type: schema.Types.ObjectId,
@@ -14,6 +13,11 @@ const ProductsSchema = new schema({
     price: {
         type: Number,
         require: true,
+    },
+    salePrice: {
+        type: Number,
+        require: true,
+        default: 0,
     },
     countSold: {
         type: Number,

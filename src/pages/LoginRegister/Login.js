@@ -30,7 +30,6 @@ function Login() {
                 password: password,
             })
             .then((res) => {
-                localStorage.setItem("token", res.data.accessToken);
                 localStorage.setItem("username", username);
                 localStorage.setItem("accountID", res.data.userId);
                 toast.success("Đăng nhập thành công!", {

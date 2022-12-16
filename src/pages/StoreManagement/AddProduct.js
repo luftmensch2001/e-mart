@@ -7,16 +7,20 @@ import axios from "axios";
 import { storage } from "../../components/firebase";
 import { ref, uploadBytes, getDownloadURL, getStorage } from "firebase/storage";
 import { v4 } from "uuid";
+import { Navigate } from "react-router-dom";
 
 const AddProduct = () => {
     const [types, setTypes] = useState([]);
+    const [sale, setSale] = useState(false);
     const [typeName, setTypeName] = useState("");
     const [mainImage, setMainImage] = useState(null);
     const [otherImage, setOtherImage] = useState([]);
     const [productName, setProductName] = useState("");
     const [productCategory, setProductCategory] = useState(1);
     const [productPrice, setProductPrice] = useState("");
+    const [productSalePrice, setProductSalePrice] = useState("");
     const [productDescription, setProductDescription] = useState("");
+    const [addSuccess, setAddSuccess] = useState(false);
 
     const TypeNameInputOnchange = (event) => {
         setTypeName(event.target.value);
@@ -156,14 +160,15 @@ const AddProduct = () => {
         }
 
         const accountID = localStorage.getItem("accountID");
-
+        const saleValue = productSalePrice ? productSalePrice : 0;
         axios
             .post("http://localhost:5000/api/products/create", {
-                accoutId: accountID,
+                accountId: accountID,
                 nameProduct: productName,
                 price: productPrice,
                 describe: productDescription,
                 type: productCategory,
+                salePrice: saleValue,
             })
             .then((res) => {
                 UpLoadImages(res.data.productID);
@@ -178,6 +183,7 @@ const AddProduct = () => {
                     progress: undefined,
                     theme: "light",
                 });
+                setAddSuccess(true);
             })
             .catch((err) => {
                 if (err.response.data.message === "Missing information") {
@@ -207,6 +213,7 @@ const AddProduct = () => {
 
     return (
         <div className="AddProduct content">
+            {addSuccess && <Navigate to="/account/store" />}
             <span className="title-text">
                 Thêm <span className="green-text">Sản Phẩm</span>
             </span>
@@ -252,6 +259,47 @@ const AddProduct = () => {
                             type="number"
                             value={productPrice}
                             onChange={(e) => setProductPrice(e.target.value)}
+                        />
+                    </div>
+                    {/* Sale */}
+                    <div className="product-info-row">
+                        <div
+                            style={{
+                                width: "25%",
+                                display: "flex",
+                                alignItems: "center",
+                            }}
+                        >
+                            <input
+                                type="checkbox"
+                                style={{
+                                    width: "15px",
+                                    height: "15px",
+                                    marginRight: "8px",
+                                    cursor: "pointer",
+                                }}
+                                value={sale}
+                                onChange={() => {
+                                    setProductSalePrice("");
+                                    setSale(!sale);
+                                }}
+                            />
+                            <span
+                                className="product-info-label"
+                                style={{ width: "fit-content" }}
+                            >
+                                Đã giảm giá
+                            </span>
+                        </div>
+                        <input
+                            className="product-info-input"
+                            type="number"
+                            disabled={!sale}
+                            placeholder="Nhập giá cũ"
+                            value={productSalePrice}
+                            onChange={(e) =>
+                                setProductSalePrice(e.target.value)
+                            }
                         />
                     </div>
                     <div className="product-info-row-detail">

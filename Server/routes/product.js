@@ -9,9 +9,19 @@ router.get("/", (req, res) => res.send("PRODUCT ROUTE"));
 // @desc Create product
 // @access Public
 router.post("/create", async (req, res) => {
-    const { accountId, nameProduct, price, salePrice, describe, type } =
-        req.body;
+    const {
+        accountId,
+        nameProduct,
+        price,
+        salePrice,
+        describe,
+        type,
+        imageURLs,
+    } = req.body;
+    console.log("req.body: ", req.body);
     // Simple validation
+    console.log("imageURLs: ", imageURLs);
+
     if (!accountId || !nameProduct || !price || !describe || !type)
         return res
             .status(400)
@@ -25,6 +35,7 @@ router.post("/create", async (req, res) => {
             salePrice,
             describe,
             type,
+            imageURLs,
         });
         await newProduct.save();
         res.json({

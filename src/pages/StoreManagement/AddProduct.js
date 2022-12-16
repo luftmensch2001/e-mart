@@ -8,6 +8,7 @@ import { storage } from "../../components/firebase";
 import { ref, uploadBytes, getDownloadURL, getStorage } from "firebase/storage";
 import { v4 } from "uuid";
 import { Navigate } from "react-router-dom";
+import qs from "qs";
 
 const AddProduct = () => {
     const [types, setTypes] = useState([]);
@@ -21,6 +22,7 @@ const AddProduct = () => {
     const [productSalePrice, setProductSalePrice] = useState("");
     const [productDescription, setProductDescription] = useState("");
     const [addSuccess, setAddSuccess] = useState(false);
+    let urls = [];
 
     const TypeNameInputOnchange = (event) => {
         setTypeName(event.target.value);
@@ -88,24 +90,16 @@ const AddProduct = () => {
         setOtherImage([...otherImage, ...event.target.files]);
     };
 
-    const UpLoadImages = (productID) => {
+    const UpLoadImages = () => {
+        urls = [];
         // Main Image
         if (!mainImage) return;
         const imageRef = ref(storage, `images/${mainImage.name + v4()}`);
         uploadBytes(imageRef, mainImage)
             .then(() => {
                 getDownloadURL(imageRef).then((url) => {
-                    axios
-                        .post(
-                            "http://localhost:5000/api/imageProducts/create",
-                            {
-                                productId: productID,
-                                imageURL: url,
-                                isMainImage: true,
-                            }
-                        )
-                        .then((res) => console.log(res))
-                        .catch((err) => console.log(err));
+                    console.log("url: ", url);
+                    urls.push(url);
                 });
             })
             .catch((err) => console.log(err));
@@ -115,17 +109,8 @@ const AddProduct = () => {
             uploadBytes(imageRef, item)
                 .then(() => {
                     getDownloadURL(imageRef).then((url) => {
-                        axios
-                            .post(
-                                "http://localhost:5000/api/imageProducts/create",
-                                {
-                                    productId: productID,
-                                    imageURL: url,
-                                    isMainImage: false,
-                                }
-                            )
-                            .then((res) => console.log(res))
-                            .catch((err) => console.log(err));
+                        console.log("url: ", url);
+                        urls.push(url);
                     });
                 })
                 .catch((err) => console.log(err));
@@ -161,6 +146,9 @@ const AddProduct = () => {
 
         const accountID = localStorage.getItem("accountID");
         const saleValue = productSalePrice ? productSalePrice : 0;
+        UpLoadImages();
+        console.log("URLs: ", urls);
+
         axios
             .post("http://localhost:5000/api/products/create", {
                 accountId: accountID,
@@ -169,9 +157,10 @@ const AddProduct = () => {
                 describe: productDescription,
                 type: productCategory,
                 salePrice: saleValue,
+                imageURLs: urls,
             })
             .then((res) => {
-                UpLoadImages(res.data.productID);
+                console.log("res: ", res);
                 UploadColor(res.data.productID);
                 toast.success("Thêm sản phẩm thành công", {
                     position: "bottom-right",
@@ -183,7 +172,7 @@ const AddProduct = () => {
                     progress: undefined,
                     theme: "light",
                 });
-                setAddSuccess(true);
+                // setAddSuccess(true);
             })
             .catch((err) => {
                 if (err.response.data.message === "Missing information") {

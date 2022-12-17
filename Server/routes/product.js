@@ -1,7 +1,10 @@
 const express = require("express");
+const multer = require("multer");
 const router = express.Router();
 
 const Product = require("../models/products");
+
+const uploadMultipartForm = multer().none();
 
 router.get("/", (req, res) => res.send("PRODUCT ROUTE"));
 
@@ -9,39 +12,44 @@ router.get("/", (req, res) => res.send("PRODUCT ROUTE"));
 // @desc Create product
 // @access Public
 router.post("/create", async (req, res) => {
-    const {
-        accountId,
-        nameProduct,
-        price,
-        salePrice,
-        describe,
-        type,
-        imageURLs,
-    } = req.body;
-    console.log("req.body: ", req.body);
-    // Simple validation
-    console.log("imageURLs: ", imageURLs);
-
-    if (!accountId || !nameProduct || !price || !describe || !type)
-        return res
-            .status(400)
-            .json({ success: false, message: "Missing information" });
-    //All good
     try {
-        const newProduct = new Product({
-            accountId,
-            nameProduct,
-            price,
-            salePrice,
-            describe,
-            type,
-            imageURLs,
-        });
-        await newProduct.save();
-        res.json({
-            success: true,
-            message: "Product created successfully",
-            productID: newProduct._id,
+        uploadMultipartForm(req, res, function (err) {
+            const {
+                accountId,
+                nameProduct,
+                price,
+                salePrice,
+                describe,
+                type,
+                imageURLs,
+            } = req.body;
+            console.log("req.body: ", req.body);
+            // Simple validation
+            console.log("imageURLs: ", imageURLs);
+
+            if (!accountId || !nameProduct || !price || !describe || !type)
+                return res
+                    .status(400)
+                    .json({ success: false, message: "Missing information" });
+
+            const newProduct = new Product({
+                accountId,
+                nameProduct,
+                price,
+                salePrice,
+                describe,
+                type,
+                imageURLs,
+            });
+
+            //All good
+
+            newProduct.save();
+            res.json({
+                success: true,
+                message: "Product created successfully",
+                productID: newProduct._id,
+            });
         });
     } catch (error) {
         console.log(error);

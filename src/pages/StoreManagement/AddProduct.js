@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { toast } from "react-toastify";
 import "./AddProduct.css";
@@ -8,7 +8,6 @@ import { storage } from "../../components/firebase";
 import { ref, uploadBytes, getDownloadURL, getStorage } from "firebase/storage";
 import { v4 } from "uuid";
 import { Navigate } from "react-router-dom";
-import qs from "qs";
 
 const AddProduct = () => {
     const [types, setTypes] = useState([]);
@@ -22,6 +21,8 @@ const AddProduct = () => {
     const [productSalePrice, setProductSalePrice] = useState("");
     const [productDescription, setProductDescription] = useState("");
     const [addSuccess, setAddSuccess] = useState(false);
+    let imageCount = 0;
+    let currentImageCount = 0;
     let urls = [];
 
     const TypeNameInputOnchange = (event) => {
@@ -90,7 +91,67 @@ const AddProduct = () => {
         setOtherImage([...otherImage, ...event.target.files]);
     };
 
-    const UpLoadImages = () => {
+    const createFunc = () => {
+        const accountID = localStorage.getItem("accountID");
+        const saleValue = productSalePrice ? productSalePrice : 0;
+        let formData = new FormData();
+        formData.append("accountId", accountID);
+        formData.append("nameProduct", productName);
+        formData.append("price", productPrice);
+        formData.append("describe", productDescription);
+        formData.append("type", productCategory);
+        formData.append("salePrice", saleValue);
+
+        const imageURLs = urls;
+        imageURLs.forEach((item) => formData.append("imageURLs[]", item));
+
+        axios
+            .post("http://localhost:5000/api/products/create", formData, {
+                headers: {
+                    "content-type": "multipart/form-data",
+                },
+            })
+            .then((res) => {
+                UploadColor(res.data.productID);
+                toast.success("Thêm sản phẩm thành công", {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+                setAddSuccess(true);
+            })
+            .catch((err) => {
+                if (err.response.data.message === "Missing information") {
+                    toast.warn("Vui lòng nhập đầy đủ thông tin!", {
+                        position: "bottom-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "light",
+                    });
+                } else
+                    toast.error("Lỗi kết nối!", {
+                        position: "bottom-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "light",
+                    });
+            });
+    };
+
+    const UpLoadImages = (createFunc) => {
         urls = [];
         // Main Image
         if (!mainImage) return;
@@ -98,8 +159,9 @@ const AddProduct = () => {
         uploadBytes(imageRef, mainImage)
             .then(() => {
                 getDownloadURL(imageRef).then((url) => {
-                    console.log("url: ", url);
                     urls.push(url);
+                    currentImageCount++;
+                    if (currentImageCount === imageCount) createFunc();
                 });
             })
             .catch((err) => console.log(err));
@@ -109,8 +171,9 @@ const AddProduct = () => {
             uploadBytes(imageRef, item)
                 .then(() => {
                     getDownloadURL(imageRef).then((url) => {
-                        console.log("url: ", url);
                         urls.push(url);
+                        currentImageCount++;
+                        if (currentImageCount === imageCount) createFunc();
                     });
                 })
                 .catch((err) => console.log(err));
@@ -143,61 +206,8 @@ const AddProduct = () => {
             });
             return;
         }
-
-        const accountID = localStorage.getItem("accountID");
-        const saleValue = productSalePrice ? productSalePrice : 0;
-        UpLoadImages();
-        console.log("URLs: ", urls);
-
-        axios
-            .post("http://localhost:5000/api/products/create", {
-                accountId: accountID,
-                nameProduct: productName,
-                price: productPrice,
-                describe: productDescription,
-                type: productCategory,
-                salePrice: saleValue,
-                imageURLs: urls,
-            })
-            .then((res) => {
-                console.log("res: ", res);
-                UploadColor(res.data.productID);
-                toast.success("Thêm sản phẩm thành công", {
-                    position: "bottom-right",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "light",
-                });
-                // setAddSuccess(true);
-            })
-            .catch((err) => {
-                if (err.response.data.message === "Missing information") {
-                    toast.warn("Vui lòng nhập đầy đủ thông tin!", {
-                        position: "bottom-right",
-                        autoClose: 5000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "light",
-                    });
-                } else
-                    toast.error("Lỗi kết nối!", {
-                        position: "bottom-right",
-                        autoClose: 5000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "light",
-                    });
-            });
+        imageCount = otherImage.length + 1;
+        UpLoadImages(createFunc);
     };
 
     return (

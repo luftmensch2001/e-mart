@@ -455,19 +455,7 @@ const AddProduct = () => {
                 </button>
             </div>
         );
-    else
-        return (
-            <div
-                className="LoadingContainer"
-                style={{
-                    width: "100%",
-                    height: "400px",
-                    position: "relative",
-                }}
-            >
-                <Loading />;
-            </div>
-        );
+    else return <Loading />;
 };
 
 export default AddProduct;

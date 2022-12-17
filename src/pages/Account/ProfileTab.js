@@ -1,7 +1,8 @@
-import { React, useState } from "react";
+import { React, useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { toast } from "react-toastify";
+import axios from "axios";
 import "./ProfileTab.css";
 
 import cover from "../../assets/images/cover.jpg";
@@ -37,6 +38,23 @@ function saveInfo() {
 
 function ProfileTab() {
     const [selectedImage, setSelectedImage] = useState(null);
+    const [isLoaded, setIsLoaded] = useState(false);
+    const [userData, setUserData] = useState(null);
+    useEffect(() => {
+        setIsLoaded(false);
+        // axios
+        //     .get("http://localhost:5000/api/accounts/getInfo", {
+        //         params: {
+        //             accountId: localStorage.getItem("accountID"),
+        //         },
+        //     })
+        //     .then((res) => {
+        //         setUserData(res.data.products);
+        //         setIsLoaded(true);
+        //     })
+        //     .catch((err) => console.log(err));
+    });
+
     return (
         <div className="ProfileTab">
             <img alt="" className="profile-cover-img" src={cover} />

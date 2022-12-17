@@ -82,7 +82,7 @@ function Items({ currentItems, refetchFunction }) {
                         currentItems.map((item) => (
                             <div className="product-item">
                                 <Link to="/product">
-                                    <img src={productImage} />
+                                    <img src={item.imageURLs[0]} />
                                 </Link>
                                 <Link to="/product" style={{ flex: 1 }}>
                                     <div className="product-info">
@@ -104,12 +104,14 @@ function Items({ currentItems, refetchFunction }) {
                                                 )}{" "}
                                                 đ
                                             </span>
-                                            <span className="product-old-price">
-                                                {ThousandSeparator(
-                                                    parseInt(item.salePrice)
-                                                )}{" "}
-                                                đ
-                                            </span>
+                                            {item.salePrice > 0 && (
+                                                <span className="product-old-price">
+                                                    {ThousandSeparator(
+                                                        parseInt(item.salePrice)
+                                                    )}{" "}
+                                                    đ
+                                                </span>
+                                            )}
                                         </div>
                                     </div>
                                 </Link>
@@ -179,6 +181,7 @@ function StoreTab() {
     const [products, setProducts] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
     useEffect(() => {
+        window.scrollTo(0, 0);
         setIsLoaded(false);
         axios
             .get("http://localhost:5000/api/products/byAccountId", {
@@ -193,6 +196,7 @@ function StoreTab() {
             .catch((err) => console.log(err));
     }, []);
     const ReFetch = () => {
+        window.scrollTo(0, 0);
         setIsLoaded(false);
         axios
             .get("http://localhost:5000/api/products/byAccountId", {

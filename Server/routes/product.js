@@ -23,9 +23,6 @@ router.post("/create", async (req, res) => {
                 type,
                 imageURLs,
             } = req.body;
-            console.log("req.body: ", req.body);
-            // Simple validation
-            console.log("imageURLs: ", imageURLs);
 
             if (!accountId || !nameProduct || !price || !describe || !type)
                 return res

@@ -75,7 +75,7 @@ function AccountManagement() {
             })
             .catch((err) => {
                 console.log("err: ", err);
-                if (err.response.message === "oldPassword not correct")
+                if (err.response.data.message === "oldPassword not correct")
                     toast.error("Mật khẩu hiện tại chưa chính xác!", {
                         position: "bottom-right",
                         autoClose: 5000,

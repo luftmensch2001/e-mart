@@ -12,83 +12,190 @@ router.get("/", (req, res) => res.send("ACCOUNT ROUTE"));
 // @access Public
 
 router.post("/register", async (req, res) => {
-    const { username, password, fullName, email, phoneNumber, sex } = req.body;
+  const { username, password, fullName, email, phoneNumber } = req.body;
 
-    // Simple validation
-    if (!username || !password || !fullName || !email || !phoneNumber || !sex)
-        return res
-            .status(400)
-            .json({ success: false, message: "Missing information" });
-    try {
-        //Check for existing user
-        const user = await Account.findOne({ username });
-        if (user)
-            return res
-                .status(400)
-                .json({ success: false, message: "Username already" });
+  // Simple validation
+  if (!username || !password || !fullName || !email || !phoneNumber)
+    return res
+      .status(400)
+      .json({ success: false, message: "Missing information" });
+  try {
+    //Check for existing user
+    const user = await Account.findOne({ username });
+    if (user)
+      return res
+        .status(400)
+        .json({ success: false, message: "Username already" });
 
-        // All good
-        const hashedPassword = await argon2.hash(password);
-        const newAccount = new Account({
-            username,
-            password: hashedPassword,
-            fullName,
-            email,
-            phoneNumber,
-            sex,
-        });
-        await newAccount.save();
+    // All good
+    const hashedPassword = await argon2.hash(password);
+    const newAccount = new Account({
+      username,
+      password: hashedPassword,
+      fullName,
+      email,
+      phoneNumber,
+    });
+    await newAccount.save();
 
-        res.status(200).json({
-            success: true,
-            message: " Created",
-            userId: user._id,
-        });
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({
-            success: false,
-            message: " Internal server error",
-        });
-    }
+    res.status(200).json({
+      success: true,
+      message: " Created",
+      userId: newAccount._id,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: " Internal server error",
+    });
+  }
 });
 
 // @route POST api/accounts/login
 // @desc Login user
 // @access Public
 router.post("/login", async (req, res) => {
-    const { username, password } = req.body;
+  const { username, password } = req.body;
 
-    if (!username || !password)
-        return res.status(400).json({
+  if (!username || !password)
+    return res.status(400).json({
+      success: false,
+      message: "Missing username and/or password",
+    });
+  try {
+    // Check for existing user
+    const user = await Account.findOne({ username });
+    if (!user)
+      return res
+        .status(400)
+        .json({ success: false, message: "Incorrect username " });
+
+    const passwordValid = await argon2.verify(user.password, password);
+    if (!passwordValid)
+      return res
+        .status(400)
+        .json({ success: false, message: "Incorrect  password" });
+    res.json({
+      success: true,
+      message: "User logged in successfully",
+      userId: user._id,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: " Internal server error",
+    });
+  }
+});
+
+// @route GET api/accounts/getInfo
+// @desc Get info user
+// @access Public
+router.get("/getInfo", async (req, res) => {
+  const { accountId } = req.body;
+  try {
+    const user = await Account.findOne({ _id: accountId });
+    if (!user)
+      return res
+        .status(200)
+        .json({ success: false, message: "Account not found " });
+    else
+      res.json({
+        success: true,
+        message: "Get Info successfully",
+        userId: user,
+      });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: " Internal server error",
+    });
+  }
+});
+
+// @route PUT api/accounts/updateInfo
+// @desc update info user
+// @access Public
+router.put("/updateInfo", async (req, res) => {
+  const { accountId, fullName, email, phoneNumber, imageURL } = req.body;
+
+  try {
+    Account.findOneAndUpdate(
+      { _id: accountId },
+      {
+        fullName,
+        email,
+        phoneNumber,
+        imageURL,
+      },
+      { new: true },
+      function (error, account) {
+        console.log(account);
+        if (!account) {
+          res.status(400).json({
             success: false,
-            message: "Missing username and/or password",
-        });
-    try {
-        // Check for existing user
-        const user = await Account.findOne({ username });
-        if (!user)
-            return res
-                .status(400)
-                .json({ success: false, message: "Incorrect username " });
-
-        const passwordValid = await argon2.verify(user.password, password);
-        if (!passwordValid)
-            return res
-                .status(400)
-                .json({ success: false, message: "Incorrect  password" });
-        res.json({
+            message: "Account not found",
+          });
+        } else {
+          res.status(200).json({
             success: true,
-            message: "User logged in successfully",
-            userId: user._id,
-        });
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({
+            message: " Updated account",
+            account,
+          });
+        }
+      }
+    );
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: " Internal server error",
+    });
+  }
+});
+
+// @route PUT api/accounts/changePassword
+// @desc update password user
+// @access Public
+router.put("/changePassword", async (req, res) => {
+  const { accountId, newPassword } = req.body;
+
+  try {
+    console.log("1");
+    let password = await argon2.hash(newPassword);
+    console.log("2");
+    Account.findOneAndUpdate(
+      { _id: accountId },
+      {
+        password,
+      },
+      { new: true },
+      function (error, account) {
+        console.log(account);
+        if (!account) {
+          res.status(400).json({
             success: false,
-            message: " Internal server error",
-        });
-    }
+            message: "Account not found",
+          });
+        } else {
+          res.status(200).json({
+            success: true,
+            message: " Updated account",
+            account,
+          });
+        }
+      }
+    );
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: " Internal server error",
+    });
+  }
 });
 
 module.exports = router;

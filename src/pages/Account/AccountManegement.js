@@ -42,6 +42,62 @@ function AccountManagement() {
             });
             return;
         }
+        if (newPassword === password) {
+            toast.warn("Mật khẩu mới phải khác mật khẩu cũ!", {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+            return;
+        }
+        axios
+            .put("http://localhost:5000/api/accounts/changePassword", {
+                accountId: localStorage.getItem("accountID"),
+                oldPassword: password,
+                newPassword: newPassword,
+            })
+            .then(() => {
+                toast.success("Thay đổi mật khẩu thành công!", {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+            })
+            .catch((err) => {
+                console.log("err: ", err);
+                if (err.response.message === "oldPassword not correct")
+                    toast.error("Mật khẩu hiện tại chưa chính xác!", {
+                        position: "bottom-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "light",
+                    });
+                else
+                    toast.error("Lỗi kết nối!", {
+                        position: "bottom-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "light",
+                    });
+            });
     };
 
     if (isLoaded)

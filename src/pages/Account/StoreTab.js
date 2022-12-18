@@ -81,10 +81,13 @@ function Items({ currentItems, refetchFunction }) {
                     {currentItems &&
                         currentItems.map((item) => (
                             <div className="product-item">
-                                <Link to="/product">
+                                <Link to={`/product/${item._id}`}>
                                     <img src={item.imageURLs[0]} />
                                 </Link>
-                                <Link to="/product" style={{ flex: 1 }}>
+                                <Link
+                                    to={`/product/${item._id}`}
+                                    style={{ flex: 1 }}
+                                >
                                     <div className="product-info">
                                         <div className="product-head-info">
                                             <span className="product-sell">

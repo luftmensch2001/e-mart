@@ -7,7 +7,7 @@ const Color = require("../models/colors");
 // @desc get color
 // @access Public
 router.get("/", async (req, res) => {
-    const { productId, imageURL } = req.body;
+    const productId = req.query.productId;
     try {
         const colors = await Color.find({ productId });
         res.json({ success: true, colors });

@@ -94,7 +94,7 @@ router.get("/byAccountId", async (req, res) => {
 // @desc Get Product by productId
 // @access Public
 router.get("/byProductId", async (req, res) => {
-    const { productId } = req.body;
+    const productId = req.query.productId;
     try {
         const product = await Product.findOne({ _id: productId });
         res.json({ success: true, product });

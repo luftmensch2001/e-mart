@@ -21,6 +21,8 @@ import Voucher from "./pages/StoreManagement/Voucher";
 import ProductList from "./pages/Product/ProductList";
 import Loading from "./components/Loading";
 
+
+
 function App() {
     const location = useLocation().pathname;
     const hideHeaderFooter = location === "/login" || location === "/register";

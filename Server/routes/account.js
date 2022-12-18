@@ -161,12 +161,22 @@ router.put("/updateInfo", async (req, res) => {
 // @desc update password user
 // @access Public
 router.put("/changePassword", async (req, res) => {
-  const { accountId, newPassword } = req.body;
+  const { accountId, oldPassword, newPassword } = req.body;
 
   try {
-    console.log("1");
+    const user = await Account.findOne({ _id: accountId });
+    if (!user)
+      res.status(400).json({
+        success: false,
+        message: "Account not found",
+      });
+    let checkPassword = await argon2.verify(user.password, oldPassword);
+    if (!checkPassword)
+      res.status(401).json({
+        success: false,
+        message: "oldPassword not correct",
+      });
     let password = await argon2.hash(newPassword);
-    console.log("2");
     Account.findOneAndUpdate(
       { _id: accountId },
       {
@@ -183,7 +193,7 @@ router.put("/changePassword", async (req, res) => {
         } else {
           res.status(200).json({
             success: true,
-            message: " Updated account",
+            message: " Changed account",
             account,
           });
         }

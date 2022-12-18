@@ -12,10 +12,10 @@ router.get("/", (req, res) => res.send("ACCOUNT ROUTE"));
 // @access Public
 
 router.post("/register", async (req, res) => {
-    const { username, password, fullName, email, phoneNumber, sex } = req.body;
+    const { username, password, fullName, email, phoneNumber } = req.body;
 
     // Simple validation
-    if (!username || !password || !fullName || !email || !phoneNumber || !sex)
+    if (!username || !password || !fullName || !email || !phoneNumber)
         return res
             .status(400)
             .json({ success: false, message: "Missing information" });
@@ -35,14 +35,13 @@ router.post("/register", async (req, res) => {
             fullName,
             email,
             phoneNumber,
-            sex,
         });
         await newAccount.save();
 
         res.status(200).json({
             success: true,
             message: " Created",
-            userId: user._id,
+            userId: newAccount._id,
         });
     } catch (error) {
         console.log(error);
@@ -82,6 +81,114 @@ router.post("/login", async (req, res) => {
             message: "User logged in successfully",
             userId: user._id,
         });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            success: false,
+            message: " Internal server error",
+        });
+    }
+});
+
+// @route GET api/accounts/getInfo
+// @desc Get info user
+// @access Public
+router.get("/getInfo", async (req, res) => {
+    const accountId = req.query.accountId;
+    try {
+        const user = await Account.findOne({ _id: accountId });
+        if (!user)
+            return res
+                .status(200)
+                .json({ success: false, message: "Account not found " });
+        else
+            res.json({
+                success: true,
+                message: "Get Info successfully",
+                userId: user,
+            });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            success: false,
+            message: " Internal server error",
+        });
+    }
+});
+
+// @route PUT api/accounts/updateInfo
+// @desc update info user
+// @access Public
+router.put("/updateInfo", async (req, res) => {
+    const { accountId, fullName, email, phoneNumber, imageURL } = req.body;
+
+    try {
+        Account.findOneAndUpdate(
+            { _id: accountId },
+            {
+                fullName,
+                email,
+                phoneNumber,
+                imageURL,
+            },
+            { new: true },
+            function (error, account) {
+                console.log(account);
+                if (!account) {
+                    res.status(400).json({
+                        success: false,
+                        message: "Account not found",
+                    });
+                } else {
+                    res.status(200).json({
+                        success: true,
+                        message: " Updated account",
+                        account,
+                    });
+                }
+            }
+        );
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            success: false,
+            message: " Internal server error",
+        });
+    }
+});
+
+// @route PUT api/accounts/changePassword
+// @desc update password user
+// @access Public
+router.put("/changePassword", async (req, res) => {
+    const { accountId, newPassword } = req.body;
+
+    try {
+        console.log("1");
+        let password = await argon2.hash(newPassword);
+        console.log("2");
+        Account.findOneAndUpdate(
+            { _id: accountId },
+            {
+                password,
+            },
+            { new: true },
+            function (error, account) {
+                console.log(account);
+                if (!account) {
+                    res.status(400).json({
+                        success: false,
+                        message: "Account not found",
+                    });
+                } else {
+                    res.status(200).json({
+                        success: true,
+                        message: " Updated account",
+                        account,
+                    });
+                }
+            }
+        );
     } catch (error) {
         console.log(error);
         res.status(500).json({

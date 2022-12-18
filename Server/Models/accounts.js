@@ -22,14 +22,9 @@ const AccountsSchema = new schema({
         type: String,
         require: true,
     },
-    imageUrl: {
+    imageURL: {
         type: String,
         require: false,
-    },
-    sex: {
-        type: String,
-        enum: ["MALE", "FEMALE"],
-        require: true,
     },
 });
 

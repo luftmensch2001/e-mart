@@ -5,7 +5,7 @@ import "./AddProduct.css";
 import { BsCheckLg } from "react-icons/bs";
 import axios from "axios";
 import { storage } from "../../components/firebase";
-import { ref, uploadBytes, getDownloadURL, getStorage } from "firebase/storage";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
 import { Navigate } from "react-router-dom";
 import Loading from "../../components/Loading";

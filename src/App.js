@@ -1,5 +1,5 @@
 import "./App.css";
-import { React, useState } from "react";
+import { React, useEffect, useState } from "react";
 import Home from "./pages/Home/Home";
 import Login from "./pages/LoginRegister/Login";
 import Register from "./pages/LoginRegister/Register";

@@ -19,6 +19,7 @@ import ProductDetail from "./pages/Product/ProductDetail";
 import AddProduct from "./pages/StoreManagement/AddProduct";
 import Voucher from "./pages/StoreManagement/Voucher";
 import ProductList from "./pages/Product/ProductList";
+import EditProduct from "./pages/StoreManagement/EditProduct";
 
 function App() {
     const location = useLocation().pathname;
@@ -41,6 +42,12 @@ function App() {
                     />
                 </Route>
                 <Route path="/add-product" element={<AddProduct />} />
+                <Route path="/edit-product">
+                    <Route
+                        path="/edit-product/:productId"
+                        element={<EditProduct />}
+                    />
+                </Route>
                 <Route path="/voucher" element={<Voucher />} />
                 <Route path="/products" element={<ProductList />} />
                 <Route path="/account" element={<Account tabIndex={1} />}>

@@ -119,9 +119,14 @@ function Items({ currentItems, refetchFunction }) {
                                     </div>
                                 </Link>
                                 <div className="product-bottom-buttons">
-                                    <button>
-                                        <AiOutlineEdit className="icon" />
-                                    </button>
+                                    <Link
+                                        to={`/edit-product/${item._id}`}
+                                        className="edit-link"
+                                    >
+                                        <button className="edit-button">
+                                            <AiOutlineEdit className="icon" />
+                                        </button>
+                                    </Link>
                                     <button
                                         onClick={() => DeleteProduct(item._id)}
                                     >

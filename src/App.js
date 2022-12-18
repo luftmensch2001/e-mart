@@ -19,7 +19,6 @@ import ProductDetail from "./pages/Product/ProductDetail";
 import AddProduct from "./pages/StoreManagement/AddProduct";
 import Voucher from "./pages/StoreManagement/Voucher";
 import ProductList from "./pages/Product/ProductList";
-import NotFound from "./components/NotFound";
 
 function App() {
     const location = useLocation().pathname;

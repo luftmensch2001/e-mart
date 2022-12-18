@@ -82,6 +82,7 @@ const ProductDetail = () => {
 
     useEffect(() => {
         window.scrollTo(0, 0);
+        let counter = 0;
         setIsLoaded(false);
         // Get product data
         axios
@@ -91,9 +92,9 @@ const ProductDetail = () => {
                 },
             })
             .then((res) => {
-                console.log("res: ", res);
                 setProductData(res.data.product);
-                setIsLoaded(true);
+                counter++;
+                if (counter === 2) setIsLoaded(true);
             })
             .catch(() => setFoundProduct(false));
         // Get type data
@@ -105,7 +106,8 @@ const ProductDetail = () => {
             })
             .then((res) => {
                 setTypeData(res.data.colors);
-                setIsLoaded(true);
+                counter++;
+                if (counter === 2) setIsLoaded(true);
             })
             .catch((err) => console.log(err));
     }, []);

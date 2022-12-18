@@ -17,7 +17,7 @@ const AddProduct = () => {
     const [mainImage, setMainImage] = useState(null);
     const [otherImage, setOtherImage] = useState([]);
     const [productName, setProductName] = useState("");
-    const [productCategory, setProductCategory] = useState(1);
+    const [productCategory, setProductCategory] = useState("Điện thoại");
     const [productPrice, setProductPrice] = useState("");
     const [productSalePrice, setProductSalePrice] = useState("");
     const [productDescription, setProductDescription] = useState("");
@@ -253,11 +253,30 @@ const AddProduct = () => {
                                     setProductCategory(e.target.value)
                                 }
                             >
-                                <option value={1}>Điện thoại</option>
-                                <option value={2}>Laptop</option>
-                                <option value={3}>Mỹ phẩm</option>
-                                <option value={4}>Thời trang nam</option>
-                                <option value={5}>Sách</option>
+                                <option value={"Điện thoại"}>Điện thoại</option>
+                                <option value={"Laptop"}>Laptop</option>
+                                <option value={"Thời trang nam"}>
+                                    Thời trang nam
+                                </option>
+                                <option value={"Thời trang nữ"}>
+                                    Thời trang nữ
+                                </option>
+                                <option value={"Trang sức"}>Trang sức</option>
+                                <option value={"Thiết bị điện tử"}>
+                                    Thiết bị điện tử
+                                </option>
+                                <option value={"Nhà bếp"}>Nhà bếp</option>
+                                <option value={"Giày nam"}>Giày nam</option>
+                                <option value={"Giày nữ"}>Giày nữ</option>
+                                <option value={"Sách"}>Sách</option>
+                                <option value={"Đồng hồ"}>Đồng hồ</option>
+                                <option value={"Cho bé"}>Cho bé</option>
+                                <option value={"Sức khoẻ"}>Sức khoẻ</option>
+                                <option value={"Mỹ phẩm"}>Mỹ phẩm</option>
+                                <option value={"Dụng cụ gia đình"}>
+                                    Dụng cụ gia đình
+                                </option>
+                                <option value={"Khác"}>Khác</option>
                             </select>
                         </div>
                         <div className="product-info-row">

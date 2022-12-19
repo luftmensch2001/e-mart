@@ -181,7 +181,6 @@ const EditProduct = () => {
                     theme: "light",
                 });
                 setAddSuccess(true);
-                setIsLoaded(true);
             })
             .catch((err) => {
                 console.log("err: ", err);
@@ -195,7 +194,8 @@ const EditProduct = () => {
                     progress: undefined,
                     theme: "light",
                 });
-            });
+            })
+            .finally(() => setIsLoaded(true));
     };
 
     const UpLoadImages = (createFunc) => {
@@ -245,7 +245,9 @@ const EditProduct = () => {
         console.log("productID: ", productID);
         axios
             .delete("http://localhost:5000/api/colors", {
-                productId: productID,
+                params: {
+                    productId: productID,
+                },
             })
             .then((res) => console.log(res))
             .catch((err) => console.log(err));
@@ -264,7 +266,33 @@ const EditProduct = () => {
     const AddProductOnClick = () => {
         console.log("mainImage: ", mainImage);
         if (!mainImage) {
-            toast.warn("Vui lòng thêm hình ảnh cho sản phẩm!", {
+            toast.info("Vui lòng thêm hình ảnh cho sản phẩm!", {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+            return;
+        }
+        if (!productName || !productPrice || !productDescription) {
+            toast.info("Vui lòng nhập đầy đủ thông tin!", {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+            return;
+        }
+        if (sale && !productSalePrice) {
+            toast.info("Vui lòng nhập đầy đủ thông tin!", {
                 position: "bottom-right",
                 autoClose: 5000,
                 hideProgressBar: false,

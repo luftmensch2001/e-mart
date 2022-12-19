@@ -127,11 +127,10 @@ const AddProduct = () => {
                     theme: "light",
                 });
                 setAddSuccess(true);
-                setIsLoaded(true);
             })
             .catch((err) => {
                 if (err.response.data.message === "Missing information") {
-                    toast.warn("Vui lòng nhập đầy đủ thông tin!", {
+                    toast.info("Vui lòng nhập đầy đủ thông tin!", {
                         position: "bottom-right",
                         autoClose: 5000,
                         hideProgressBar: false,
@@ -152,7 +151,8 @@ const AddProduct = () => {
                         progress: undefined,
                         theme: "light",
                     });
-            });
+            })
+            .finally(() => setIsLoaded(true));
     };
 
     const UpLoadImages = (createFunc) => {
@@ -199,7 +199,33 @@ const AddProduct = () => {
 
     const AddProductOnClick = () => {
         if (!mainImage) {
-            toast.warn("Vui lòng thêm hình ảnh cho sản phẩm!", {
+            toast.info("Vui lòng thêm hình ảnh cho sản phẩm!", {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+            return;
+        }
+        if (!productName || !productPrice || !productDescription) {
+            toast.info("Vui lòng nhập đầy đủ thông tin!", {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+            return;
+        }
+        if (sale && !productSalePrice) {
+            toast.info("Vui lòng nhập đầy đủ thông tin!", {
                 position: "bottom-right",
                 autoClose: 5000,
                 hideProgressBar: false,

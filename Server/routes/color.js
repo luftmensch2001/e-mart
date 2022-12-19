@@ -58,7 +58,7 @@ router.post("/create", async (req, res) => {
 // @access Public
 router.delete("/", async (req, res) => {
     try {
-        const colors = await Color.find({ productId: req.productId });
+        const colors = await Color.find({ productId: req.query.productId });
         const deleteColor = await colors.findAndDelete(colors);
         if (!deleteColor)
             res.status(500).json({

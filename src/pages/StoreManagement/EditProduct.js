@@ -146,18 +146,13 @@ const EditProduct = () => {
             });
             return;
         }
-        const arr = [];
-        for (let i = 0; i < event.target.files.length; i++) {
-            arr.push(URL.createObjectURL(event.target.files[i]));
-        }
-        setOtherImage([...otherImage, ...arr]);
+        setOtherImage([...otherImage, ...event.target.files]);
     };
 
     const createFunc = () => {
-        const accountID = localStorage.getItem("accountID");
         const saleValue = productSalePrice ? productSalePrice : 0;
         let formData = new FormData();
-        formData.append("accountId", accountID);
+        formData.append("productId", productID);
         formData.append("nameProduct", productName);
         formData.append("price", productPrice);
         formData.append("describe", productDescription);
@@ -168,14 +163,14 @@ const EditProduct = () => {
         imageURLs.forEach((item) => formData.append("imageURLs[]", item));
 
         axios
-            .post("http://localhost:5000/api/products/create", formData, {
+            .put("http://localhost:5000/api/products/update", formData, {
                 headers: {
                     "content-type": "multipart/form-data",
                 },
             })
             .then((res) => {
-                UploadColor(res.data.productID);
-                toast.success("Thêm sản phẩm thành công", {
+                // UploadColor(res.data.productID);
+                toast.success("Cập nhật thông tin thành công", {
                     position: "bottom-right",
                     autoClose: 5000,
                     hideProgressBar: false,
@@ -189,62 +184,72 @@ const EditProduct = () => {
                 setIsLoaded(true);
             })
             .catch((err) => {
-                if (err.response.data.message === "Missing information") {
-                    toast.warn("Vui lòng nhập đầy đủ thông tin!", {
-                        position: "bottom-right",
-                        autoClose: 5000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "light",
-                    });
-                } else
-                    toast.error("Lỗi kết nối!", {
-                        position: "bottom-right",
-                        autoClose: 5000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "light",
-                    });
+                console.log("err: ", err);
+                toast.error("Lỗi kết nối!", {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
             });
     };
 
     const UpLoadImages = (createFunc) => {
         urls = [];
         // Main Image
-        if (!mainImage) return;
-        const imageRef = ref(storage, `images/${mainImage.name + v4()}`);
-        uploadBytes(imageRef, mainImage)
-            .then(() => {
-                getDownloadURL(imageRef).then((url) => {
-                    // urls.push(url);
-                    mainImageURL = url;
-                    currentImageCount++;
-                    if (currentImageCount === imageCount) createFunc();
-                });
-            })
-            .catch((err) => console.log(err));
-        // Other Images
-        otherImage.forEach((item) => {
-            const imageRef = ref(storage, `images/${item.name + v4()}`);
-            uploadBytes(imageRef, item)
+        if (typeof mainImage !== "string") {
+            const imageRef = ref(storage, `images/${mainImage.name + v4()}`);
+            uploadBytes(imageRef, mainImage)
                 .then(() => {
                     getDownloadURL(imageRef).then((url) => {
-                        urls.push(url);
+                        // urls.push(url);
+                        mainImageURL = url;
                         currentImageCount++;
                         if (currentImageCount === imageCount) createFunc();
                     });
                 })
                 .catch((err) => console.log(err));
+        } else {
+            mainImageURL = mainImage;
+            currentImageCount++;
+            if (currentImageCount === imageCount) createFunc();
+        }
+        // Other Images
+        otherImage.forEach((item) => {
+            if (typeof item === "string") {
+                // is url
+                urls.push(item);
+                currentImageCount++;
+                if (currentImageCount === imageCount) createFunc();
+            } else {
+                // is not url
+                const imageRef = ref(storage, `images/${item.name + v4()}`);
+                uploadBytes(imageRef, item)
+                    .then(() => {
+                        getDownloadURL(imageRef).then((url) => {
+                            urls.push(url);
+                            currentImageCount++;
+                            if (currentImageCount === imageCount) createFunc();
+                        });
+                    })
+                    .catch((err) => console.log(err));
+            }
         });
     };
 
     const UploadColor = (productID) => {
+        console.log("productID: ", productID);
+        axios
+            .delete("http://localhost:5000/api/colors", {
+                productId: productID,
+            })
+            .then((res) => console.log(res))
+            .catch((err) => console.log(err));
+
         types.forEach((item) => {
             axios
                 .post("http://localhost:5000/api/colors/create", {
@@ -257,6 +262,7 @@ const EditProduct = () => {
     };
 
     const AddProductOnClick = () => {
+        console.log("mainImage: ", mainImage);
         if (!mainImage) {
             toast.warn("Vui lòng thêm hình ảnh cho sản phẩm!", {
                 position: "bottom-right",
@@ -273,6 +279,8 @@ const EditProduct = () => {
         window.scrollTo(0, 0);
         setIsLoaded(false);
         imageCount = otherImage.length + 1;
+        console.log("imageCount: ", imageCount);
+        UploadColor(productID);
         UpLoadImages(createFunc);
     };
     if (!foundProduct) return <NotFound />;
@@ -371,7 +379,7 @@ const EditProduct = () => {
                                         cursor: "pointer",
                                     }}
                                     checked={sale}
-                                    onClick={() => {
+                                    onChange={() => {
                                         setProductSalePrice("");
                                         setSale(!sale);
                                     }}
@@ -456,7 +464,11 @@ const EditProduct = () => {
                             <div className="image-container">
                                 {mainImage ? (
                                     <img
-                                        src={mainImage}
+                                        src={
+                                            typeof mainImage === "string"
+                                                ? mainImage
+                                                : URL.createObjectURL(mainImage)
+                                        }
                                         className="main-image"
                                         alt="Chưa có ảnh nào"
                                     />
@@ -477,11 +489,7 @@ const EditProduct = () => {
                                     type="file"
                                     name="myImage"
                                     onChange={(event) => {
-                                        setMainImage(
-                                            URL.createObjectURL(
-                                                event.target.files[0]
-                                            )
-                                        );
+                                        setMainImage(event.target.files[0]);
                                     }}
                                 />
                             </div>
@@ -493,7 +501,13 @@ const EditProduct = () => {
                                     <div className="other-image-container">
                                         {otherImage.map((item) => (
                                             <img
-                                                src={item}
+                                                src={
+                                                    typeof item === "string"
+                                                        ? item
+                                                        : URL.createObjectURL(
+                                                              item
+                                                          )
+                                                }
                                                 className="other-image"
                                                 alt="Chưa có ảnh nào"
                                             />

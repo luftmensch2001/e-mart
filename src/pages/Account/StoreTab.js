@@ -12,16 +12,15 @@ import { Link } from "react-router-dom";
 import Loading from "../../components/Loading";
 import { toast } from "react-toastify";
 
-import productImage from "../../assets/images/products/5.jpg";
-import productImage2 from "../../assets/images/products/4.jpg";
-import productImage3 from "../../assets/images/products/6.jpg";
-import productImage4 from "../../assets/images/products/3.jpg";
 import starImg from "../../assets/images/reviews/4.png";
 import ThousandSeparator from "../../components/ThousandSeparator";
 import axios from "axios";
+import ConfirmDialog from "../../components/ConfirmDialog";
 
 function Items({ currentItems, refetchFunction }) {
     const [searchValue, setSearchValue] = useState("");
+    const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+    const [idDelete, setIdDelete] = useState("");
 
     function SearchInputOnChange(event) {
         setSearchValue(event.target.value);
@@ -128,13 +127,25 @@ function Items({ currentItems, refetchFunction }) {
                                         </button>
                                     </Link>
                                     <button
-                                        onClick={() => DeleteProduct(item._id)}
+                                        onClick={() => {
+                                            setShowDeleteDialog(true);
+                                            setIdDelete(item._id);
+                                        }}
                                     >
                                         <AiOutlineDelete className="icon" />
                                     </button>
                                 </div>
                             </div>
                         ))}
+                    {showDeleteDialog && (
+                        <ConfirmDialog
+                            message="Bạn có chắc chắn muốn xoá sản phẩm này ?"
+                            yesLabel="Xoá"
+                            noLabel="Huỷ"
+                            yesFunction={() => DeleteProduct(idDelete)}
+                            noFunction={() => setShowDeleteDialog(false)}
+                        />
+                    )}
                 </div>
             ) : (
                 <span className="no-product">Chưa có sản phẩm nào</span>

@@ -160,60 +160,65 @@ router.delete("/byAccountId", async (req, res) => {
 // @desc update Product
 // @access Public
 router.put("/update", async (req, res) => {
-    const {
-        productId,
-        nameProduct,
-        price,
-        salePrice,
-        describe,
-        type,
-        countSold,
-        countAvailability,
-        countStar,
-    } = req.body;
-
     try {
-        let updateProduct = new Product({
-            _id: productId,
-            nameProduct,
-            price,
-            salePrice,
-            describe,
-            type,
-            countSold,
-            countAvailability,
-            countStar,
-        });
-        const product = Product.findOneAndUpdate(
-            { _id: productId },
-            {
-                nameProduct: nameProduct,
+        uploadMultipartForm(req, res, function (err) {
+            const {
+                productId,
+                nameProduct,
                 price,
                 salePrice,
                 describe,
                 type,
                 countSold,
+                imageURLs,
                 countAvailability,
                 countStar,
-            },
-            { new: true },
-            function (error, productt) {
-                console.log(productt);
-                if (!productt) {
-                    res.status(400).json({
-                        success: false,
-                        message: "product not found",
-                    });
-                } else {
-                    res.status(200).json({
-                        success: true,
-                        message: " Updated product",
-                        productt,
-                    });
+            } = req.body;
+
+            let updateProduct = new Product({
+                _id: productId,
+                nameProduct,
+                price,
+                salePrice,
+                describe,
+                type,
+                imageURLs,
+                countSold,
+                countAvailability,
+                countStar,
+            });
+            const product = Product.findOneAndUpdate(
+                { _id: productId },
+                {
+                    nameProduct: nameProduct,
+                    price: price,
+                    salePrice: salePrice,
+                    describe: describe,
+                    imageURLs: imageURLs,
+                    type: type,
+                    countSold: countSold,
+                    countAvailability: countAvailability,
+                    countStar: countStar,
+                },
+                { new: true },
+                function (error, productt) {
+                    console.log(productt);
+                    if (!productt) {
+                        res.status(400).json({
+                            success: false,
+                            message: "product not found",
+                        });
+                    } else {
+                        res.status(200).json({
+                            success: true,
+                            message: " Updated product",
+                            productt,
+                        });
+                    }
                 }
-            }
-        );
-        // All Good
+            );
+            // All Good
+        });
     } catch (error) {
         console.log(error);
         res.status(500).json({

@@ -235,3 +235,9 @@
     height: 18px;
     margin-right: 8px;
 }
+
+.AddProduct .save-button {
+    background-color: rgb(91, 182, 244);
+    border-radius: 12px;
+    padding: 28px 18px;
+}

@@ -1,5 +1,5 @@
 import "./App.css";
-import { React, useState } from "react";
+import { React, useEffect, useState } from "react";
 import Home from "./pages/Home/Home";
 import Login from "./pages/LoginRegister/Login";
 import Register from "./pages/LoginRegister/Register";
@@ -19,7 +19,7 @@ import ProductDetail from "./pages/Product/ProductDetail";
 import AddProduct from "./pages/StoreManagement/AddProduct";
 import Voucher from "./pages/StoreManagement/Voucher";
 import ProductList from "./pages/Product/ProductList";
-import Loading from "./components/Loading";
+import EditProduct from "./pages/StoreManagement/EditProduct";
 
 function App() {
     const location = useLocation().pathname;
@@ -35,8 +35,19 @@ function App() {
                 <Route path="/wishlist" element={<Wishlist />} />
                 <Route path="/cart" element={<Cart />} />
                 <Route path="/checkout" element={<Checkout />} />
-                <Route path="/product" element={<ProductDetail />} />
+                <Route path="/product">
+                    <Route
+                        path="/product/:productId"
+                        element={<ProductDetail />}
+                    />
+                </Route>
                 <Route path="/add-product" element={<AddProduct />} />
+                <Route path="/edit-product">
+                    <Route
+                        path="/edit-product/:productId"
+                        element={<EditProduct />}
+                    />
+                </Route>
                 <Route path="/voucher" element={<Voucher />} />
                 <Route path="/products" element={<ProductList />} />
                 <Route path="/account" element={<Account tabIndex={1} />}>

@@ -157,16 +157,21 @@
     cursor: pointer;
     transition: 0.2s;
 }
-
-.StoreTab .product-bottom-buttons button:first-child {
-    color: rgb(91, 182, 244);
-    border-radius: 0 16px 0 0;
+.StoreTab .product-bottom-buttons .edit-link {
+    width: 30px;
+    height: 50%;
 }
 
-.StoreTab .product-bottom-buttons button:first-child:hover {
-    cursor: pointer;
-    background-color: rgb(91, 182, 244);
-    color: #fff;
+.StoreTab .product-bottom-buttons .edit-button {
+    color: rgb(91, 182, 244) !important;
+    height: 100%;
+    border-radius: 0 16px 0 0 !important;
+}
+
+.StoreTab .product-bottom-buttons .edit-button:hover {
+    cursor: pointer !important;
+    background-color: rgb(91, 182, 244) !important;
+    color: #fff !important;
 }
 
 .StoreTab .product-bottom-buttons button:last-child {
@@ -179,11 +184,13 @@
     color: #fff;
 }
 
-.StoreTab {
-}
-
-.StoreTab {
-}
-
-.StoreTab {
+.StoreTab .no-product {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--text-color-primary);
+    display: block;
+    width: 100%;
+    height: 400px;
+    text-align: center;
+    line-height: 400px;
 }

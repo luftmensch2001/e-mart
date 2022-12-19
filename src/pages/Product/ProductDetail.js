@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./ProductDetail.css";
 import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
 import ReactPaginate from "react-paginate";
 import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
 import { AiFillHeart, AiOutlineShoppingCart } from "react-icons/ai";
+import axios from "axios";
 
 import img1 from "../../assets/images/products/4.jpg";
 import img2 from "../../assets/images/products/5.jpg";
@@ -14,6 +15,9 @@ import img3 from "../../assets/images/products/6.jpg";
 import stars4 from "../../assets/images/reviews/4.png";
 import stars5 from "../../assets/images/reviews/5.png";
 import avatar from "../../assets/images/avatar.png";
+import Loading from "../../components/Loading";
+import ThousandSeparator from "../../components/ThousandSeparator";
+import NotFound from "../../components/NotFound";
 
 const data = {
     id: "id001",
@@ -70,6 +74,43 @@ const ProductDetail = () => {
     const [quantity, setQuantity] = useState(1);
     const [isFavorite, setIsFavorite] = useState(data.isFavorite);
     const [reviewData, setReviewData] = useState(reviews);
+    const [isLoaded, setIsLoaded] = useState(false);
+    const [productData, setProductData] = useState();
+    const [typeData, setTypeData] = useState([]);
+    const productID = useParams().productId;
+    const [foundProduct, setFoundProduct] = useState(true);
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+        let counter = 0;
+        setIsLoaded(false);
+        // Get product data
+        axios
+            .get("http://localhost:5000/api/products/byProductId", {
+                params: {
+                    productId: productID,
+                },
+            })
+            .then((res) => {
+                setProductData(res.data.product);
+                counter++;
+                if (counter === 2) setIsLoaded(true);
+            })
+            .catch(() => setFoundProduct(false));
+        // Get type data
+        axios
+            .get("http://localhost:5000/api/colors", {
+                params: {
+                    productId: productID,
+                },
+            })
+            .then((res) => {
+                setTypeData(res.data.colors);
+                counter++;
+                if (counter === 2) setIsLoaded(true);
+            })
+            .catch((err) => console.log(err));
+    }, []);
 
     const UpQuantityOnClick = () => {
         setQuantity(quantity + 1);
@@ -97,200 +138,242 @@ const ProductDetail = () => {
         if (event.target.value !== "" && event.target.value < 1) return;
         setQuantity(event.target.value * 1);
     };
-    return (
-        <div className="ProductDetail content">
-            <div className="d-product-overview">
-                <div className="d-product-images">
-                    <Carousel thumbWidth="min(100px, 18%)" showArrows={false}>
-                        <div>
-                            <img src={img1} alt="" />
-                        </div>
-                        <div>
-                            <img src={img2} alt="" />
-                        </div>
-                        <div>
-                            <img src={img3} alt="" />
-                        </div>
-                        <div>
-                            <img src={img1} alt="" />
-                        </div>
-                        <div>
-                            <img src={img2} alt="" />
-                        </div>
-                    </Carousel>
-                </div>
-                <div className="d-product-info">
-                    <span className="d-product-catalog">{data.catalog}</span>
-                    <span className="d-product-name">{data.name}</span>
-                    <div className="d-product-review-overview">
-                        <img
-                            src={data.starsImage}
-                            className="d-product-star-img"
-                            alt=""
-                        />
-                        <span>({data.averageStars})</span>
-                        <span>{data.reviewCount} lượt đánh giá</span>
-                    </div>
-                    <div className="d-product-prices">
-                        <span className="d-product-current-price">
-                            {data.price} đ
-                        </span>
-                        <span className="d-product-old-price">
-                            {data.oldPrice} đ
-                        </span>
-                    </div>
-                    <div className="d-product-classify">
-                        <div className="d-product-quantity-wrapper">
-                            <span>Số lượng:</span>
-                            <input
-                                type="number"
-                                value={quantity}
-                                onChange={QuantityInputOnChange}
-                            />
-                            <button
-                                className="up-quantity-button"
-                                onClick={UpQuantityOnClick}
-                            >
-                                <IoIosArrowUp className="quantity-icon" />
-                            </button>
-                            <button
-                                className="down-quantity-button"
-                                onClick={DownQuantityOnClick}
-                            >
-                                <IoIosArrowDown className="quantity-icon" />
-                            </button>
-                        </div>
-                        <div className="d-product-type-wrapper">
-                            <span>Phân loại hàng:</span>
-                            <select>
-                                <option>Silver</option>
-                                <option>Gold</option>
-                                <option>Space Black</option>
-                                <option>Deep Purple</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div className="d-product-buy-wrapper">
-                        <div className="add-to-wishlist-wrapper">
-                            <input
-                                type="checkbox"
-                                checked={isFavorite}
-                                id="favorite"
-                                name="favorite-checkbox"
-                                value="favorite-button"
-                                className="atw-input"
-                            />
-                            <label
-                                for="favorite"
-                                className="container"
-                                onClick={() => setIsFavorite(!isFavorite)}
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    style={{
-                                        width: "24",
-                                        height: "24",
-                                        viewBox: "0 0 24 24",
-                                        fill: "none",
-                                        stroke: "currentColor",
-                                        strokeWidth: "2",
-                                        strokeLinecap: "round",
-                                        strokeLinejoin: "round",
-                                    }}
-                                    className="feather feather-heart"
-                                >
-                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                                </svg>
-                                <div className="action">
-                                    <span className="option-1">Yêu thích</span>
-                                    <span className="option-2">Đã thích</span>
+
+    if (!foundProduct) return <NotFound />;
+
+    if (isLoaded)
+        return (
+            <div className="ProductDetail content">
+                <div className="d-product-overview">
+                    <div className="d-product-images">
+                        <Carousel
+                            thumbWidth="min(100px, 18%)"
+                            showArrows={false}
+                        >
+                            {productData?.imageURLs.map((item) => (
+                                <div>
+                                    <img src={item} alt="" />
                                 </div>
+                            ))}
+                        </Carousel>
+                    </div>
+                    <div className="d-product-info">
+                        <span className="d-product-catalog">
+                            {productData?.type}
+                        </span>
+                        <span className="d-product-name">
+                            {productData?.nameProduct}
+                        </span>
+                        <div className="d-product-review-overview">
+                            <img
+                                src={data.starsImage}
+                                className="d-product-star-img"
+                                alt=""
+                            />
+                            <span>({data.averageStars})</span>
+                            <span>{data.reviewCount} lượt đánh giá</span>
+                        </div>
+                        <div className="d-product-prices">
+                            <span className="d-product-current-price">
+                                {ThousandSeparator(productData?.price)} đ
+                            </span>
+                            <span className="d-product-old-price">
+                                {productData?.salePrice > 0
+                                    ? ThousandSeparator(productData.salePrice) +
+                                      " đ"
+                                    : ""}{" "}
+                            </span>
+                        </div>
+                        <div className="d-product-classify">
+                            <div className="d-product-quantity-wrapper">
+                                <span>Số lượng:</span>
+                                <input
+                                    type="number"
+                                    value={quantity}
+                                    onChange={QuantityInputOnChange}
+                                />
+                                <button
+                                    className="up-quantity-button"
+                                    onClick={UpQuantityOnClick}
+                                >
+                                    <IoIosArrowUp className="quantity-icon" />
+                                </button>
+                                <button
+                                    className="down-quantity-button"
+                                    onClick={DownQuantityOnClick}
+                                >
+                                    <IoIosArrowDown className="quantity-icon" />
+                                </button>
+                            </div>
+                            <div className="d-product-type-wrapper">
+                                <span>Phân loại hàng:</span>
+                                <select>
+                                    {/* <option>Silver</option>
+                                    <option>Gold</option>
+                                    <option>Space Black</option>
+                                    <option>Deep Purple</option> */}
+                                    {typeData?.map((item) => (
+                                        <option>{item.name}</option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
+                        <div className="d-product-buy-wrapper">
+                            <div className="add-to-wishlist-wrapper">
+                                <input
+                                    type="checkbox"
+                                    checked={isFavorite}
+                                    id="favorite"
+                                    name="favorite-checkbox"
+                                    value="favorite-button"
+                                    className="atw-input"
+                                />
+                                <label
+                                    for="favorite"
+                                    className="container"
+                                    onClick={() => setIsFavorite(!isFavorite)}
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        style={{
+                                            width: "24",
+                                            height: "24",
+                                            viewBox: "0 0 24 24",
+                                            fill: "none",
+                                            stroke: "currentColor",
+                                            strokeWidth: "2",
+                                            strokeLinecap: "round",
+                                            strokeLinejoin: "round",
+                                        }}
+                                        className="feather feather-heart"
+                                    >
+                                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                                    </svg>
+                                    <div className="action">
+                                        <span className="option-1">
+                                            Yêu thích
+                                        </span>
+                                        <span className="option-2">
+                                            Đã thích
+                                        </span>
+                                    </div>
+                                </label>
+                            </div>
+                            <Link to="/checkout">
+                                <button className="buy-now-button primary-button">
+                                    Mua ngay
+                                </button>
+                            </Link>
+                            <button className="add-to-cart-button primary-button">
+                                <AiOutlineShoppingCart className="icon" />
+                                Thêm vào Giỏ hàng
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div className="d-product-description-wrapper">
+                    <span className="d-product-title">Mô tả sản phẩm</span>
+                    <p className="d-product-description">
+                        {productData.describe}
+                    </p>
+                </div>
+                <div className="d-product-review-wrapper">
+                    <span className="d-product-title">Đánh giá</span>
+                    <div className="review-left">
+                        <span className="review-title">
+                            Đánh giá của khách hàng
+                        </span>
+                        {reviewData.length > 0 && (
+                            <PaginatedItems
+                                items={reviewData}
+                                itemsPerPage={5}
+                            />
+                        )}
+                        {reviewData.length === 0 && <NoReviewYet />}
+                    </div>
+                    <div className="review-right">
+                        <span className="review-title">Gửi đánh giá</span>
+                        <div class="rate">
+                            <input
+                                type="radio"
+                                id="star5"
+                                name="rate"
+                                value="5"
+                            />
+                            <label for="star5" title="text">
+                                5 stars
+                            </label>
+                            <input
+                                type="radio"
+                                id="star4"
+                                name="rate"
+                                value="4"
+                            />
+                            <label for="star4" title="text">
+                                4 stars
+                            </label>
+                            <input
+                                type="radio"
+                                id="star3"
+                                name="rate"
+                                value="3"
+                            />
+                            <label for="star3" title="text">
+                                3 stars
+                            </label>
+                            <input
+                                type="radio"
+                                id="star2"
+                                name="rate"
+                                value="2"
+                            />
+                            <label for="star2" title="text">
+                                2 stars
+                            </label>
+                            <input
+                                type="radio"
+                                id="star1"
+                                name="rate"
+                                value="1"
+                            />
+                            <label for="star1" title="text">
+                                1 star
                             </label>
                         </div>
-                        <Link to="/checkout">
-                            <button className="buy-now-button primary-button">
-                                Mua ngay
-                            </button>
-                        </Link>
-                        <button className="add-to-cart-button primary-button">
-                            <AiOutlineShoppingCart className="icon" />
-                            Thêm vào Giỏ hàng
+                        <textarea placeholder="Đánh giá về sản phẩm" />
+                        <button className="send-review-button">
+                            <div class="svg-wrapper-1">
+                                <div class="svg-wrapper">
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        style={{
+                                            viewBox: "0 0 24 24",
+                                            width: "24",
+                                            height: "24",
+                                        }}
+                                    >
+                                        <path
+                                            d="M0 0h24v24H0z"
+                                            style={{
+                                                fill: "none",
+                                            }}
+                                        ></path>
+                                        <path
+                                            d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z"
+                                            style={{
+                                                fill: "currentColor",
+                                            }}
+                                        ></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <span>Gửi</span>
                         </button>
                     </div>
                 </div>
             </div>
-            <div className="d-product-description-wrapper">
-                <span className="d-product-title">Mô tả sản phẩm</span>
-                <p className="d-product-description">{data.description}</p>
-            </div>
-            <div className="d-product-review-wrapper">
-                <span className="d-product-title">Đánh giá</span>
-                <div className="review-left">
-                    <span className="review-title">
-                        Đánh giá của khách hàng
-                    </span>
-                    {reviewData.length > 0 && (
-                        <PaginatedItems items={reviewData} itemsPerPage={5} />
-                    )}
-                    {reviewData.length === 0 && <NoReviewYet />}
-                </div>
-                <div className="review-right">
-                    <span className="review-title">Gửi đánh giá</span>
-                    <div class="rate">
-                        <input type="radio" id="star5" name="rate" value="5" />
-                        <label for="star5" title="text">
-                            5 stars
-                        </label>
-                        <input type="radio" id="star4" name="rate" value="4" />
-                        <label for="star4" title="text">
-                            4 stars
-                        </label>
-                        <input type="radio" id="star3" name="rate" value="3" />
-                        <label for="star3" title="text">
-                            3 stars
-                        </label>
-                        <input type="radio" id="star2" name="rate" value="2" />
-                        <label for="star2" title="text">
-                            2 stars
-                        </label>
-                        <input type="radio" id="star1" name="rate" value="1" />
-                        <label for="star1" title="text">
-                            1 star
-                        </label>
-                    </div>
-                    <textarea placeholder="Đánh giá về sản phẩm" />
-                    <button className="send-review-button">
-                        <div class="svg-wrapper-1">
-                            <div class="svg-wrapper">
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    style={{
-                                        viewBox: "0 0 24 24",
-                                        width: "24",
-                                        height: "24",
-                                    }}
-                                >
-                                    <path
-                                        d="M0 0h24v24H0z"
-                                        style={{
-                                            fill: "none",
-                                        }}
-                                    ></path>
-                                    <path
-                                        d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z"
-                                        style={{
-                                            fill: "currentColor",
-                                        }}
-                                    ></path>
-                                </svg>
-                            </div>
-                        </div>
-                        <span>Gửi</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    );
+        );
+    else return <Loading />;
 };
 
 function Items({ currentItems }) {

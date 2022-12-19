@@ -35,7 +35,7 @@ html {
 }
 
 .green-text {
-    color: var(--primary-color);
+    color: var(--primary-color) !important;
     font-weight: 700;
 }
 

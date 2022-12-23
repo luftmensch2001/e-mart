@@ -1,0 +1,15 @@
+.OrderDetail .checkout-container .button-wrapper {
+    margin-top: 60px;
+    display: flex;
+    justify-content: center;
+}
+
+.OrderDetail .checkout-container .button-wrapper button {
+    border-radius: 8px;
+    padding: 12px 24px;
+}
+
+.OrderDetail .checkout-container .button-wrapper button:last-child {
+    margin-left: 48px;
+    background-color: rgb(253, 68, 68);
+}

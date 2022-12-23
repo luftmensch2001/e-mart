@@ -20,6 +20,7 @@ import AddProduct from "./pages/StoreManagement/AddProduct";
 import Voucher from "./pages/StoreManagement/Voucher";
 import ProductList from "./pages/Product/ProductList";
 import EditProduct from "./pages/StoreManagement/EditProduct";
+import OrderDetail from "./pages/Order/OrderDetail";
 
 function App() {
     const location = useLocation().pathname;
@@ -35,6 +36,7 @@ function App() {
                 <Route path="/wishlist" element={<Wishlist />} />
                 <Route path="/cart" element={<Cart />} />
                 <Route path="/checkout" element={<Checkout />} />
+                <Route path="/order" element={<OrderDetail />} />
                 <Route path="/product">
                     <Route
                         path="/product/:productId"

@@ -6,6 +6,9 @@ import StatusLabel from "../../components/StatusLabel";
 import { AiOutlineSearch } from "react-icons/ai";
 import productImage from "../../assets/images/products/5.jpg";
 import productImage2 from "../../assets/images/products/product-290274-160922-071637-600x600.jpg";
+import iphone from "../../assets/ExampleProduct/iPhone/1.png";
+import sach from "../../assets/ExampleProduct/sach/3.jpg";
+import giay from "../../assets/ExampleProduct/giay/1.jpg";
 
 let day1 = new Date(2022, 10, 13);
 let day2 = new Date(2022, 10, 8);
@@ -17,33 +20,33 @@ let dataRaw = [
     {
         orderDate: day1,
         productName: "Bình Giữ Nhiệt Lock&Lock 450ML",
-        productImg: productImage,
-        count: 3,
-        total: 465000,
+        productImg: productImage2,
+        count: 1,
+        total: 165000,
         status: 1,
     },
     {
         orderDate: day2,
         productName: "iPhone 14 Pro Max 1TB",
-        productImg: productImage2,
-        count: 3,
-        total: 465000,
+        productImg: iphone,
+        count: 2,
+        total: 365000,
         status: 2,
     },
     {
         orderDate: day3,
-        productName: "Bình Giữ Nhiệt Lock&Lock 450ML",
-        productImg: productImage,
+        productName: "Sách Dám mơ lớn, đừng phí hoài tuổi trẻ - Lư Tư Hạo",
+        productImg: sach,
         count: 3,
         total: 465000,
-        status: 2,
+        status: 3,
     },
     {
         orderDate: day4,
-        productName: "Áo Khoác Blazer Kiểu Dáng Hàn Quốc",
-        productImg: productImage2,
+        productName: "Giày Da Nam Cao cấp",
+        productImg: giay,
         count: 3,
-        total: 465000,
+        total: 565000,
         status: 4,
     },
     {

@@ -2,47 +2,43 @@ import { React, useState, useEffect } from "react";
 import "./Wishlist.css";
 import ReactPaginate from "react-paginate";
 import WishlistProduct from "./WishlistProduct";
-import productImage from "../../assets/images/products/4.jpg";
 import { AiOutlineSearch } from "react-icons/ai";
 import { BsArrowLeft } from "react-icons/bs";
 import { Link } from "react-router-dom";
 
-const products = [
+import pi1 from "../../assets/ExampleProduct/iPhone/1.png";
+import pi2 from "../../assets/ExampleProduct/sach/2.jpg";
+import pi3 from "../../assets/ExampleProduct/giay/1.jpg";
+import pi4 from "../../assets/ExampleProduct/dongho/1.jpeg";
+
+let products = [
     {
-        image: productImage,
-        name: "Nước hoa Pháp cao cấp 100ML",
-        type: "Màu xanh",
-        price: 450000,
+        image: pi1,
+        name: "iPhone 14 Pro Max",
+        type: "Space Black",
+        quantity: 1,
+        price: 31990000,
     },
     {
-        image: productImage,
-        name: "Nước hoa Pháp cao cấp 200ML",
-        type: "Màu xanh",
-        price: 450000,
+        image: pi2,
+        name: "Sách Dám mơ lớn, đừng hoài phí tuổi trẻ - Lư Tư Hạo",
+        type: "Bìa cứng",
+        quantity: 3,
+        price: 96000,
     },
     {
-        image: productImage,
-        name: "Nước hoa Pháp cao cấp 100ML",
-        type: "Màu xanh",
-        price: 450000,
+        image: pi3,
+        name: "Giày Da Thể Thao Dành Cho Nam",
+        type: "Size 42",
+        quantity: 2,
+        price: 540000,
     },
     {
-        image: productImage,
-        name: "Nước hoa Pháp cao cấp 320ML",
+        image: pi4,
+        name: "Đồng Hồ Thông Minh Xiaomi Mi Watch",
         type: "Màu xanh",
-        price: 450000,
-    },
-    {
-        image: productImage,
-        name: "Quần Jeans Slim Fit",
-        type: "Màu xanh",
-        price: 450000,
-    },
-    {
-        image: productImage,
-        name: "Nước hoa Pháp cao cấp 100ML",
-        type: "Màu xanh",
-        price: 450000,
+        quantity: 1,
+        price: 1350000,
     },
 ];
 

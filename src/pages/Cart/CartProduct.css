@@ -1,5 +1,5 @@
 .CartProduct {
-    padding: 12px 0;
+    padding: 24px 0;
     display: flex;
     align-items: center;
     border-bottom: 1px solid lightgray;
@@ -16,9 +16,9 @@
 }
 
 .CartProduct .cart-product-img {
-    width: 80px;
-    min-width: 80px;
-    height: 100px;
+    width: 90px;
+    min-width: 90px;
+    height: 90px;
     object-fit: cover;
 }
 
@@ -27,6 +27,7 @@
     flex-direction: column;
     justify-content: space-evenly;
     height: 80px;
+    padding: 0 8px;
 }
 
 .CartProduct .cart-product-name {
@@ -34,6 +35,11 @@
     font-weight: 700;
     line-height: 20px;
     color: var(--text-color-primary);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .CartProduct .cart-product-type {

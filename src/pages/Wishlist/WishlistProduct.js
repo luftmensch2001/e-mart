@@ -2,6 +2,7 @@ import React from "react";
 import "./WishlistProduct.css";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { TbShoppingCartPlus } from "react-icons/tb";
+import ThousandSeparator from "../../components/ThousandSeparator";
 
 function WishlistProduct(props) {
     const data = props.data;
@@ -16,7 +17,9 @@ function WishlistProduct(props) {
 
             <span className="wl-product-type c2">{data.type}</span>
 
-            <span className="wl-product-price c3">{data.price} đ</span>
+            <span className="wl-product-price c3">
+                {ThousandSeparator(data.price)} đ
+            </span>
 
             <div className="wl-product-buttons c4">
                 <button className="wl-product-cart-button">

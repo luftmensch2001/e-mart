@@ -345,7 +345,7 @@ const AddVoucherModal = ({ id, voucher, closeFunction }) => {
                                 className="max-input"
                                 type="number"
                                 placeholder="Giảm tối đa"
-                                disabled={unit === unitOptions[0]}
+                                disabled={unit !== unitOptions[0]}
                             />
                         </div>
                     </div>

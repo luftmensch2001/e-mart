@@ -1,41 +1,45 @@
 import React, { useState } from "react";
 import "./Cart.css";
 import { Link } from "react-router-dom";
-import productImg from "../../assets/images/products/1.png";
 import CartProduct from "./CartProduct";
 import { HiOutlineRefresh } from "react-icons/hi";
 import { BsArrowLeft, BsCartCheck } from "react-icons/bs";
 import { FaMoneyBillWave } from "react-icons/fa";
 import AddToCart from "../../assets/images/illustrations/undraw_Add_to_cart_re_wrdo.png";
 
+import pi1 from "../../assets/ExampleProduct/iPhone/1.png";
+import pi2 from "../../assets/ExampleProduct/sach/2.jpg";
+import pi3 from "../../assets/ExampleProduct/giay/1.jpg";
+import pi4 from "../../assets/ExampleProduct/dongho/1.jpeg";
+
 let products = [
     {
-        image: productImg,
+        image: pi1,
         name: "iPhone 14 Pro Max",
-        type: "Màu xanh",
+        type: "Space Black",
         quantity: 1,
-        price: 28000000,
+        price: 31990000,
     },
     {
-        image: productImg,
-        name: "iPhone 14 Pro Max",
-        type: "Màu đỏ",
+        image: pi2,
+        name: "Sách Dám mơ lớn, đừng hoài phí tuổi trẻ - Lư Tư Hạo",
+        type: "Bìa cứng",
         quantity: 3,
-        price: 28000000,
+        price: 96000,
     },
     {
-        image: productImg,
-        name: "iPhone 14 Pro Max",
-        type: "Màu xanh",
+        image: pi3,
+        name: "Giày Da Thể Thao Dành Cho Nam",
+        type: "Size 42",
         quantity: 2,
-        price: 28000000,
+        price: 540000,
     },
     {
-        image: productImg,
-        name: "iPhone 14 Pro Max",
-        type: "Màu tím",
+        image: pi4,
+        name: "Đồng Hồ Thông Minh Xiaomi Mi Watch",
+        type: "Màu xanh",
         quantity: 1,
-        price: 28000000,
+        price: 1350000,
     },
 ];
 

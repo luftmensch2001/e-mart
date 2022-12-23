@@ -3,36 +3,41 @@ import "./Checkout.css";
 import paypal from "../../assets/images/paypal.png";
 import cod from "../../assets/images/cash-on-delivery.png";
 import { BsCheckCircleFill } from "react-icons/bs";
-import productImg from "../../assets/images/products/1.png";
+
+import pi1 from "../../assets/ExampleProduct/iPhone/1.png";
+import pi2 from "../../assets/ExampleProduct/sach/2.jpg";
+import pi3 from "../../assets/ExampleProduct/giay/1.jpg";
+import pi4 from "../../assets/ExampleProduct/dongho/1.jpeg";
+import ThousandSeparator from "../../components/ThousandSeparator";
 
 let products = [
     {
-        image: productImg,
+        image: pi1,
         name: "iPhone 14 Pro Max",
-        type: "Màu xanh",
+        type: "Space Black",
         quantity: 1,
-        price: 28000000,
+        price: 31990000,
     },
     {
-        image: productImg,
-        name: "iPhone 14 Pro Max",
-        type: "Màu đỏ",
+        image: pi2,
+        name: "Sách Dám mơ lớn, đừng hoài phí tuổi trẻ - Lư Tư Hạo",
+        type: "Bìa cứng",
         quantity: 3,
-        price: 28000000,
+        price: 96000,
     },
     {
-        image: productImg,
-        name: "iPhone 14 Pro Max",
-        type: "Màu xanh",
+        image: pi3,
+        name: "Giày Da Thể Thao Dành Cho Nam",
+        type: "Size 42",
         quantity: 2,
-        price: 28000000,
+        price: 540000,
     },
     {
-        image: productImg,
-        name: "iPhone 14 Pro Max",
-        type: "Màu tím",
+        image: pi4,
+        name: "Đồng Hồ Thông Minh Xiaomi Mi Watch",
+        type: "Màu xanh",
         quantity: 1,
-        price: 28000000,
+        price: 1350000,
     },
 ];
 
@@ -188,7 +193,10 @@ const Checkout = () => {
                                     </div>
                                 </div>
                                 <span className="bill-product-total">
-                                    {item.price * item.quantity} đ
+                                    {ThousandSeparator(
+                                        item.price * item.quantity
+                                    )}{" "}
+                                    đ
                                 </span>
                             </div>
                         ))}
@@ -196,7 +204,7 @@ const Checkout = () => {
                     <div className="bill-money-container">
                         <div className="bill-row">
                             <span className="label">Tổng tiền hàng</span>
-                            <span className="value">28000000 đ</span>
+                            <span className="value">28,000,000 đ</span>
                         </div>
                         <div className="bill-row">
                             <span className="label">Phí vận chuyển</span>
@@ -204,7 +212,7 @@ const Checkout = () => {
                         </div>
                         <div className="bill-row">
                             <span className="label">Giảm giá</span>
-                            <span className="value">1200000 đ</span>
+                            <span className="value">1,200,000 đ</span>
                         </div>
                         <div className="bill-row">
                             <span className="label">Thành tiền</span>
@@ -212,7 +220,7 @@ const Checkout = () => {
                                 className="label"
                                 style={{ fontSize: "1.7rem" }}
                             >
-                                27880000 đ
+                                27,880,000 đ
                             </span>
                         </div>
                     </div>

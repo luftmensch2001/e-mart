@@ -10,7 +10,6 @@ router.get("/", (req, res) => res.send("ACCOUNT ROUTE"));
 // @route POST api/accounts/register
 // @desc Register account
 // @access Public
-
 router.post("/register", async (req, res) => {
   const { username, password, fullName, email, phoneNumber } = req.body;
 

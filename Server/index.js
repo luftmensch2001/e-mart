@@ -9,6 +9,7 @@ const imageProductRouter = require("./routes/imageProduct");
 const colorRouter = require("./routes/color");
 const productInCartRouter = require("./routes/productInCart");
 const productInCartFavorite = require("./routes/productInFavorite");
+const discountCodeRouter = require("./routes/discountCode");
 
 //const colorRouter = require("./routes/color");
 
@@ -45,6 +46,7 @@ app.use("/api/imageProducts", imageProductRouter);
 app.use("/api/colors", colorRouter);
 app.use("/api/productInCarts", productInCartRouter);
 app.use("/api/productInFavorites", productInCartFavorite);
+app.use("/api/discountCodes", discountCodeRouter);
 
 const PORT = 5000;
 

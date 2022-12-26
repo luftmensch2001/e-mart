@@ -244,23 +244,24 @@ const EditProduct = () => {
     const UploadColor = (productID) => {
         console.log("productID: ", productID);
         axios
-            .delete("http://localhost:5000/api/colors", {
+            .delete("http://localhost:5000/api/colors/byProductId", {
                 params: {
                     productId: productID,
                 },
             })
-            .then((res) => console.log(res))
+            .then((res) => {
+                console.log(res);
+                types.forEach((item) => {
+                    axios
+                        .post("http://localhost:5000/api/colors/create", {
+                            productId: productID,
+                            name: item.name,
+                        })
+                        .then((res) => console.log(res))
+                        .catch((err) => console.log(err));
+                });
+            })
             .catch((err) => console.log(err));
-
-        types.forEach((item) => {
-            axios
-                .post("http://localhost:5000/api/colors/create", {
-                    productId: productID,
-                    name: item.name,
-                })
-                .then((res) => console.log(res))
-                .catch((err) => console.log(err));
-        });
     };
 
     const AddProductOnClick = () => {

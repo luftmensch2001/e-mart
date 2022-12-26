@@ -9,9 +9,9 @@ import { Carousel } from "react-responsive-carousel";
 import { AiFillHeart, AiOutlineShoppingCart } from "react-icons/ai";
 import axios from "axios";
 
-import img1 from "../../assets/images/products/4.jpg";
-import img2 from "../../assets/images/products/5.jpg";
-import img3 from "../../assets/images/products/6.jpg";
+import stars1 from "../../assets/images/reviews/1.png";
+import stars2 from "../../assets/images/reviews/2.png";
+import stars3 from "../../assets/images/reviews/3.png";
 import stars4 from "../../assets/images/reviews/4.png";
 import stars5 from "../../assets/images/reviews/5.png";
 import avatar from "../../assets/images/avatar.png";
@@ -79,6 +79,8 @@ const ProductDetail = () => {
     const [typeData, setTypeData] = useState([]);
     const productID = useParams().productId;
     const [foundProduct, setFoundProduct] = useState(true);
+    const [reviewContent, setReviewContent] = useState("");
+    const [starVote, setStarVote] = useState(0);
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -110,6 +112,17 @@ const ProductDetail = () => {
                 if (counter === 2) setIsLoaded(true);
             })
             .catch((err) => console.log(err));
+        // Get reviews data
+        axios
+            .get("http://localhost:5000/api/evalutes", {
+                params: {
+                    productId: productID,
+                },
+            })
+            .then((res) => {
+                console.log("res review: ", res);
+            })
+            .catch((err) => console.log(err));
     }, []);
 
     const UpQuantityOnClick = () => {
@@ -137,6 +150,20 @@ const ProductDetail = () => {
         if (event.target.value === "-") return;
         if (event.target.value !== "" && event.target.value < 1) return;
         setQuantity(event.target.value * 1);
+    };
+
+    const SendReview = () => {
+        axios
+            .post("http://localhost:5000/api/evalutes/create", {
+                accountId: localStorage.getItem("accountID"),
+                productId: productID,
+                name: reviewContent,
+                star: starVote,
+            })
+            .then((res) => {
+                console.log("res create: ", res);
+            })
+            .catch((err) => console.log(err));
     };
 
     if (!foundProduct) return <NotFound />;
@@ -299,8 +326,13 @@ const ProductDetail = () => {
                                 id="star5"
                                 name="rate"
                                 value="5"
+                                checked={starVote === 5}
                             />
-                            <label for="star5" title="text">
+                            <label
+                                for="star5"
+                                title="text"
+                                onClick={() => setStarVote(5)}
+                            >
                                 5 stars
                             </label>
                             <input
@@ -308,8 +340,13 @@ const ProductDetail = () => {
                                 id="star4"
                                 name="rate"
                                 value="4"
+                                checked={starVote === 4}
                             />
-                            <label for="star4" title="text">
+                            <label
+                                for="star4"
+                                title="text"
+                                onClick={() => setStarVote(4)}
+                            >
                                 4 stars
                             </label>
                             <input
@@ -317,8 +354,13 @@ const ProductDetail = () => {
                                 id="star3"
                                 name="rate"
                                 value="3"
+                                checked={starVote === 3}
                             />
-                            <label for="star3" title="text">
+                            <label
+                                for="star3"
+                                title="text"
+                                onClick={() => setStarVote(3)}
+                            >
                                 3 stars
                             </label>
                             <input
@@ -326,8 +368,13 @@ const ProductDetail = () => {
                                 id="star2"
                                 name="rate"
                                 value="2"
+                                checked={starVote === 2}
                             />
-                            <label for="star2" title="text">
+                            <label
+                                for="star2"
+                                title="text"
+                                onClick={() => setStarVote(2)}
+                            >
                                 2 stars
                             </label>
                             <input
@@ -335,13 +382,25 @@ const ProductDetail = () => {
                                 id="star1"
                                 name="rate"
                                 value="1"
+                                checked={starVote === 1}
                             />
-                            <label for="star1" title="text">
+                            <label
+                                for="star1"
+                                title="text"
+                                onClick={() => setStarVote(1)}
+                            >
                                 1 star
                             </label>
                         </div>
-                        <textarea placeholder="Đánh giá về sản phẩm" />
-                        <button className="send-review-button">
+                        <textarea
+                            placeholder="Đánh giá về sản phẩm"
+                            value={reviewContent}
+                            onChange={(e) => setReviewContent(e.target.value)}
+                        />
+                        <button
+                            className="send-review-button"
+                            onClick={SendReview}
+                        >
                             <div class="svg-wrapper-1">
                                 <div class="svg-wrapper">
                                     <svg

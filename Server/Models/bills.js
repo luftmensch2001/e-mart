@@ -12,7 +12,7 @@ const BillsSchema = new schema({
   },
   code: {
     type: String,
-    require: false
+    require: false,
   },
   state: {
     type: String,
@@ -22,7 +22,7 @@ const BillsSchema = new schema({
     type: Long,
     require: true,
   },
-  discount: {
+  discountCodeId: {
     type: Long,
     require: true,
   },

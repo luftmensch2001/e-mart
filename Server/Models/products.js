@@ -17,7 +17,10 @@ const ProductsSchema = new schema({
   salePrice: {
     type: Number,
     require: true,
-    default: 0,
+  },
+  discountValue: {
+    type: Number,
+    require: true,
   },
   countSold: {
     type: Number,

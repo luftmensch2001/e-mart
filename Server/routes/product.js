@@ -29,11 +29,13 @@ router.post("/create", async (req, res) => {
           .status(400)
           .json({ success: false, message: "Missing information" });
 
+      const discountValue = Number(salePrice) - Number(price);
       const newProduct = new Product({
         accountId,
         nameProduct,
         price,
         salePrice,
+        discountValue,
         describe,
         type,
         imageURLs,
@@ -175,25 +177,13 @@ router.put("/update", async (req, res) => {
         countAvailability,
         countStar,
       } = req.body;
-
-      let updateProduct = new Product({
-        _id: productId,
-        nameProduct,
-        price,
-        salePrice,
-        describe,
-        type,
-        imageURLs,
-        countSold,
-        countAvailability,
-        countStar,
-      });
-      const product = Product.findOneAndUpdate(
+      Product.findOneAndUpdate(
         { _id: productId },
         {
           nameProduct: nameProduct,
           price: price,
           salePrice: salePrice,
+          discountValue: Number(salePrice - price),
           describe: describe,
           imageURLs: imageURLs,
           type: type,
@@ -220,6 +210,280 @@ router.put("/update", async (req, res) => {
       );
       // All Good
     });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: " Internal server error",
+    });
+  }
+});
+
+// @route GET api/products/populate
+// @desc Get Count Product populate
+// @access Public
+router.get("/populate", async (req, res) => {
+  const count = req.query.count;
+  try {
+    const products = await Product.find().limit(count).sort({ countSold: -1 });
+    res.json({ success: true, products });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: " Internal server error",
+    });
+  }
+});
+
+// @route GET api/products/allPopulate
+// @desc Get Count Product populate all catalog
+// @access Public
+router.get("/allPopulate", async (req, res) => {
+  const count = req.query.count;
+  try {
+    const products = await Product.find().limit(count).sort({ countSold: -1 });
+    res.json({ success: true, products });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: " Internal server error",
+    });
+  }
+});
+// @route GET api/products/populateCatalog
+// @desc Get Count Product populate
+// @access Public
+router.get("/populateCatalog", async (req, res) => {
+  const count = req.query.count;
+  const type = req.query.catalog;
+  try {
+    const products = await Product.find({ type })
+      .limit(count)
+      .sort({ countSold: -1 });
+    res.json({ success: true, products });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: " Internal server error",
+    });
+  }
+});
+
+// @route GET api/products/allNewest
+// @desc Get Count Product newest all catalog
+// @access Public
+router.get("/allNewest", async (req, res) => {
+  const count = req.query.count;
+  try {
+    const products = await Product.find().limit(count).sort({ createdAt: -1 });
+    res.json({ success: true, products });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: " Internal server error",
+    });
+  }
+});
+// @route GET api/products/newestCatalog
+// @desc Get Count Product newest
+// @access Public
+router.get("/newestCatalog", async (req, res) => {
+  const count = req.query.count;
+  const type = req.query.catalog;
+  try {
+    const products = await Product.find({ type })
+      .limit(count)
+      .sort({ createdAt: -1 });
+    res.json({ success: true, products });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: " Internal server error",
+    });
+  }
+});
+
+// @route GET api/products/allDiscount
+// @desc Get Count Product discount all catalog
+// @access Public
+router.get("/allDiscount", async (req, res) => {
+  const count = req.query.count;
+  try {
+    const products = await Product.find()
+      .limit(count)
+      .sort({ discountValue: -1 });
+    res.json({ success: true, products });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: " Internal server error",
+    });
+  }
+});
+// @route GET api/products/discountCatalog
+// @desc Get Count Product discount
+// @access Public
+router.get("/discountCatalog", async (req, res) => {
+  const count = req.query.count;
+  const type = req.query.catalog;
+  try {
+    const products = await Product.find({ type })
+      .limit(count)
+      .sort({ discountValue: -1 });
+    res.json({ success: true, products });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: " Internal server error",
+    });
+  }
+});
+
+// @route GET api/products/randomInCatalog
+// @desc Get Count Product random in Catalog
+// @access Public
+router.get("/randomInCatalog", async (req, res) => {
+  const count = req.query.count;
+  try {
+    const products = await Product.aggregate([
+      { $sample: { size: Number(count) } },
+    ]);
+    res.json({ success: true, products });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: " Internal server error",
+    });
+  }
+});
+
+// @route GET api/products/allByKeyWord
+// @desc Get All Product By key word
+// @access Public
+router.get("/allByKeyWord", async (req, res) => {
+  const keyWord = req.query.keyWord;
+  try {
+    const products = await Product.find({ nameProduct: { $regex: keyWord } });
+    res.json({ success: true, products });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: " Internal server error",
+    });
+  }
+});
+
+// @route GET api/products/catalogByKeyWord
+// @desc Get (Catalog) Product By key word
+// @access Public
+router.get("/catalogByKeyWord", async (req, res) => {
+  const keyWord = req.query.keyWord;
+  const type = req.query.type;
+  try {
+    const products = await Product.find({
+      nameProduct: { $regex: keyWord },
+      type,
+    });
+    res.json({ success: true, products });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: " Internal server error",
+    });
+  }
+});
+
+// @route GET api/products/allByKeyWordMinMax
+// @desc Get All Product By key word Min Max
+// @access Public
+router.get("/allByKeyWordMinMax", async (req, res) => {
+  const keyWord = req.query.keyWord;
+  const min = req.query.min;
+  const max = req.query.max;
+  try {
+    const products = await Product.find({
+      nameProduct: { $regex: keyWord },
+      price: { $gt: Number(min), $lt: Number(max) },
+    });
+    res.json({ success: true, products });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: " Internal server error",
+    });
+  }
+});
+// @route GET api/products/catalogByKeyWordMinMax
+// @desc Get (Catalog) Product By key word Min Max
+// @access Public
+router.get("/catalogByKeyWordMinMax", async (req, res) => {
+  const keyWord = req.query.keyWord;
+  const type = req.query.type;
+  const min = req.query.min;
+  const max = req.query.max;
+  try {
+    const products = await Product.find({
+      nameProduct: { $regex: keyWord },
+      type,
+      price: { $gt: Number(min), $lt: Number(max) },
+    });
+    res.json({ success: true, products });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: " Internal server error",
+    });
+  }
+});
+
+// @route GET api/products/allByKeyWordMinMaxStar
+// @desc Get All Product By key word Min Max Star
+// @access Public
+router.get("/allByKeyWordMinMaxStar", async (req, res) => {
+  const keyWord = req.query.keyWord;
+  const min = req.query.min;
+  const max = req.query.max;
+  try {
+    const products = await Product.find({
+      nameProduct: { $regex: keyWord },
+      countStar: { $gt: Number(min), $lt: Number(max) },
+    });
+    res.json({ success: true, products });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: " Internal server error",
+    });
+  }
+});
+// @route GET api/products/catalogByKeyWordMinMaxStar
+// @desc Get (Catalog) Product By key word Min Max Star
+// @access Public
+router.get("/catalogByKeyWordStar", async (req, res) => {
+  const keyWord = req.query.keyWord;
+  const type = req.query.type;
+  const min = req.query.min;
+  const max = req.query.max;
+  try {
+    const products = await Product.find({
+      nameProduct: { $regex: keyWord },
+      type,
+      countStar: { $gt: Number(min), $lt: Number(max) },
+    });
+    res.json({ success: true, products });
   } catch (error) {
     console.log(error);
     res.status(500).json({

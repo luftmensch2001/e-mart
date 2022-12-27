@@ -572,3 +572,114 @@
     font-weight: 600;
     color: var(--text-color-secondary);
 }
+
+.ProductDetail .OtherProduct {
+    margin-top: 50px;
+}
+
+.ProductDetail .OtherProduct .title-text {
+    font-size: 2.8rem;
+    width: 100%;
+    text-align: center;
+    display: block;
+}
+
+.ProductDetail .OtherProduct .list-products {
+    margin-top: 40px;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.ProductDetail .OtherProduct .product-item {
+    width: 100;
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    border: 1px solid lightgray;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    padding-bottom: 8px;
+}
+
+.ProductDetail .OtherProduct .product-image {
+    border-radius: 8px 8px 4px 4px;
+    width: 100%;
+    height: 250px;
+    min-height: 250px;
+    object-fit: cover;
+    border-bottom: 0.5px solid lightgray;
+}
+.ProductDetail .OtherProduct .product-category {
+    padding: 8px;
+    padding-bottom: 0;
+    font-size: 1.5rem;
+    font-weight: bold;
+    line-height: 25px;
+    color: var(--primary-color);
+}
+
+.ProductDetail .OtherProduct .product-name-wrapper {
+    padding: 4px 8px 0;
+    height: 50px;
+    display: flex;
+    align-items: center;
+}
+
+.ProductDetail .OtherProduct .product-name {
+    font-size: 1.7rem;
+    font-weight: bold;
+    line-height: 25px;
+    color: var(--text-color-primary);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ProductDetail .OtherProduct .product-star-wrapper {
+    margin-top: 8px;
+    padding-left: 6px;
+    display: flex;
+    align-items: center;
+}
+
+.ProductDetail .OtherProduct .product-star-wrapper img {
+    width: 120px;
+}
+
+.ProductDetail .OtherProduct .product-star-wrapper span {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: var(--text-color-primary);
+}
+
+.ProductDetail .OtherProduct .product-price-wrapper {
+    padding: 12px 8px;
+}
+
+.ProductDetail .OtherProduct .product-price-wrapper .price {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.ProductDetail .OtherProduct .product-price-wrapper .old-price {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text-color-secondary);
+    text-decoration: line-through;
+    margin-left: 12px;
+}
+
+.ProductDetail .OtherProduct .add-to-cart-button {
+    padding: 0 24px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 8px;
+    margin-top: 8px;
+}

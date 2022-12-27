@@ -8,6 +8,7 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import { BsCartPlus } from "react-icons/bs";
 import axios from "axios";
 
 import Loading from "../../components/Loading";
@@ -66,7 +67,7 @@ const ProductDetail = () => {
             .catch((err) => console.log(err));
         // Get reviews data
         GetReviewData();
-    }, []);
+    }, [productID]);
 
     const GetReviewData = () => {
         axios
@@ -464,6 +465,7 @@ const ProductDetail = () => {
                         </button>
                     </div>
                 </div>
+                <OtherProduct />
                 {showDeleteDialog && (
                     <ConfirmDialog
                         message="Bạn có chắc chắn muốn xoá đánh giá này ?"
@@ -568,6 +570,86 @@ function NoReviewYet() {
             </span>
         </div>
     );
+}
+
+function OtherProduct() {
+    const [otherProductData, setOtherProductData] = useState([]);
+    const [isLoaded, setIsLoaded] = useState();
+    useEffect(() => {
+        setIsLoaded(false);
+        axios
+            .get("http://localhost:5000/api/products/populateCatalog", {
+                params: {
+                    count: 8,
+                    catalog: "Sách",
+                },
+            })
+            .then((res) => {
+                // console.log("res review: ", res);
+                setOtherProductData(res.data.products);
+
+                setIsLoaded(true);
+            })
+            .catch((err) => console.log(err));
+    }, []);
+    if (isLoaded)
+        return (
+            <div className="OtherProduct">
+                <span className="title-text">
+                    Có thể bạn <span className="green-text">Quan tâm</span>
+                </span>
+                <div className="list-products">
+                    {otherProductData.map((item) => (
+                        <Link
+                            to={`/product/${item._id}`}
+                            style={{ width: "23%" }}
+                        >
+                            <div className="product-item">
+                                <img
+                                    className="product-image"
+                                    src={item.imageURLs[0]}
+                                />
+                                <span className="product-category">
+                                    {item.type}
+                                </span>
+                                <div className="product-name-wrapper">
+                                    <span className="product-name">
+                                        {item.nameProduct}
+                                    </span>
+                                </div>
+                                <div className="product-star-wrapper">
+                                    <img src={GetStarImage(item.countStar)} />
+                                    <span>({item.countStar})</span>
+                                </div>
+                                <div className="product-price-wrapper">
+                                    <span className="price">
+                                        {ThousandSeparator(item.price)} đ
+                                    </span>
+                                    {item.salePrice > 0 && (
+                                        <span className="old-price">
+                                            {ThousandSeparator(item.salePrice)}{" "}
+                                            đ
+                                        </span>
+                                    )}
+                                </div>
+
+                                <button className="add-to-cart-button primary-button">
+                                    <BsCartPlus
+                                        style={{
+                                            width: "22px",
+                                            height: "22px",
+                                            marginRight: "6px",
+                                        }}
+                                    />{" "}
+                                    Thêm vào Giỏ
+                                </button>
+                            </div>
+                        </Link>
+                    ))}
+                </div>
+            </div>
+        );
+    else return <Loading />;
 }
 
 export default ProductDetail;

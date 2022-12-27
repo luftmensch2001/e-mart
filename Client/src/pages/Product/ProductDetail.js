@@ -467,7 +467,10 @@ const ProductDetail = () => {
                         </button>
                     </div>
                 </div>
-                <OtherProduct productID={productID} />
+                <OtherProduct
+                    productID={productID}
+                    category={productData.type}
+                />
                 {showDeleteDialog && (
                     <ConfirmDialog
                         message="Bạn có chắc chắn muốn xoá đánh giá này ?"
@@ -574,7 +577,7 @@ function NoReviewYet() {
     );
 }
 
-function OtherProduct({ productID }) {
+function OtherProduct({ productID, category }) {
     const [otherProductData, setOtherProductData] = useState([]);
     const [isLoaded, setIsLoaded] = useState();
     const [widthPercent, setWidthPercent] = useState(100);
@@ -585,7 +588,7 @@ function OtherProduct({ productID }) {
             .get("http://localhost:5000/api/products/populateCatalog", {
                 params: {
                     count: 9,
-                    catalog: "Sách",
+                    catalog: category,
                 },
             })
             .then((res) => {

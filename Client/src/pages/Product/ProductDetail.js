@@ -108,6 +108,19 @@ const ProductDetail = () => {
     };
 
     const SendReview = () => {
+        if (starVote === 0) {
+            toast.warning("Bạn chưa vote sao!", {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+            return;
+        }
         axios
             .post("http://localhost:5000/api/evalutes/create", {
                 accountId: localStorage.getItem("accountID"),

@@ -7,12 +7,14 @@ import { Link, useParams } from "react-router-dom";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
 import { AiOutlineShoppingCart } from "react-icons/ai";
+import { RiDeleteBin6Line } from "react-icons/ri";
 import axios from "axios";
 
 import Loading from "../../components/Loading";
 import ThousandSeparator from "../../components/ThousandSeparator";
 import GetStarImage from "../../components/GetStarImage";
 import NotFound from "../../components/NotFound";
+import ConfirmDialog from "../../components/ConfirmDialog";
 
 const today = new Date();
 
@@ -27,6 +29,8 @@ const ProductDetail = () => {
     const [foundProduct, setFoundProduct] = useState(true);
     const [reviewContent, setReviewContent] = useState("");
     const [starVote, setStarVote] = useState(0);
+    const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+    const [evaluteID, setEvaluteID] = useState();
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -137,6 +141,39 @@ const ProductDetail = () => {
                     theme: "light",
                 });
             });
+    };
+
+    const DeleteEvalute = () => {
+        axios
+            .delete("http://localhost:5000/api/evalutes/", {
+                params: { evaluteId: evaluteID },
+            })
+            .then((res) => {
+                toast.success("Xoá đánh giá thành công!", {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+                GetReviewData();
+            })
+            .catch((err) => {
+                toast.error("Xoá không thành công!", {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+            });
+        setShowDeleteDialog(false);
     };
 
     if (!foundProduct) return <NotFound />;
@@ -287,6 +324,8 @@ const ProductDetail = () => {
                             <PaginatedItems
                                 items={reviewData}
                                 itemsPerPage={4}
+                                enableDialog={() => setShowDeleteDialog(true)}
+                                setEvaluteID={setEvaluteID}
                             />
                         )}
                         {reviewData.length === 0 && <NoReviewYet />}
@@ -408,12 +447,21 @@ const ProductDetail = () => {
                         </button>
                     </div>
                 </div>
+                {showDeleteDialog && (
+                    <ConfirmDialog
+                        message="Bạn có chắc chắn muốn xoá đánh giá này ?"
+                        yesLabel="Xoá"
+                        noLabel="Huỷ"
+                        yesFunction={() => DeleteEvalute()}
+                        noFunction={() => setShowDeleteDialog(false)}
+                    />
+                )}
             </div>
         );
     else return <Loading />;
 };
 
-function Items({ currentItems }) {
+function Items({ currentItems, enableDialog, setEvaluteID }) {
     return (
         <div className="review-list">
             {currentItems.map((item) => (
@@ -430,13 +478,26 @@ function Items({ currentItems }) {
                         <p>{item.describe}</p>
                         <img src={GetStarImage(item.star)} alt="" />
                     </div>
+
+                    {localStorage.getItem("accountID") === item.accountId && (
+                        <button className="review-delete-button">
+                            <RiDeleteBin6Line
+                                className="review-delete-icon"
+                                onClick={() => {
+                                    setEvaluteID(item._id);
+                                    console.log("item._id: ", item._id);
+                                    enableDialog();
+                                }}
+                            />
+                        </button>
+                    )}
                 </div>
             ))}
         </div>
     );
 }
 
-function PaginatedItems({ items, itemsPerPage }) {
+function PaginatedItems({ items, itemsPerPage, enableDialog, setEvaluteID }) {
     const [itemOffset, setItemOffset] = useState(0);
     const endOffset = itemOffset + itemsPerPage;
     const currentItems = items.slice(itemOffset, endOffset);
@@ -449,7 +510,11 @@ function PaginatedItems({ items, itemsPerPage }) {
 
     return (
         <>
-            <Items currentItems={currentItems} />
+            <Items
+                currentItems={currentItems}
+                enableDialog={enableDialog}
+                setEvaluteID={setEvaluteID}
+            />
             <ReactPaginate
                 breakLabel="..."
                 nextLabel=">"

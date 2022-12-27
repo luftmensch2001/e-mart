@@ -362,6 +362,7 @@
     display: flex;
     padding: 20px 0;
     border-bottom: 1px solid lightgray;
+    align-items: center;
 }
 
 .ProductDetail .review-item:last-child {
@@ -390,8 +391,27 @@
 }
 
 .ProductDetail .review-item .review-body {
-    width: 75%;
+    flex: 1;
     padding: 0 12px;
+}
+
+.ProductDetail .review-item .review-delete-button {
+    width: 40px;
+    height: 40px;
+    background-color: transparent;
+    border: none;
+    border-radius: 8px;
+}
+
+.ProductDetail .review-item .review-delete-button:hover {
+    cursor: pointer;
+    background-color: #fef2f2;
+}
+
+.ProductDetail .review-item .review-delete-icon {
+    width: 18px;
+    height: 18px;
+    color: #fd2e1b;
 }
 
 .ProductDetail .review-item .review-body span {

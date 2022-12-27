@@ -61,7 +61,7 @@ router.post("/create", async (req, res) => {
 // @desc delete evalute
 // @access Public
 router.delete("/", async (req, res) => {
-    const { evaluteId } = req.body;
+    const evaluteId = req.query.evaluteId;
     try {
         const deleteEvalute = await Evalute.findByIdAndDelete({
             _id: evaluteId,

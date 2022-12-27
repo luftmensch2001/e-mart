@@ -225,8 +225,11 @@ router.put("/update", async (req, res) => {
 // @access Public
 router.get("/populate", async (req, res) => {
   const count = req.query.count;
+  const accountId = req.query.accountId;
   try {
-    const products = await Product.find().limit(count).sort({ countSold: -1 });
+    const products = await Product.find({ accountId: { $ne: accountId } })
+      .limit(count)
+      .sort({ countSold: -1 });
     res.json({ success: true, products });
   } catch (error) {
     console.log(error);
@@ -242,8 +245,11 @@ router.get("/populate", async (req, res) => {
 // @access Public
 router.get("/allPopulate", async (req, res) => {
   const count = req.query.count;
+  const accountId = req.query.accountId;
   try {
-    const products = await Product.find().limit(count).sort({ countSold: -1 });
+    const products = await Product.find({ accountId: { $ne: accountId } })
+      .limit(count)
+      .sort({ countSold: -1 });
     res.json({ success: true, products });
   } catch (error) {
     console.log(error);
@@ -259,8 +265,9 @@ router.get("/allPopulate", async (req, res) => {
 router.get("/populateCatalog", async (req, res) => {
   const count = req.query.count;
   const type = req.query.catalog;
+  const accountId = req.query.accountId;
   try {
-    const products = await Product.find({ type })
+    const products = await Product.find({ type, accountId: { $ne: accountId } })
       .limit(count)
       .sort({ countSold: -1 });
     res.json({ success: true, products });
@@ -278,8 +285,11 @@ router.get("/populateCatalog", async (req, res) => {
 // @access Public
 router.get("/allNewest", async (req, res) => {
   const count = req.query.count;
+  const accountId = req.query.accountId;
   try {
-    const products = await Product.find().limit(count).sort({ createdAt: -1 });
+    const products = await Product.find({ accountId: { $ne: accountId } })
+      .limit(count)
+      .sort({ createdAt: -1 });
     res.json({ success: true, products });
   } catch (error) {
     console.log(error);
@@ -295,8 +305,9 @@ router.get("/allNewest", async (req, res) => {
 router.get("/newestCatalog", async (req, res) => {
   const count = req.query.count;
   const type = req.query.catalog;
+  const accountId = req.query.accountId;
   try {
-    const products = await Product.find({ type })
+    const products = await Product.find({ type, accountId: { $ne: accountId } })
       .limit(count)
       .sort({ createdAt: -1 });
     res.json({ success: true, products });
@@ -314,8 +325,9 @@ router.get("/newestCatalog", async (req, res) => {
 // @access Public
 router.get("/allDiscount", async (req, res) => {
   const count = req.query.count;
+  const accountId = req.query.accountId;
   try {
-    const products = await Product.find()
+    const products = await Product.find({ accountId: { $ne: accountId } })
       .limit(count)
       .sort({ discountValue: -1 });
     res.json({ success: true, products });
@@ -333,8 +345,9 @@ router.get("/allDiscount", async (req, res) => {
 router.get("/discountCatalog", async (req, res) => {
   const count = req.query.count;
   const type = req.query.catalog;
+  const accountId = req.query.accountId;
   try {
-    const products = await Product.find({ type })
+    const products = await Product.find({ type, accountId: { $ne: accountId } })
       .limit(count)
       .sort({ discountValue: -1 });
     res.json({ success: true, products });
@@ -352,9 +365,12 @@ router.get("/discountCatalog", async (req, res) => {
 // @access Public
 router.get("/randomInCatalog", async (req, res) => {
   const count = req.query.count;
+  const accountId = req.query.accountId;
+  const type = req.query.catalog;
   try {
     const products = await Product.aggregate([
       { $sample: { size: Number(count) } },
+      { $match: { accountId: { $ne: accountId }, type } },
     ]);
     res.json({ success: true, products });
   } catch (error) {

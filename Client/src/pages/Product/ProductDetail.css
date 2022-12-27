@@ -376,7 +376,10 @@
 }
 
 .ProductDetail .review-item .review-info img {
-    width: 60px;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
 }
 
 .ProductDetail .review-item .review-info span {

@@ -6,74 +6,20 @@ import { toast } from "react-toastify";
 import { Link, useParams } from "react-router-dom";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
-import { AiFillHeart, AiOutlineShoppingCart } from "react-icons/ai";
+import { AiOutlineShoppingCart } from "react-icons/ai";
 import axios from "axios";
 
-import stars1 from "../../assets/images/reviews/1.png";
-import stars2 from "../../assets/images/reviews/2.png";
-import stars3 from "../../assets/images/reviews/3.png";
-import stars4 from "../../assets/images/reviews/4.png";
-import stars5 from "../../assets/images/reviews/5.png";
-import avatar from "../../assets/images/avatar.png";
 import Loading from "../../components/Loading";
 import ThousandSeparator from "../../components/ThousandSeparator";
+import GetStarImage from "../../components/GetStarImage";
 import NotFound from "../../components/NotFound";
-
-const data = {
-    id: "id001",
-    name: "Apple iPhone 14 Pro Max 1TB - Chính Hãng VN/A - Bảo hành 24 tháng",
-    catalog: "Điện thoại",
-    starsImage: stars5,
-    isFavorite: false,
-    averageStars: 4.7,
-    reviewCount: 15,
-    oldPrice: 30000000,
-    price: 28000000,
-    description:
-        "iPhone 14 Pro Max VN/A là dòng sản phẩm cao cấp nhất nằm trong thế hệ iPhone 14 Series mới vừa được ra mắt cùng với nhiều nâng cấp về ngoại hình và tính năng, hứa hẹn sẽ là dòng sản phẩm đột phá trong vài năm trở lại đây của Apple. Điểm độc đáo trên thế hệ iPhone 14 Series chính là điện thoại vệ tinh hỗ trợ người dùng trong việc liên lạc bằng cách kết nối với các trạm vệ tinh xoay quanh quỹ đạo mà không cần sóng của nhà mạng. iPhone 14 Pro Max VN/A có dung lượng 4.323 mAh – thấp hơn một chút so với mức 4.352 mAh của 13 Pro Max. Ngoài ra, thiết bị được trang bị sạc nhanh với công suất 30W, cao hơn đáng kể so với mức sạc 20W cũ. iPhone 14 Pro Max VN/A hiện là chiếc flagship có trọng lượng nặng nhất trên thị trường với khối lượng 255 gram, cao hơn 15 gram so với thế hệ trước. Người dùng có tùy chọn các phiên bản dung lượng gồm 128 GB, 256 GB, 512 GB và 1TB. Thiết bị sử dụng phần khung titan thay vì thép không gỉ, mang đến một chiếc iPhone mạnh mẽ hơn, nhẹ hơn và chống trầy tốt hơn, dù làm tăng khối lượng. iPhone 14 Pro Max VN/A sử dụng bộ vi xử lý Apple A16 Bionic được xử lý trên tiến trình 4nm. Với bộ xử lý neural 16 nhân trên chip này, bên cạnh bộ xử lý màn hình hoàn toàn mới để hỗ trợ đẩy tần số quét xuống 1Hz, xử lý tính năng always-on và giúp Dynamic Island hoạt động mượt mà.Thiết bị có RAM 6GB sử dụng công nghệ LPDDR5 cải tiến về tốc độ truyền và điện năng tiêu thụ.",
-};
 
 const today = new Date();
 
-const reviews = [
-    {
-        name: "Nguyễn Văn Long",
-        avatar: avatar,
-        date: today,
-        content:
-            "Sản phẩm rất chất lượng. Camera sắc nét, chế độ đêm hoạt động rất tốt. Dung lượng pin ổn, sử dụng mượt mà không có vấn đề gì. Giao hàng nhanh.",
-        starImg: stars5,
-    },
-    {
-        name: "Lê Bảo Ngọc",
-        avatar: avatar,
-        date: today,
-        content:
-            "Sản phẩm rất chất lượng. Camera sắc nét, chế độ đêm hoạt động rất tốt. Dung lượng pin ổn, sử dụng mượt mà không có vấn đề gì. Giao hàng nhanh.",
-        starImg: stars5,
-    },
-    {
-        name: "Trần Văn Bảo",
-        avatar: avatar,
-        date: today,
-        content:
-            "Sản phẩm rất chất lượng. Camera sắc nét, chế độ đêm hoạt động rất tốt. Dung lượng pin ổn, sử dụng mượt mà không có vấn đề gì. Giao hàng nhanh.",
-        starImg: stars5,
-    },
-    {
-        name: "Nguyễn Ngọc Vy",
-        avatar: avatar,
-        date: today,
-        content:
-            "Sản phẩm rất chất lượng. Camera sắc nét, chế độ đêm hoạt động rất tốt. Dung lượng pin ổn, sử dụng mượt mà không có vấn đề gì. Giao hàng nhanh.",
-        starImg: stars5,
-    },
-];
-
 const ProductDetail = () => {
     const [quantity, setQuantity] = useState(1);
-    const [isFavorite, setIsFavorite] = useState(data.isFavorite);
-    const [reviewData, setReviewData] = useState(reviews);
+    const [isFavorite, setIsFavorite] = useState(false);
+    const [reviewData, setReviewData] = useState();
     const [isLoaded, setIsLoaded] = useState(false);
     const [productData, setProductData] = useState();
     const [typeData, setTypeData] = useState([]);
@@ -113,6 +59,10 @@ const ProductDetail = () => {
             })
             .catch((err) => console.log(err));
         // Get reviews data
+        GetReviewData();
+    }, []);
+
+    const GetReviewData = () => {
         axios
             .get("http://localhost:5000/api/evalutes", {
                 params: {
@@ -120,10 +70,11 @@ const ProductDetail = () => {
                 },
             })
             .then((res) => {
-                console.log("res review: ", res);
+                // console.log("res review: ", res);
+                setReviewData(res.data.evalutes);
             })
             .catch((err) => console.log(err));
-    }, []);
+    };
 
     const UpQuantityOnClick = () => {
         setQuantity(quantity + 1);
@@ -157,13 +108,35 @@ const ProductDetail = () => {
             .post("http://localhost:5000/api/evalutes/create", {
                 accountId: localStorage.getItem("accountID"),
                 productId: productID,
-                name: reviewContent,
+                describe: reviewContent,
                 star: starVote,
             })
             .then((res) => {
-                console.log("res create: ", res);
+                toast.success("Đã gửi đánh giá!", {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+                GetReviewData();
             })
-            .catch((err) => console.log(err));
+            .catch((err) => {
+                console.log("err: ", err);
+                toast.error("Lỗi kết nối!", {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+            });
     };
 
     if (!foundProduct) return <NotFound />;
@@ -193,12 +166,12 @@ const ProductDetail = () => {
                         </span>
                         <div className="d-product-review-overview">
                             <img
-                                src={data.starsImage}
+                                src={GetStarImage(productData.countStar)}
                                 className="d-product-star-img"
                                 alt=""
                             />
-                            <span>({data.averageStars})</span>
-                            <span>{data.reviewCount} lượt đánh giá</span>
+                            <span>({productData.countStar})</span>
+                            <span>{reviewData.length} lượt đánh giá</span>
                         </div>
                         <div className="d-product-prices">
                             <span className="d-product-current-price">
@@ -308,12 +281,12 @@ const ProductDetail = () => {
                     <span className="d-product-title">Đánh giá</span>
                     <div className="review-left">
                         <span className="review-title">
-                            Đánh giá của khách hàng
+                            Đánh giá của khách hàng ({reviewData.length})
                         </span>
                         {reviewData.length > 0 && (
                             <PaginatedItems
                                 items={reviewData}
-                                itemsPerPage={5}
+                                itemsPerPage={4}
                             />
                         )}
                         {reviewData.length === 0 && <NoReviewYet />}
@@ -327,6 +300,7 @@ const ProductDetail = () => {
                                 name="rate"
                                 value="5"
                                 checked={starVote === 5}
+                                onChange={() => {}}
                             />
                             <label
                                 for="star5"
@@ -341,6 +315,7 @@ const ProductDetail = () => {
                                 name="rate"
                                 value="4"
                                 checked={starVote === 4}
+                                onChange={() => {}}
                             />
                             <label
                                 for="star4"
@@ -355,6 +330,7 @@ const ProductDetail = () => {
                                 name="rate"
                                 value="3"
                                 checked={starVote === 3}
+                                onChange={() => {}}
                             />
                             <label
                                 for="star3"
@@ -369,6 +345,7 @@ const ProductDetail = () => {
                                 name="rate"
                                 value="2"
                                 checked={starVote === 2}
+                                onChange={() => {}}
                             />
                             <label
                                 for="star2"
@@ -383,6 +360,7 @@ const ProductDetail = () => {
                                 name="rate"
                                 value="1"
                                 checked={starVote === 1}
+                                onChange={() => {}}
                             />
                             <label
                                 for="star1"
@@ -441,16 +419,16 @@ function Items({ currentItems }) {
             {currentItems.map((item) => (
                 <div className="review-item">
                     <div className="review-info">
-                        <img src={item.avatar} alt="" />
-                        <span>{item.name}</span>
+                        <img src={item.imageURL} alt="" />
+                        <span>{item.fullName}</span>
                     </div>
                     <div className="review-body">
                         <span>
-                            {item.date.toLocaleDateString()} -{" "}
-                            {item.date.toLocaleTimeString()}
+                            {today.toLocaleDateString()} -{" "}
+                            {today.toLocaleTimeString()}
                         </span>
-                        <p>{item.content}</p>
-                        <img src={item.starImg} alt="" />
+                        <p>{item.describe}</p>
+                        <img src={GetStarImage(item.star)} alt="" />
                     </div>
                 </div>
             ))}

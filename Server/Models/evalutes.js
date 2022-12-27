@@ -10,13 +10,23 @@ const EvalutesSchema = new schema({
         type: schema.Types.ObjectId,
         ref: "products",
     },
-    name: {
+    describe: {
         type: String,
         require: true,
     },
     star: {
         type: Number,
         require: true,
+    },
+    fullName: {
+        type: String,
+        require: true,
+        default: "",
+    },
+    imageURL: {
+        type: String,
+        require: true,
+        default: "",
     },
 });
 

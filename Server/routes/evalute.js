@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const Evalute = require("../models/evalutes");
+const Account = require("../Models/accounts");
 
 // @route GET api/evalutes
 // @desc get evalute
@@ -23,26 +24,30 @@ router.get("/", async (req, res) => {
 // @desc create color
 // @access Public
 router.post("/create", async (req, res) => {
-    const { accountId, productId, name, star } = req.body;
-
-    if (!name || !star || !productId || !accountId)
-        return res
-            .status(400)
-            .json({ success: false, message: "Missing information" });
+    const { accountId, productId, describe, star } = req.body;
     try {
-        // Check for existing evalute
-        const evalute = await Evalute.findOne({ productId, accountId });
-        if (evalute)
+        if (!describe || !star || !productId || !accountId)
             return res
                 .status(400)
-                .json({ success: false, message: "Already exist evalute" });
+                .json({ success: false, message: "Missing information" });
 
         // All Good
-        const newEvalute = new Evalute({ name, productId, accountId, star });
+        const account = await Account.findOne({ _id: accountId });
+        const fullName = account.fullName;
+        const imageURL = account.imageURL;
+
+        const newEvalute = new Evalute({
+            describe,
+            productId,
+            accountId,
+            star,
+            fullName,
+            imageURL,
+        });
         await newEvalute.save();
         return res
             .status(200)
-            .json({ success: true, message: "Created evalute" });
+            .json({ success: true, message: "Created evalute", newEvalute });
     } catch (error) {
         console.log(error);
         res.status(500).json({
@@ -56,18 +61,17 @@ router.post("/create", async (req, res) => {
 // @desc delete evalute
 // @access Public
 router.delete("/", async (req, res) => {
+    const { evaluteId } = req.body;
     try {
-        const evalutes = await Evalute.find({
-            productId: req.productId,
-            accountId: req.accountId,
+        const deleteEvalute = await Evalute.findByIdAndDelete({
+            _id: evaluteId,
         });
-        const deleteEvalute = await evalutes.findAndDelete(evalutes);
         if (!deleteEvalute)
             res.status(500).json({
                 success: false,
                 message: "Evalute not found",
             });
-        res.json({ success: true, message: "Deleted evalute" });
+        else res.json({ success: true, message: "Deleted evalute" });
     } catch (error) {
         console.log(error);
         res.status(500).json({

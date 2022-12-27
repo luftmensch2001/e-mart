@@ -72,6 +72,11 @@ router.post("/create", async (req, res) => {
 router.delete("/", async (req, res) => {
   const evaluteId = req.query.evaluteId;
   try {
+    const eva = await Evalute.findOne({ _id: evaluteId });
+    const productId = eva.productId;
+    const star = eva.star;
+    console.log(eva);
+    console.log("star" + star + "star");
     const deleteEvalute = await Evalute.findByIdAndDelete({
       _id: evaluteId,
     });
@@ -80,7 +85,18 @@ router.delete("/", async (req, res) => {
         success: false,
         message: "Evalute not found",
       });
-    else res.json({ success: true, message: "Deleted evalute" });
+    else {
+      const product = await Product.findOne({ _id: productId });
+      const countEva = await Evalute.find({ productId }).count();
+      console.log("countEva" + countEva);
+      console.log("countStar" + product.countStar);
+      const newStar =
+        ((Number(countEva) + 1) * Number(product.countStar) - Number(star)) /
+        Number(countEva);
+      product.countStar = newStar;
+      await product.save();
+      res.json({ success: true, message: "Deleted evalute", newStar });
+    }
   } catch (error) {
     console.log(error);
     res.status(500).json({

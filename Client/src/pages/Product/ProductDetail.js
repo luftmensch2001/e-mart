@@ -144,6 +144,8 @@ const ProductDetail = () => {
                     progress: undefined,
                     theme: "light",
                 });
+                setReviewContent("");
+                setStarVote(0);
                 GetReviewData();
             })
             .catch((err) => {
@@ -465,7 +467,7 @@ const ProductDetail = () => {
                         </button>
                     </div>
                 </div>
-                <OtherProduct />
+                <OtherProduct productID={productID} />
                 {showDeleteDialog && (
                     <ConfirmDialog
                         message="Bạn có chắc chắn muốn xoá đánh giá này ?"
@@ -491,8 +493,8 @@ function Items({ currentItems, enableDialog, setEvaluteID }) {
                     </div>
                     <div className="review-body">
                         <span>
-                            {today.toLocaleDateString()} -{" "}
-                            {today.toLocaleTimeString()}
+                            {new Date(item.createdAt).toLocaleDateString()} -{" "}
+                            {new Date(item.createdAt).toLocaleTimeString()}
                         </span>
                         <p>{item.describe}</p>
                         <img src={GetStarImage(item.star)} alt="" />
@@ -572,22 +574,34 @@ function NoReviewYet() {
     );
 }
 
-function OtherProduct() {
+function OtherProduct({ productID }) {
     const [otherProductData, setOtherProductData] = useState([]);
     const [isLoaded, setIsLoaded] = useState();
+    const [widthPercent, setWidthPercent] = useState(100);
+    const [widthPercentItem, setWidthPercentItem] = useState(23);
     useEffect(() => {
         setIsLoaded(false);
         axios
             .get("http://localhost:5000/api/products/populateCatalog", {
                 params: {
-                    count: 8,
+                    count: 9,
                     catalog: "Sách",
                 },
             })
             .then((res) => {
-                // console.log("res review: ", res);
-                setOtherProductData(res.data.products);
-
+                let arr = res.data.products;
+                const index = arr.findIndex((element) => {
+                    return element._id === productID;
+                });
+                console.log("index: ", index);
+                arr = arr.slice(0, index).concat(arr.slice(index + 1));
+                if (arr.length === 2) {
+                    setWidthPercent(60);
+                    setWidthPercentItem(40);
+                } else if (arr.length === 6) {
+                    setWidthPercentItem(26);
+                }
+                setOtherProductData(arr.slice(0, 8));
                 setIsLoaded(true);
             })
             .catch((err) => console.log(err));
@@ -598,11 +612,14 @@ function OtherProduct() {
                 <span className="title-text">
                     Có thể bạn <span className="green-text">Quan tâm</span>
                 </span>
-                <div className="list-products">
+                <div
+                    className="list-products"
+                    style={{ width: `${widthPercent}%` }}
+                >
                     {otherProductData.map((item) => (
                         <Link
                             to={`/product/${item._id}`}
-                            style={{ width: "23%" }}
+                            style={{ width: `${widthPercentItem}%` }}
                         >
                             <div className="product-item">
                                 <img

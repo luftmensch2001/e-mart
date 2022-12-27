@@ -28,6 +28,10 @@ const EvalutesSchema = new schema({
         require: true,
         default: "",
     },
+    createdAt: {
+        type: Date,
+        default: Date.now,
+    },
 });
 
 module.exports = mongoose.model("evalutes", EvalutesSchema);

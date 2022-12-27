@@ -585,15 +585,14 @@
 }
 
 .ProductDetail .OtherProduct .list-products {
-    margin-top: 40px;
-    width: 100%;
+    margin: 40px auto;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
 }
 
 .ProductDetail .OtherProduct .product-item {
-    width: 100;
+    width: 100%;
     display: flex;
     flex-direction: column;
     border-radius: 8px;

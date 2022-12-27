@@ -16,7 +16,7 @@ import GetStarImage from "../../components/GetStarImage";
 import NotFound from "../../components/NotFound";
 import ConfirmDialog from "../../components/ConfirmDialog";
 
-const today = new Date();
+let today = new Date();
 
 const ProductDetail = () => {
     const [quantity, setQuantity] = useState(1);
@@ -31,10 +31,11 @@ const ProductDetail = () => {
     const [starVote, setStarVote] = useState(0);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const [evaluteID, setEvaluteID] = useState();
+    let counter = 0;
 
     useEffect(() => {
         window.scrollTo(0, 0);
-        let counter = 0;
+        counter = 0;
         setIsLoaded(false);
         // Get product data
         axios
@@ -44,9 +45,10 @@ const ProductDetail = () => {
                 },
             })
             .then((res) => {
+                console.log("res: ", res);
                 setProductData(res.data.product);
                 counter++;
-                if (counter === 2) setIsLoaded(true);
+                if (counter === 3) setIsLoaded(true);
             })
             .catch(() => setFoundProduct(false));
         // Get type data
@@ -59,7 +61,7 @@ const ProductDetail = () => {
             .then((res) => {
                 setTypeData(res.data.colors);
                 counter++;
-                if (counter === 2) setIsLoaded(true);
+                if (counter === 3) setIsLoaded(true);
             })
             .catch((err) => console.log(err));
         // Get reviews data
@@ -76,6 +78,8 @@ const ProductDetail = () => {
             .then((res) => {
                 // console.log("res review: ", res);
                 setReviewData(res.data.evalutes);
+                counter++;
+                if (counter === 3) setIsLoaded(true);
             })
             .catch((err) => console.log(err));
     };
@@ -216,12 +220,12 @@ const ProductDetail = () => {
                         </span>
                         <div className="d-product-review-overview">
                             <img
-                                src={GetStarImage(productData.countStar)}
+                                src={GetStarImage(productData?.countStar)}
                                 className="d-product-star-img"
                                 alt=""
                             />
-                            <span>({productData.countStar})</span>
-                            <span>{reviewData.length} lượt đánh giá</span>
+                            <span>({productData?.countStar})</span>
+                            <span>{reviewData?.length} lượt đánh giá</span>
                         </div>
                         <div className="d-product-prices">
                             <span className="d-product-current-price">
@@ -324,7 +328,7 @@ const ProductDetail = () => {
                 <div className="d-product-description-wrapper">
                     <span className="d-product-title">Mô tả sản phẩm</span>
                     <p className="d-product-description">
-                        {productData.describe}
+                        {productData?.describe}
                     </p>
                 </div>
                 <div className="d-product-review-wrapper">
@@ -333,7 +337,7 @@ const ProductDetail = () => {
                         <span className="review-title">
                             Đánh giá của khách hàng ({reviewData.length})
                         </span>
-                        {reviewData.length > 0 && (
+                        {reviewData?.length > 0 && (
                             <PaginatedItems
                                 items={reviewData}
                                 itemsPerPage={4}
@@ -341,7 +345,7 @@ const ProductDetail = () => {
                                 setEvaluteID={setEvaluteID}
                             />
                         )}
-                        {reviewData.length === 0 && <NoReviewYet />}
+                        {reviewData?.length === 0 && <NoReviewYet />}
                     </div>
                     <div className="review-right">
                         <span className="review-title">Gửi đánh giá</span>

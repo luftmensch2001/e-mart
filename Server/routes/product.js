@@ -396,7 +396,7 @@ router.get("/randomInCatalog", async (req, res) => {
 // @desc Get All Product By key word
 // @access Public
 router.get("/allByKeyWord", async (req, res) => {
-    const keyWord = req.query.keyWord;
+    const keyWord = req.query.keyword;
     try {
         const products = await Product.find({
             nameProduct: { $regex: keyWord },
@@ -415,7 +415,7 @@ router.get("/allByKeyWord", async (req, res) => {
 // @desc Get (Catalog) Product By key word
 // @access Public
 router.get("/catalogByKeyWord", async (req, res) => {
-    const keyWord = req.query.keyWord;
+    const keyWord = req.query.keyword;
     const type = req.query.type;
     try {
         const products = await Product.find({

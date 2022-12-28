@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import "./ProductList.css";
 import { AiOutlineFilter } from "react-icons/ai";
@@ -8,109 +8,12 @@ import { MdKeyboardArrowDown } from "react-icons/md";
 import { BsCartPlus } from "react-icons/bs";
 import ReactPaginate from "react-paginate";
 import ThousandSeparator from "../../components/ThousandSeparator";
+import { useSearchParams, Link } from "react-router-dom";
+import axios from "axios";
+import Loading from "../../components/Loading";
+import GetStarImage from "../../components/GetStarImage";
 
-import pi1 from "../../assets/ExampleProduct/iPhone/1.png";
-import pi2 from "../../assets/ExampleProduct/binhgiunhiet/binh-giu-nhiet-lock-lock-name-tumbler-lhc4125b-7.jpg";
-import pi3 from "../../assets/ExampleProduct/dongho/1.jpeg";
-import pi4 from "../../assets/ExampleProduct/giay/1.jpg";
-import pi5 from "../../assets/ExampleProduct/kemchongnang/00013491-kem-chong-nang-la-roche-posay-kiem-soat-dau-spf50-6561-634c_large.webp";
-import pi6 from "../../assets/ExampleProduct/laptop/gsmarena001-1653379584969-16533795856231394043061.webp";
-import pi7 from "../../assets/ExampleProduct/nuochoa/6.jpg";
-import pi8 from "../../assets/ExampleProduct/sach/2.jpg";
-
-const products = [
-    {
-        name: "Apple iPhone 14 Pro Max 1TB Chính Hãng",
-        image: pi1,
-        price: 35000000,
-        category: "Điện thoại",
-        salePrice: 38990000,
-        sell: 1430,
-        starNumber: 4,
-        starImage: starImg,
-    },
-    {
-        name: "Sách Dám mơ lớn, đừng hoài phí tuổi trẻ - Lư Tư Hạo",
-        image: pi8,
-        price: 96000,
-        category: "Sách",
-        salePrice: 132000,
-        sell: 1430,
-        starNumber: 4,
-        starImage: starImg,
-    },
-
-    {
-        name: "Đồng Hồ Thông Minh Xiaomi Mi Watch",
-        image: pi3,
-        price: 350000,
-        category: "Đồng hồ",
-        salePrice: 389900,
-        sell: 1430,
-        starNumber: 4,
-        starImage: starImg,
-    },
-    {
-        name: "Giày Da Thể Thao Nam Cao Cấp - Bảo Hành 12 Tháng",
-        image: pi4,
-        price: 450000,
-        category: "Giày nam",
-        salePrice: 489000,
-        sell: 1430,
-        starNumber: 4,
-        starImage: starImg,
-    },
-    {
-        name: "Kem Chống Nắng La Roche-Posay Kiểm Soát Dầu SPF50+",
-        image: pi5,
-        price: 350000,
-        category: "Mỹ phẩm",
-        salePrice: 389000,
-        sell: 1430,
-        starNumber: 4,
-        starImage: starImg,
-    },
-    {
-        name: "Bình Giữ Nhiệt Lock&Lock 750ML Chính hãng",
-        image: pi2,
-        price: 169000,
-        category: "Sức khoẻ",
-        salePrice: 230000,
-        sell: 1430,
-        starNumber: 4,
-        starImage: starImg,
-    },
-    {
-        name: "Nước Hoa Pháp Queen Cao Cấp 50ml - Lưu hương 24h",
-        image: pi7,
-        price: 2500000,
-        category: "Mỹ phẩm",
-        salePrice: 3690000,
-        sell: 1430,
-        starNumber: 4,
-        starImage: starImg,
-    },
-    {
-        name: "Laptop Huawei Matebook D14 - SSD 512GB",
-        image: pi6,
-        price: 15000000,
-        category: "Laptop",
-        salePrice: 18990000,
-        sell: 1430,
-        starNumber: 4,
-        starImage: starImg,
-    },
-    {
-        name: "Sách Dám mơ lớn, đừng hoài phí tuổi trẻ - Lư Tư Hạo",
-        image: pi8,
-        price: 96000,
-        category: "Sách",
-        salePrice: 132000,
-        sell: 1430,
-        starNumber: 4,
-        starImage: starImg,
-    },
-];
+import notFoundProduct from "../../assets/images/illustrations/notfoundproduct.jpg";
 
 const sortOptions = [
     { value: "1", label: "Mới nhất trước" },
@@ -147,158 +50,53 @@ const categories = [
     { id: 16, name: "Khác" },
 ];
 
-const productss = [
-    {
-        id: 1,
-        category: "Mỹ phẩm",
-        image: productImage,
-        sell: 1430,
-        name: "Nước hoa Pháp cao cấp 450ML Lưu hương 24h",
-        price: 570000,
-        oldPrice: 620000,
-        starNumber: 4,
-        starImage: starImg,
-    },
-    {
-        id: 1,
-        category: "Mỹ phẩm",
-        image: productImage,
-        sell: 1430,
-        name: "Nước hoa Pháp cao cấp 450ML Lưu hương 24h",
-        price: 570000,
-        oldPrice: 620000,
-        starNumber: 4,
-        starImage: starImg,
-    },
-    {
-        id: 1,
-        image: productImage,
-        category: "Mỹ phẩm",
-        name: "Nước hoa Pháp cao cấp 450ML Lưu hương 24h",
-        price: 570000,
-        oldPrice: 620000,
-        sell: 1430,
-        starNumber: 4,
-        starImage: starImg,
-    },
-    {
-        id: 1,
-        category: "Mỹ phẩm",
-        image: productImage,
-        sell: 1430,
-        name: "Nước hoa Pháp cao cấp 450ML Lưu hương 24h",
-        price: 570000,
-        oldPrice: 620000,
-        starNumber: 4,
-        starImage: starImg,
-    },
-    {
-        id: 1,
-        category: "Mỹ phẩm",
-        image: productImage,
-        sell: 1430,
-        name: "Nước hoa Pháp cao cấp 450ML Lưu hương 24h",
-        price: 570000,
-        oldPrice: 620000,
-        starNumber: 4,
-        starImage: starImg,
-    },
-    {
-        id: 1,
-        category: "Mỹ phẩm",
-        image: productImage,
-        sell: 1430,
-        name: "Nước hoa Pháp cao cấp 450ML Lưu hương 24h",
-        price: 570000,
-        oldPrice: 620000,
-        starNumber: 4,
-        starImage: starImg,
-    },
-    {
-        id: 1,
-        category: "Mỹ phẩm",
-        image: productImage,
-        sell: 1430,
-        name: "Nước hoa Pháp cao cấp 450ML Lưu hương 24h",
-        price: 570000,
-        oldPrice: 620000,
-        starNumber: 4,
-        starImage: starImg,
-    },
-    {
-        id: 1,
-        category: "Mỹ phẩm",
-        image: productImage,
-        sell: 1430,
-        name: "Nước hoa Pháp cao cấp 450ML Lưu hương 24h",
-        price: 570000,
-        oldPrice: 620000,
-        starNumber: 4,
-        starImage: starImg,
-    },
-    {
-        id: 1,
-        category: "Mỹ phẩm",
-        image: productImage,
-        sell: 1430,
-        name: "Nước hoa Pháp cao cấp 450ML Lưu hương 24h",
-        price: 570000,
-        oldPrice: 620000,
-        starNumber: 4,
-        starImage: starImg,
-    },
-    {
-        id: 1,
-        category: "Mỹ phẩm",
-        image: productImage,
-        sell: 1430,
-        name: "Nước hoa Pháp cao cấp 450ML Lưu hương 24h",
-        price: 570000,
-        oldPrice: 620000,
-        starNumber: 4,
-        starImage: starImg,
-    },
-    {
-        id: 1,
-        category: "Mỹ phẩm",
-        image: productImage,
-        sell: 1430,
-        name: "Nước hoa Pháp cao cấp 450ML Lưu hương 24h",
-        price: 570000,
-        oldPrice: 620000,
-        starNumber: 4,
-        starImage: starImg,
-    },
-    {
-        id: 1,
-        category: "Mỹ phẩm",
-        image: productImage,
-        sell: 1430,
-        name: "Nước hoa Pháp cao cấp 450ML Lưu hương 24h",
-        price: 570000,
-        oldPrice: 620000,
-        starNumber: 4,
-        starImage: starImg,
-    },
-    {
-        id: 1,
-        category: "Mỹ phẩm",
-        image: productImage,
-        sell: 1430,
-        name: "Nước hoa Pháp cao cấp 450ML Lưu hương 24h",
-        price: 570000,
-        oldPrice: 620000,
-        starNumber: 4,
-        starImage: starImg,
-    },
-];
-
-const ProductList = ({ keyword }) => {
-    keyword = "Quần Jeans Slim Fit Dành Cho Nam";
+const ProductList = () => {
     const [sortOption, setSortOption] = useState(null);
     const [countOption, setCountOption] = useState(countOptions[1]);
     const [selectedCategory, setSelectedCategory] = useState(0);
     const [showCategories, setShowCategories] = useState(false);
+    const [searchParams] = useSearchParams();
+    const [data, setData] = useState([]);
+    let keyword = searchParams.get("search").slice(0, -1);
+    let category = searchParams.get("category").slice(0, -1);
+    const [isLoaded, setIsLoaded] = useState(false);
+
+    useEffect(() => {
+        setIsLoaded(false);
+        if (category === "All") GetAllProducts();
+        else GetCategoryProducts();
+    }, [keyword, category]);
+
+    const GetAllProducts = () => {
+        axios
+            .get("http://localhost:5000/api/products/allByKeyWord", {
+                params: {
+                    keyword: keyword,
+                },
+            })
+            .then((res) => {
+                console.log("list product: ", res);
+                setData(res.data.products);
+                setIsLoaded(true);
+            })
+            .catch((err) => console.log(err));
+    };
+
+    const GetCategoryProducts = () => {
+        axios
+            .get("http://localhost:5000/api/products/catalogByKeyWord", {
+                params: {
+                    keyword: keyword,
+                    type: category,
+                },
+            })
+            .then((res) => {
+                console.log("list product: ", res);
+                setData(res.data.products);
+                setIsLoaded(true);
+            })
+            .catch((err) => console.log(err));
+    };
 
     return (
         <div className="ProductList content">
@@ -436,15 +234,32 @@ const ProductList = ({ keyword }) => {
                     </div>
                 </div>
                 <div className="products-container">
-                    <PaginatedItems
-                        items={products}
-                        itemsPerPage={countOption.value}
-                    />
+                    {isLoaded ? (
+                        data.length > 0 ? (
+                            <PaginatedItems
+                                items={data}
+                                itemsPerPage={countOption.value}
+                            />
+                        ) : (
+                            <NotFoundProduct />
+                        )
+                    ) : (
+                        <Loading />
+                    )}
                 </div>
             </div>
         </div>
     );
 };
+
+function NotFoundProduct() {
+    return (
+        <div className="NotFoundProduct">
+            <img src={notFoundProduct} />
+            <h1 className="not-found">Không tìm thấy sản phẩm nào</h1>;
+        </div>
+    );
+}
 
 function PaginatedItems({ items, itemsPerPage }) {
     const [itemOffset, setItemOffset] = useState(0);
@@ -500,19 +315,25 @@ const ProductCard = ({ item }) => {
 
     return (
         <div className="product-item">
-            <img src={item.image} className="product-image" />
-            <span className="product-category">{item.category}</span>
-            <span className="product-name">{item.name}</span>
-            <div className="product-star-wrapper">
-                <img src={item.starImage} />
-                <span>({item.starNumber})</span>
-            </div>
-            <div className="product-price-wrapper">
-                <span className="price">{ThousandSeparator(item.price)} đ</span>
-                <span className="old-price">
-                    {ThousandSeparator(item.salePrice)} đ
-                </span>
-            </div>
+            <Link to={`/product/${item._id}`}>
+                <img src={item.imageURLs[0]} className="product-image" />
+                <span className="product-category">{item.type}</span>
+                <div className="product-name-wrapper">
+                    <span className="product-name">{item.nameProduct}</span>
+                </div>
+                <div className="product-star-wrapper">
+                    <img src={GetStarImage(item.countStar)} />
+                    <span>({Math.round(item.countStar * 10) / 10})</span>
+                </div>
+                <div className="product-price-wrapper">
+                    <span className="price">
+                        {ThousandSeparator(item.price)} đ
+                    </span>
+                    <span className="old-price">
+                        {ThousandSeparator(item.salePrice)} đ
+                    </span>
+                </div>
+            </Link>
             <div className="buttons-wrapper">
                 <button className="add-to-cart-button primary-button">
                     <BsCartPlus

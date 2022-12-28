@@ -1,5 +1,10 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import {
+    Link,
+    useNavigate,
+    createSearchParams,
+    useAsyncError,
+} from "react-router-dom";
 import "./NavBar.css";
 
 import {
@@ -19,6 +24,17 @@ import { FiPhoneCall } from "react-icons/fi";
 function NavBar() {
     const [wishlistCount, setWishlistCount] = useState(8);
     const [cartCount, setCartCount] = useState(1);
+    const navigate = useNavigate();
+    const [searchValue, setSearchValue] = useState("");
+    const [categoryValue, setCategoryValue] = useState("All");
+
+    const searchClick = () =>
+        navigate({
+            pathname: "/products",
+            search: `?search=${createSearchParams(
+                searchValue
+            )}&category=${createSearchParams(categoryValue)}`,
+        });
 
     return (
         <div className="NavBar">
@@ -30,17 +46,52 @@ function NavBar() {
                         </span>
                     </Link>
                     <div className="navbar-search-container">
-                        <select className="navbar-category-select">
-                            <option>Tất cả danh mục</option>
-                            <option>Quần áo nam</option>
-                            <option>Quần áo nữ</option>
-                            <option>Sức khoẻ</option>
+                        <select
+                            className="navbar-category-select"
+                            value={categoryValue}
+                            onChange={(e) => setCategoryValue(e.target.value)}
+                        >
+                            <option value={"All"}>Tất cả danh mục</option>
+                            <option value={"Điện thoại"}>Điện thoại</option>
+                            <option value={"Laptop"}>Laptop</option>
+                            <option value={"Thời trang nam"}>
+                                Thời trang nam
+                            </option>
+                            <option value={"Thời trang nữ"}>
+                                Thời trang nữ
+                            </option>
+                            <option value={"Trang sức"}>Trang sức</option>
+                            <option value={"Thiết bị điện tử"}>
+                                Thiết bị điện tử
+                            </option>
+                            <option value={"Nhà bếp"}>Nhà bếp</option>
+                            <option value={"Giày nam"}>Giày nam</option>
+                            <option value={"Giày nữ"}>Giày nữ</option>
+                            <option value={"Sách"}>Sách</option>
+                            <option value={"Đồng hồ"}>Đồng hồ</option>
+                            <option value={"Cho bé"}>Cho bé</option>
+                            <option value={"Sức khoẻ"}>Sức khoẻ</option>
+                            <option value={"Mỹ phẩm"}>Mỹ phẩm</option>
+                            <option value={"Dụng cụ gia đình"}>
+                                Dụng cụ gia đình
+                            </option>
+                            <option value={"Khác"}>Khác</option>
                         </select>
                         <input
                             className="navbar-search-input"
                             placeholder="Tìm kiếm sản phẩm"
+                            value={searchValue}
+                            onChange={(event) =>
+                                setSearchValue(event.target.value)
+                            }
+                            onKeyDown={(event) => {
+                                if (event.key === "Enter") searchClick();
+                            }}
                         />
-                        <AiOutlineSearch className="navbar-search-icon" />
+                        <AiOutlineSearch
+                            className="navbar-search-icon"
+                            onClick={searchClick}
+                        />
                     </div>
                     <div className="navbar-controller">
                         <Link to="/wishlist">

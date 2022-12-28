@@ -95,10 +95,12 @@ router.delete("/", async (req, res) => {
             const countEva = await Evalute.find({ productId }).count();
             console.log("countEva" + countEva);
             console.log("countStar" + product.countStar);
-            const newStar =
-                ((Number(countEva) + 1) * Number(product.countStar) -
-                    Number(star)) /
-                Number(countEva);
+            const newStar = 0;
+            if (Number(countEva) > 0)
+                newStar =
+                    ((Number(countEva) + 1) * Number(product.countStar) -
+                        Number(star)) /
+                    Number(countEva);
             product.countStar = newStar;
             await product.save();
             res.json({ success: true, message: "Deleted evalute", newStar });

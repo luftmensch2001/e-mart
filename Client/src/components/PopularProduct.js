@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./PopularProduct.css";
 import { BiCategory } from "react-icons/bi";
-import { AiOutlineShoppingCart, AiOutlineHeart } from "react-icons/ai";
+import { AiOutlineShoppingCart } from "react-icons/ai";
+import { Link } from "react-router-dom";
 
 import ThousandSeparator from "./ThousandSeparator";
 import Loading from "./Loading";
@@ -138,27 +139,33 @@ function ProductCard({ item, widthPercentItem }) {
 
     return (
         <div className="product-item" style={{ width: `${widthPercentItem}%` }}>
-            <img className="product-img" src={item.imageURLs[0]} alt="" />
             <div className="product-info">
-                <div className="product-name-wrapper">
-                    <p className="product-name">{item.nameProduct}</p>
-                </div>
-                <div className="product-star">
-                    <img src={GetStarImage(item.countStar)} alt="" />
-                    <span>
-                        ({Math.round(parseFloat(item.countStar) * 10) / 10})
-                    </span>
-                </div>
-                <div className="product-price-container">
-                    <span className="product-sale-price">
-                        {ThousandSeparator(item.price)} đ
-                    </span>
-                    <span className="product-old-price">
-                        {item.salePrice > 0
-                            ? ThousandSeparator(item.salePrice) + " đ"
-                            : ""}
-                    </span>
-                </div>
+                <Link to={`/product/${item._id}`}>
+                    <img
+                        className="product-img"
+                        src={item.imageURLs[0]}
+                        alt=""
+                    />
+                    <div className="product-name-wrapper">
+                        <p className="product-name">{item.nameProduct}</p>
+                    </div>
+                    <div className="product-star">
+                        <img src={GetStarImage(item.countStar)} alt="" />
+                        <span>
+                            ({Math.round(parseFloat(item.countStar) * 10) / 10})
+                        </span>
+                    </div>
+                    <div className="product-price-container">
+                        <span className="product-sale-price">
+                            {ThousandSeparator(item.price)} đ
+                        </span>
+                        <span className="product-old-price">
+                            {item.salePrice > 0
+                                ? ThousandSeparator(item.salePrice) + " đ"
+                                : ""}
+                        </span>
+                    </div>
+                </Link>
                 <div className="product-buttons">
                     <button className="product-add-to-cart-button">
                         <AiOutlineShoppingCart className="product-add-to-cart-icon" />

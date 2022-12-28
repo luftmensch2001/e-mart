@@ -38,20 +38,7 @@ const ProductDetail = () => {
         window.scrollTo(0, 0);
         counter = 0;
         setIsLoaded(false);
-        // Get product data
-        axios
-            .get("http://localhost:5000/api/products/byProductId", {
-                params: {
-                    productId: productID,
-                },
-            })
-            .then((res) => {
-                console.log("res: ", res);
-                setProductData(res.data.product);
-                counter++;
-                if (counter === 3) setIsLoaded(true);
-            })
-            .catch(() => setFoundProduct(false));
+        GetProductData();
         // Get type data
         axios
             .get("http://localhost:5000/api/colors", {
@@ -68,6 +55,23 @@ const ProductDetail = () => {
         // Get reviews data
         GetReviewData();
     }, [productID]);
+
+    const GetProductData = () => {
+        // Get product data
+        axios
+            .get("http://localhost:5000/api/products/byProductId", {
+                params: {
+                    productId: productID,
+                },
+            })
+            .then((res) => {
+                console.log("res: ", res);
+                setProductData(res.data.product);
+                counter++;
+                if (counter === 3) setIsLoaded(true);
+            })
+            .catch(() => setFoundProduct(false));
+    };
 
     const GetReviewData = () => {
         axios
@@ -146,7 +150,9 @@ const ProductDetail = () => {
                 });
                 setReviewContent("");
                 setStarVote(0);
+                counter = 1;
                 GetReviewData();
+                GetProductData();
             })
             .catch((err) => {
                 console.log("err: ", err);
@@ -179,7 +185,9 @@ const ProductDetail = () => {
                     progress: undefined,
                     theme: "light",
                 });
+                counter = 1;
                 GetReviewData();
+                GetProductData();
             })
             .catch((err) => {
                 toast.error("Xoá không thành công!", {
@@ -227,7 +235,13 @@ const ProductDetail = () => {
                                 className="d-product-star-img"
                                 alt=""
                             />
-                            <span>({productData?.countStar})</span>
+                            <span>
+                                (
+                                {Math.round(
+                                    parseFloat(productData?.countStar) * 10
+                                ) / 10}
+                                )
+                            </span>
                             <span>{reviewData?.length} lượt đánh giá</span>
                         </div>
                         <div className="d-product-prices">
@@ -589,15 +603,18 @@ function OtherProduct({ productID, category }) {
                 params: {
                     count: 9,
                     catalog: category,
+                    accountId: localStorage.getItem("accountID"),
                 },
             })
             .then((res) => {
                 let arr = res.data.products;
+                console.log("res.data.products: ", res.data.products);
                 const index = arr.findIndex((element) => {
                     return element._id === productID;
                 });
                 console.log("index: ", index);
-                arr = arr.slice(0, index).concat(arr.slice(index + 1));
+                if (index !== -1)
+                    arr = arr.slice(0, index).concat(arr.slice(index + 1));
                 if (arr.length === 2) {
                     setWidthPercent(60);
                     setWidthPercentItem(40);
@@ -639,7 +656,13 @@ function OtherProduct({ productID, category }) {
                                 </div>
                                 <div className="product-star-wrapper">
                                     <img src={GetStarImage(item.countStar)} />
-                                    <span>({item.countStar})</span>
+                                    <span>
+                                        (
+                                        {Math.round(
+                                            parseFloat(item.countStar) * 10
+                                        ) / 10}
+                                        )
+                                    </span>
                                 </div>
                                 <div className="product-price-wrapper">
                                     <span className="price">

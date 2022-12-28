@@ -637,11 +637,11 @@ function OtherProduct({ productID, category }) {
                     style={{ width: `${widthPercent}%` }}
                 >
                     {otherProductData.map((item) => (
-                        <Link
-                            to={`/product/${item._id}`}
+                        <div
+                            className="product-item"
                             style={{ width: `${widthPercentItem}%` }}
                         >
-                            <div className="product-item">
+                            <Link to={`/product/${item._id}`}>
                                 <img
                                     className="product-image"
                                     src={item.imageURLs[0]}
@@ -675,19 +675,19 @@ function OtherProduct({ productID, category }) {
                                         </span>
                                     )}
                                 </div>
+                            </Link>
 
-                                <button className="add-to-cart-button primary-button">
-                                    <BsCartPlus
-                                        style={{
-                                            width: "22px",
-                                            height: "22px",
-                                            marginRight: "6px",
-                                        }}
-                                    />{" "}
-                                    Thêm vào Giỏ
-                                </button>
-                            </div>
-                        </Link>
+                            <button className="add-to-cart-button primary-button">
+                                <BsCartPlus
+                                    style={{
+                                        width: "22px",
+                                        height: "22px",
+                                        marginRight: "6px",
+                                    }}
+                                />{" "}
+                                Thêm vào Giỏ
+                            </button>
+                        </div>
                     ))}
                 </div>
             </div>

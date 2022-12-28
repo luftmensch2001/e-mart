@@ -13,9 +13,14 @@ function PopularProduct() {
     const [isLoaded, setIsLoaded] = useState();
     const [widthPercent, setWidthPercent] = useState(100);
     const [widthPercentItem, setWidthPercentItem] = useState(22);
+    const [filterValue, setFilterValue] = useState("All");
 
     useEffect(() => {
         setIsLoaded(false);
+        GetAllData();
+    }, []);
+
+    const GetAllData = () => {
         axios
             .get("http://localhost:5000/api/products/allPopulate", {
                 params: {
@@ -31,11 +36,40 @@ function PopularProduct() {
                     setWidthPercentItem(25.1);
                 }
                 setData(res.data.products);
-                console.log("res.data.products: ", res.data.products);
                 setIsLoaded(true);
             })
             .catch((err) => console.log(err));
-    }, []);
+    };
+
+    const HandleFilterOnchange = (event) => {
+        setIsLoaded(false);
+        setFilterValue(event.target.value);
+        if (event.target.value === "All") {
+            GetAllData();
+            return;
+        }
+
+        axios
+            .get("http://localhost:5000/api/products/populateCatalog", {
+                params: {
+                    count: 8,
+                    accountId: localStorage.getItem("accountID"),
+                    catalog: event.target.value,
+                },
+            })
+            .then((res) => {
+                console.log("res: ", res);
+                if (res.data.products.length === 2) {
+                    setWidthPercent(60);
+                    setWidthPercentItem(40);
+                } else if (res.data.products.length === 6) {
+                    setWidthPercentItem(25.1);
+                }
+                setData(res.data.products);
+                setIsLoaded(true);
+            })
+            .catch((err) => console.log(err));
+    };
 
     if (isLoaded)
         return (
@@ -46,7 +80,11 @@ function PopularProduct() {
                     </p>
                     <div className="popular-filter">
                         <BiCategory className="popular-filter-icon" />
-                        <select className="popular-filter-selector">
+                        <select
+                            className="popular-filter-selector"
+                            value={filterValue}
+                            onChange={HandleFilterOnchange}
+                        >
                             <option value={"All"}>Tất cả danh mục</option>
                             <option value={"Điện thoại"}>Điện thoại</option>
                             <option value={"Laptop"}>Laptop</option>
@@ -79,12 +117,16 @@ function PopularProduct() {
                     className="product-list"
                     style={{ width: `${widthPercent}%` }}
                 >
-                    {data.map((item) => (
-                        <ProductCard
-                            item={item}
-                            widthPercentItem={widthPercentItem}
-                        />
-                    ))}
+                    {data.length > 0 ? (
+                        data.map((item) => (
+                            <ProductCard
+                                item={item}
+                                widthPercentItem={widthPercentItem}
+                            />
+                        ))
+                    ) : (
+                        <NoProduct />
+                    )}
                 </div>
             </div>
         );
@@ -158,6 +200,10 @@ function ProductCard({ item, widthPercentItem }) {
             </div>
         </div>
     );
+}
+
+function NoProduct() {
+    return <h1 className="NoProduct">Không tìm thấy sản phẩm</h1>;
 }
 
 export default PopularProduct;

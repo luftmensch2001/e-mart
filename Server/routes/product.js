@@ -265,6 +265,7 @@ router.get("/allPopulate", async (req, res) => {
 router.get("/populateCatalog", async (req, res) => {
     const count = req.query.count;
     const type = req.query.catalog;
+    console.log("type: ", type);
     const accountId = req.query.accountId;
     try {
         const products = await Product.find({

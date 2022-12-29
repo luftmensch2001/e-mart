@@ -31,6 +31,7 @@ const ProductDetail = () => {
     const [starVote, setStarVote] = useState(0);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const [evaluteID, setEvaluteID] = useState();
+    const [selectedType, setSelectedType] = useState();
     let counter = 0;
 
     useEffect(() => {
@@ -203,6 +204,82 @@ const ProductDetail = () => {
         setShowDeleteDialog(false);
     };
 
+    const AddToFavoriteOnChange = () => {
+        if (isFavorite) {
+            // Add to favorite
+            axios
+                .post("http://localhost:5000/api/productInFavorites/create", {
+                    accountId: localStorage.getItem("accountID"),
+                    productId: productID,
+                    color: selectedType,
+                })
+                .then((res) => {
+                    console.log("res: ", res);
+                    toast.success("Đã thêm vào Yêu thích!", {
+                        position: "bottom-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "light",
+                    });
+                })
+                .catch((err) => {
+                    console.log("err: ", err);
+                    toast.error("Thêm không thành công!", {
+                        position: "bottom-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "light",
+                    });
+                });
+        } else {
+            // Remove
+            axios
+                .delete(
+                    "http://localhost:5000/api/productInFavorites/byProductIdAndAccountId",
+                    {
+                        params: {
+                            accountId: localStorage.getItem("accountID"),
+                            productId: productID,
+                        },
+                    }
+                )
+                .then((res) => {
+                    console.log("res: ", res);
+                    toast.success("Đã xoá khỏi Yêu thích!", {
+                        position: "bottom-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "light",
+                    });
+                })
+                .catch((err) => {
+                    console.log("err: ", err);
+                    toast.error("Xoá không thành công!", {
+                        position: "bottom-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "light",
+                    });
+                });
+        }
+    };
+
     if (!foundProduct) return <NotFound />;
 
     if (isLoaded)
@@ -277,13 +354,15 @@ const ProductDetail = () => {
                             </div>
                             <div className="d-product-type-wrapper">
                                 <span>Phân loại hàng:</span>
-                                <select>
-                                    {/* <option>Silver</option>
-                                    <option>Gold</option>
-                                    <option>Space Black</option>
-                                    <option>Deep Purple</option> */}
+                                <select
+                                    onChange={(e) =>
+                                        setSelectedType(e.target.value)
+                                    }
+                                >
                                     {typeData?.map((item) => (
-                                        <option>{item.name}</option>
+                                        <option value={item.name}>
+                                            {item.name}
+                                        </option>
                                     ))}
                                 </select>
                             </div>
@@ -297,6 +376,7 @@ const ProductDetail = () => {
                                     name="favorite-checkbox"
                                     value="favorite-button"
                                     className="atw-input"
+                                    onChange={AddToFavoriteOnChange}
                                 />
                                 <label
                                     for="favorite"

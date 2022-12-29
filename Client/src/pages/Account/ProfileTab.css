@@ -15,7 +15,7 @@
 .profile-avatar-img {
     position: absolute;
     border-radius: 50%;
-    border: 2px solid #FFF;
+    border: 2px solid #fff;
     width: 200px;
     height: 200px;
     object-fit: cover;
@@ -25,6 +25,14 @@
 
 .profile-avatar-img:hover {
     cursor: pointer;
+}
+
+.ProfileTab .coin-label {
+    font-size: 2.4rem;
+    font-weight: bold;
+    line-height: 46px;
+    margin-top: 20px;
+    display: block;
 }
 
 .profile-avatar-img:hover ~ .profile-change-avatar-zone {
@@ -49,7 +57,6 @@
     background-color: rgb(255 255 255 / 10%);
 }
 
-
 .profile-change-cover-icon {
     width: 24px;
     height: 24px;
@@ -72,9 +79,10 @@
 
 .profile-left-label {
     font-size: 1.5rem;
-    font-weight: 600;
+    font-weight: 700;
     line-height: 46px;
     margin: 0;
+    color: var(--text-color-primary);
     margin-top: 30px;
 }
 
@@ -103,7 +111,7 @@
     cursor: default;
 }
 
-.profile-save-button  {
+.profile-save-button {
     margin-top: 30px;
     border-radius: 12px;
 }
@@ -128,4 +136,3 @@
     margin-top: 40px;
     margin-left: 20px;
 }
-

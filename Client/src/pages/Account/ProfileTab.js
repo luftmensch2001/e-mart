@@ -143,7 +143,9 @@ function ProfileTab() {
                         <AiOutlineCamera className="profile-change-cover-icon" />
                     </button>
                     <span className="profile-name">{userData.fullName}</span>
+
                     <div className="profile-left">
+                        <span className="coin-label green-text">E-Coin</span>
                         <p className="profile-left-label">Tên đăng nhập</p>
                         <p className="profile-left-label">Họ và tên</p>
                         <p className="profile-left-label">Địa chỉ E-mail</p>
@@ -153,6 +155,9 @@ function ProfileTab() {
                         </p>
                     </div>
                     <div className="profile-right">
+                        <span className="coin-label green-text">
+                            {userData.coin}
+                        </span>
                         <input
                             className="profile-input profile-username-input"
                             type="text"

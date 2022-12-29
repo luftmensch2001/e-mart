@@ -16,8 +16,7 @@ import ThousandSeparator from "../../components/ThousandSeparator";
 import GetStarImage from "../../components/GetStarImage";
 import NotFound from "../../components/NotFound";
 import ConfirmDialog from "../../components/ConfirmDialog";
-
-let today = new Date();
+import avatar from "../../assets/images/avatar.png";
 
 const ProductDetail = () => {
     const [quantity, setQuantity] = useState(1);
@@ -505,7 +504,10 @@ function Items({ currentItems, enableDialog, setEvaluteID }) {
             {currentItems.map((item) => (
                 <div className="review-item">
                     <div className="review-info">
-                        <img src={item.imageURL} alt="" />
+                        <img
+                            src={item.imageURL ? item.imageURL : avatar}
+                            alt=""
+                        />
                         <span>{item.fullName}</span>
                     </div>
                     <div className="review-body">

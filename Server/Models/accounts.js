@@ -26,6 +26,11 @@ const AccountsSchema = new schema({
         type: String,
         require: false,
     },
+    coin: {
+        type: Number,
+        default: 0,
+        require: false,
+    },
 });
 
 module.exports = mongoose.model("accounts", AccountsSchema);

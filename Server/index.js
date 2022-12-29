@@ -11,25 +11,26 @@ const productInCartRouter = require("./routes/productInCart");
 const productInCartFavorite = require("./routes/productInFavorite");
 const discountCodeRouter = require("./routes/discountCode");
 const evalutesRouter = require("./routes/evalute");
+const Payment_PaypalRouter = require("./routes/payment_paypal");
 
 //const colorRouter = require("./routes/color");
 
 console.log(process.env.DB_USERNAME);
 
 const connectDB = async () => {
-    try {
-        await mongoose.connect(
-            `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.rbbiuxh.mongodb.net/?retryWrites=true&w=majority`,
-            {
-                useNewUrlParser: true,
-                useUnifiedTopology: true,
-            }
-        );
-        console.log("MongoDB connected");
-    } catch (error) {
-        console.log(error.message);
-        process.exit(1);
-    }
+  try {
+    await mongoose.connect(
+      `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.rbbiuxh.mongodb.net/?retryWrites=true&w=majority`,
+      {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      }
+    );
+    console.log("MongoDB connected");
+  } catch (error) {
+    console.log(error.message);
+    process.exit(1);
+  }
 };
 
 connectDB();
@@ -49,6 +50,7 @@ app.use("/api/productInCarts", productInCartRouter);
 app.use("/api/productInFavorites", productInCartFavorite);
 app.use("/api/discountCodes", discountCodeRouter);
 app.use("/api/evalutes", evalutesRouter);
+app.use("/api/payment_paypal", Payment_PaypalRouter);
 
 const PORT = 5000;
 

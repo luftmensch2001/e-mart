@@ -399,7 +399,7 @@ router.get("/allByKeyWord", async (req, res) => {
     const keyWord = req.query.keyword;
     try {
         const products = await Product.find({
-            nameProduct: { $regex: keyWord },
+            nameProduct: { $regex: keyWord, $options: "six" },
         });
         res.json({ success: true, products });
     } catch (error) {
@@ -419,7 +419,7 @@ router.get("/catalogByKeyWord", async (req, res) => {
     const type = req.query.type;
     try {
         const products = await Product.find({
-            nameProduct: { $regex: keyWord },
+            nameProduct: { $regex: keyWord, $options: "six" },
             type,
         });
         res.json({ success: true, products });

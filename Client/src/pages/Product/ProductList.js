@@ -12,6 +12,7 @@ import { useSearchParams, Link } from "react-router-dom";
 import axios from "axios";
 import Loading from "../../components/Loading";
 import GetStarImage from "../../components/GetStarImage";
+import { toast } from "react-toastify";
 
 import notFoundProduct from "../../assets/images/illustrations/notfoundproduct.jpg";
 
@@ -32,6 +33,7 @@ const countOptions = [
 ];
 
 const categories = [
+    { id: 0, name: "Tất cả" },
     { id: 1, name: "Thời trang nam" },
     { id: 2, name: "Thời trang nữ" },
     { id: 3, name: "Điện thoại" },
@@ -40,7 +42,7 @@ const categories = [
     { id: 6, name: "Trang sức" },
     { id: 7, name: "Mỹ phẩm" },
     { id: 8, name: "Nhà bếp" },
-    { id: 9, name: "Giày nam" },
+    { id: 9, name: "Sách" },
     { id: 10, name: "Giày nam" },
     { id: 11, name: "Giày nữ" },
     { id: 12, name: "Sức khoẻ" },
@@ -51,15 +53,27 @@ const categories = [
 ];
 
 const ProductList = () => {
+    // states
     const [sortOption, setSortOption] = useState(null);
     const [countOption, setCountOption] = useState(countOptions[1]);
-    const [selectedCategory, setSelectedCategory] = useState(0);
+    const [selectedCategory, setSelectedCategory] = useState("Tất cả");
     const [showCategories, setShowCategories] = useState(false);
+    const [isSaling, setIsSaling] = useState(false);
     const [searchParams] = useSearchParams();
     const [data, setData] = useState([]);
+    const [dataRaw, setDataRaw] = useState([]);
+    const [isLoaded, setIsLoaded] = useState(false);
+    const [minStar, setMinStar] = useState(0);
+    const [minPrice, setMinPrice] = useState("");
+    const [maxPrice, setMaxPrice] = useState("");
+    // variables
     let keyword = searchParams.get("search").slice(0, -1);
     let category = searchParams.get("category").slice(0, -1);
-    const [isLoaded, setIsLoaded] = useState(false);
+    let categoryFilterName = "Tất cả";
+    let varMinStar = minStar;
+    let varIsSaling = isSaling;
+    let minPriceNum = parseFloat(minPrice);
+    let maxPriceNum = parseFloat(maxPrice);
 
     useEffect(() => {
         setIsLoaded(false);
@@ -75,8 +89,15 @@ const ProductList = () => {
                 },
             })
             .then((res) => {
-                console.log("list product: ", res);
+                // Reset Filter
+                setSortOption(null);
+                setCountOption(countOptions[1]);
+                setSelectedCategory("Tất cả");
+                setShowCategories(false);
+                categoryFilterName = "";
+                // Set Data
                 setData(res.data.products);
+                setDataRaw(res.data.products);
                 setIsLoaded(true);
             })
             .catch((err) => console.log(err));
@@ -91,11 +112,81 @@ const ProductList = () => {
                 },
             })
             .then((res) => {
-                console.log("list product: ", res);
+                // Reset Filter
+                setSortOption(null);
+                setCountOption(countOptions[1]);
+                setSelectedCategory("Tất cả");
+                setShowCategories(false);
+                categoryFilterName = "";
+                // Set Data
                 setData(res.data.products);
+                setDataRaw(res.data.products);
                 setIsLoaded(true);
             })
             .catch((err) => console.log(err));
+    };
+
+    function FilterData() {
+        setIsLoaded(false);
+        let arr = dataRaw;
+        // By Category
+        arr = arr.filter(checkFilterCategory);
+        arr = arr.filter(checkSaling);
+        arr = arr.filter(checkMinStar);
+        arr = arr.filter(checkPrice);
+        setData(arr);
+        setIsLoaded(true);
+    }
+
+    function checkFilterCategory(item) {
+        if (categoryFilterName === "Tất cả") return true;
+        return item.type === categoryFilterName;
+    }
+
+    function checkSaling(item) {
+        if (!varIsSaling) return true;
+        return item.discountValue > 0;
+    }
+
+    function checkMinStar(item) {
+        return item.countStar >= varMinStar;
+    }
+
+    function checkPrice(item) {
+        if (!minPrice || !maxPrice || minPriceNum > maxPriceNum) return true;
+        return item.price >= minPriceNum && item.price <= maxPriceNum;
+    }
+
+    const FilterPriceClick = () => {
+        if (!minPrice || !maxPrice) {
+            toast.warn("Vui lòng nhập Giá cao nhất và Giá thấp nhất!", {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+            return;
+        }
+        minPriceNum = parseFloat(minPrice);
+        maxPriceNum = parseFloat(maxPrice);
+        if (minPriceNum > maxPriceNum) {
+            toast.warn("Giá cao nhất phải cao hơn Giá thấp nhất!", {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+            return;
+        }
+        FilterData();
     };
 
     return (
@@ -150,13 +241,15 @@ const ProductList = () => {
                                 {categories.map((item) => (
                                     <button
                                         className={
-                                            selectedCategory === item.id
+                                            selectedCategory === item.name
                                                 ? "category-button active"
                                                 : "category-button"
                                         }
-                                        onClick={() =>
-                                            setSelectedCategory(item.id)
-                                        }
+                                        onClick={() => {
+                                            setSelectedCategory(item.name);
+                                            categoryFilterName = item.name;
+                                            FilterData();
+                                        }}
                                     >
                                         {item.name}
                                     </button>
@@ -172,6 +265,10 @@ const ProductList = () => {
                                     type="number"
                                     className="price-input"
                                     placeholder="Giá thấp nhất"
+                                    value={minPrice}
+                                    onChange={(event) =>
+                                        setMinPrice(event.target.value)
+                                    }
                                 />
                                 <span>VNĐ</span>
                             </div>
@@ -180,10 +277,17 @@ const ProductList = () => {
                                     type="number"
                                     className="price-input"
                                     placeholder="Giá cao nhất"
+                                    value={maxPrice}
+                                    onChange={(event) =>
+                                        setMaxPrice(event.target.value)
+                                    }
                                 />
                                 <span>VNĐ</span>
                             </div>
-                            <button className="price-filter-button primary-button">
+                            <button
+                                className="price-filter-button primary-button"
+                                onClick={FilterPriceClick}
+                            >
                                 <AiOutlineFilter
                                     style={{
                                         width: "20px",
@@ -203,32 +307,89 @@ const ProductList = () => {
                                     type="checkbox"
                                     id="0"
                                     className="filter-checkbox"
+                                    checked={isSaling}
+                                    onClick={() => {
+                                        setIsSaling(!isSaling);
+                                        varIsSaling = !varIsSaling;
+                                    }}
+                                    onChange={FilterData}
                                 />
                                 <label for="0">Đang giảm giá</label>
                             </div>
                             <div className="filter-option-row">
                                 <input
-                                    type="checkbox"
+                                    type="radio"
+                                    name="star"
                                     id="1"
                                     className="filter-checkbox"
+                                    checked={minStar === 1}
+                                    onClick={() => {
+                                        varMinStar = 1;
+                                        setMinStar(1);
+                                    }}
+                                    onChange={FilterData}
                                 />
-                                <label for="1">Từ 3 sao trở lên</label>
+                                <label for="1">Từ 1 sao trở lên</label>
                             </div>
                             <div className="filter-option-row">
                                 <input
-                                    type="checkbox"
+                                    type="radio"
+                                    name="star"
                                     id="2"
                                     className="filter-checkbox"
+                                    checked={minStar === 2}
+                                    onClick={() => {
+                                        varMinStar = 2;
+                                        setMinStar(2);
+                                    }}
+                                    onChange={FilterData}
                                 />
-                                <label for="2">Từ 4 sao trở lên</label>
+                                <label for="2">Từ 2 sao trở lên</label>
                             </div>
                             <div className="filter-option-row">
                                 <input
-                                    type="checkbox"
+                                    type="radio"
+                                    name="star"
                                     id="3"
                                     className="filter-checkbox"
+                                    checked={minStar === 3}
+                                    onClick={() => {
+                                        varMinStar = 3;
+                                        setMinStar(3);
+                                    }}
+                                    onChange={FilterData}
                                 />
-                                <label for="3">Từ 5 sao trở lên</label>
+                                <label for="3">Từ 3 sao trở lên</label>
+                            </div>
+                            <div className="filter-option-row">
+                                <input
+                                    type="radio"
+                                    name="star"
+                                    id="4"
+                                    className="filter-checkbox"
+                                    checked={minStar === 4}
+                                    onClick={() => {
+                                        varMinStar = 4;
+                                        setMinStar(4);
+                                    }}
+                                    onChange={FilterData}
+                                />
+                                <label for="4">Từ 4 sao trở lên</label>
+                            </div>
+                            <div className="filter-option-row">
+                                <input
+                                    type="radio"
+                                    name="star"
+                                    id="5"
+                                    className="filter-checkbox"
+                                    checked={minStar === 5}
+                                    onClick={() => {
+                                        varMinStar = 5;
+                                        setMinStar(5);
+                                    }}
+                                    onChange={FilterData}
+                                />
+                                <label for="5">Từ 5 sao trở lên</label>
                             </div>
                         </div>
                     </div>
@@ -329,9 +490,11 @@ const ProductCard = ({ item }) => {
                     <span className="price">
                         {ThousandSeparator(item.price)} đ
                     </span>
-                    <span className="old-price">
-                        {ThousandSeparator(item.salePrice)} đ
-                    </span>
+                    {item.salePrice > 0 && (
+                        <span className="old-price">
+                            {ThousandSeparator(item.salePrice)} đ
+                        </span>
+                    )}
                 </div>
             </Link>
             <div className="buttons-wrapper">

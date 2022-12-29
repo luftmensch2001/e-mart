@@ -113,6 +113,7 @@
     outline: none;
     border: 1px solid lightgray;
     border-radius: 8px;
+    font-weight: 700;
     color: var(--text-color-primary);
 }
 
@@ -144,7 +145,6 @@
     cursor: pointer;
     width: 24px;
     height: 24px;
-    accent-color: rgb(178, 248, 178);
 }
 
 .ProductList .filter-option-row label {
@@ -152,7 +152,8 @@
     font-size: 1.5rem;
     font-weight: 700;
     color: var(--text-color-primary);
-    padding: 4px 0;
+    padding: 8px 0;
+    margin-top: 4px;
     padding-left: 8px;
     cursor: pointer;
     -webkit-user-select: none; /* Safari */
@@ -168,6 +169,8 @@
     width: 100%;
     display: flex;
     flex-wrap: wrap;
+    margin-left: auto;
+    margin-right: 0;
 }
 .ProductList .product-item {
     width: 28%;

@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import "./ProductList.css";
 import { AiOutlineFilter } from "react-icons/ai";
-import productImage from "../../assets/images/products/4.jpg";
-import starImg from "../../assets/images/reviews/4.png";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { BsCartPlus } from "react-icons/bs";
 import ReactPaginate from "react-paginate";
@@ -17,11 +15,11 @@ import { toast } from "react-toastify";
 import notFoundProduct from "../../assets/images/illustrations/notfoundproduct.jpg";
 
 const sortOptions = [
-    { value: "1", label: "Mới nhất trước" },
-    { value: "2", label: "Cũ nhất trước" },
-    { value: "3", label: "Giá tăng dần" },
-    { value: "4", label: "Giá giảm dần" },
-    { value: "5", label: "Mua nhiều nhất" },
+    { value: 1, label: "Mới nhất trước" },
+    { value: 2, label: "Cũ nhất trước" },
+    { value: 3, label: "Giá tăng dần" },
+    { value: 4, label: "Giá giảm dần" },
+    { value: 5, label: "Mua nhiều nhất" },
 ];
 
 const countOptions = [
@@ -81,6 +79,43 @@ const ProductList = () => {
         else GetCategoryProducts();
     }, [keyword, category]);
 
+    useEffect(() => {
+        if (!sortOption) return;
+        let arr = data;
+        switch (sortOption.value) {
+            case 1:
+                arr.sort((a, b) => {
+                    const aDate = new Date(a.createdAt);
+                    const bDate = new Date(b.createdAt);
+                    return bDate - aDate;
+                });
+                break;
+            case 2:
+                arr.sort((a, b) => {
+                    const aDate = new Date(a.createdAt);
+                    const bDate = new Date(b.createdAt);
+                    return aDate - bDate;
+                });
+                break;
+            case 3:
+                arr.sort((a, b) => {
+                    return a.price - b.price;
+                });
+                break;
+            case 4:
+                arr.sort((a, b) => {
+                    return b.price - a.price;
+                });
+                break;
+            case 5:
+                arr.sort((a, b) => {
+                    return b.countSold - a.countSold;
+                });
+                break;
+        }
+        setData(arr.slice(0));
+    }, [sortOption]);
+
     const GetAllProducts = () => {
         axios
             .get("http://localhost:5000/api/products/allByKeyWord", {
@@ -134,7 +169,6 @@ const ProductList = () => {
         arr = arr.filter(checkSaling);
         arr = arr.filter(checkMinStar);
         arr = arr.filter(checkPrice);
-        setData(arr);
         setIsLoaded(true);
     }
 
@@ -202,6 +236,7 @@ const ProductList = () => {
                     defaultValue={countOption}
                     onChange={setCountOption}
                     options={countOptions}
+                    isSearchable={false}
                     placeholder="Hiển thị"
                     theme={(theme) => ({
                         ...theme,
@@ -217,6 +252,7 @@ const ProductList = () => {
                     onChange={setSortOption}
                     options={sortOptions}
                     placeholder="Sắp xếp theo"
+                    isSearchable={false}
                     theme={(theme) => ({
                         ...theme,
                         colors: {

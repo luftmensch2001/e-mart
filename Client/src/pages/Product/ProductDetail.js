@@ -48,6 +48,7 @@ const ProductDetail = () => {
             })
             .then((res) => {
                 setTypeData(res.data.colors);
+                setSelectedType(res.data.colors[0].name);
                 counter++;
                 if (counter === 3) setIsLoaded(true);
             })

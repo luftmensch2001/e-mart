@@ -5,11 +5,14 @@ import WishlistProduct from "./WishlistProduct";
 import { AiOutlineSearch } from "react-icons/ai";
 import { BsArrowLeft } from "react-icons/bs";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 import pi1 from "../../assets/ExampleProduct/iPhone/1.png";
 import pi2 from "../../assets/ExampleProduct/sach/2.jpg";
 import pi3 from "../../assets/ExampleProduct/giay/1.jpg";
 import pi4 from "../../assets/ExampleProduct/dongho/1.jpeg";
+import Loading from "../../components/Loading";
 
 let products = [
     {
@@ -42,7 +45,7 @@ let products = [
     },
 ];
 
-function Items({ currentItems, filterFunction }) {
+function Items({ currentItems, filterFunction, count }) {
     const [searchValue, setSearchValue] = useState("");
 
     function SearchInputOnChange(event) {
@@ -61,7 +64,7 @@ function Items({ currentItems, filterFunction }) {
             </span>
             <span className="total-count-label">
                 Hiện có
-                <span className="green-text"> {products.length} sản phẩm </span>
+                <span className="green-text"> {count} sản phẩm </span>
                 trong Danh sách yêu thích của bạn
             </span>
             <div className="wishlist-search-container">
@@ -111,6 +114,7 @@ function PaginatedItems({ items, itemsPerPage, filterFunction }) {
             <Items
                 currentItems={currentItems}
                 filterFunction={filterFunction}
+                count={items.length}
             />
             <ReactPaginate
                 breakLabel="..."
@@ -139,10 +143,50 @@ function PaginatedItems({ items, itemsPerPage, filterFunction }) {
 function Wishlist() {
     const [data, setData] = useState(products);
     const [allProduct, setAllProduct] = useState(products);
+    const [isLoaded, setIsLoaded] = useState(false);
+
     let searchValue = "";
+    let counter = 0;
+
+    useEffect(() => {
+        setIsLoaded(false);
+        counter = 0;
+        axios
+            .get("http://localhost:5000/api/productInFavorites/byAccountId", {
+                params: {
+                    accountId: localStorage.getItem("accountID"),
+                },
+            })
+            .then((res) => {
+                let favoriteProducts = res.data.productInFavorites;
+                favoriteProducts.forEach((item) => {
+                    axios
+                        .get("http://localhost:5000/api/products/byProductId", {
+                            params: {
+                                productId: item.productId,
+                            },
+                        })
+                        .then((res) => {
+                            item.nameProduct = res.data.product.nameProduct;
+                            item.imageURL = res.data.product.imageURLs[0];
+                            item.price = res.data.product.price;
+                            counter++;
+                            if (counter === favoriteProducts.length) {
+                                setData(favoriteProducts);
+                                setAllProduct(favoriteProducts);
+                                setIsLoaded(true);
+                            }
+                        })
+                        .catch((err) => console.log("err: ", err));
+                });
+            })
+            .catch((err) => {
+                console.log("err: ", err);
+            });
+    }, []);
 
     function FilterByName(item) {
-        const productNameLow = item.name.toLowerCase();
+        const productNameLow = item.nameProduct.toLowerCase();
         const searchString = searchValue.toLowerCase();
         return productNameLow.includes(searchString);
     }
@@ -150,14 +194,30 @@ function Wishlist() {
     function FilterProduct(searchVal) {
         searchValue = searchVal;
         const arr = allProduct.filter(FilterByName);
+        if (arr.length === 0) {
+            toast.error("Không tìm thấy sản phẩm nào!", {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+            return;
+        }
         setData(arr);
     }
+
+    if (!isLoaded) return <Loading />;
+
     if (data.length > 0)
         return (
             <div className="BuyOrdersTab">
                 <PaginatedItems
                     items={data}
-                    itemsPerPage={4}
+                    itemsPerPage={8}
                     filterFunction={FilterProduct}
                 />
             </div>

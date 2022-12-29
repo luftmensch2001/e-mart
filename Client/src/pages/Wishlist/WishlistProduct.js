@@ -7,18 +7,17 @@ import ThousandSeparator from "../../components/ThousandSeparator";
 function WishlistProduct(props) {
     const data = props.data;
     console.log("data: ", data);
-
     return (
         <div className="WishlistProduct">
             <div className="wl-product-info c1">
-                <img className="wl-product-image" src={data.image} alt="" />
-                <span className="wl-product-name">{data.name}</span>
+                <img className="wl-product-image" src={data.imageURL} alt="" />
+                <span className="wl-product-name">{data.nameProduct}</span>
             </div>
 
-            <span className="wl-product-type c2">{data.type}</span>
+            <span className="wl-product-type c2">{data.color}</span>
 
             <span className="wl-product-price c3">
-                {ThousandSeparator(data.price)} đ
+                {data?.price && ThousandSeparator(data.price)} đ
             </span>
 
             <div className="wl-product-buttons c4">

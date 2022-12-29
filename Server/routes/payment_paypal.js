@@ -31,6 +31,22 @@ async function changeVNDtoUSD(price) {
     .catch((error) => console.log("error", error));
   return re;
 }
+
+///////TEST////////
+const items [
+  // items
+  {
+     "name": "item1",
+     "sku": "001",
+     "currency": "USD",
+     "price": "1",
+     "quantity": "1",
+  },
+]
+
+///////////////////
+
+
 changeVNDtoUSD(20000);
 router.post("/pay", async function (req, res) {
   const { accountId, name, price, count } = req.body;
@@ -49,13 +65,13 @@ router.post("/pay", async function (req, res) {
       {
         item_list: {
           items: [
-            {
-              name: name,
-              sku: "001",
-              currency: "USD",
-              price: newPrice.toFixed(),
-              quantity: Number(count),
-            },
+            // {
+            //   name: name,
+            //   sku: "001",
+            //   currency: "USD",
+            //   price: newPrice.toFixed(),
+            //   quantity: Number(count),
+            // },
           ],
         },
         amount: {

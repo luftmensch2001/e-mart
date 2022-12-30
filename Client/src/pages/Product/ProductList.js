@@ -67,6 +67,7 @@ const ProductList = () => {
     // variables
     let keyword = searchParams.get("search").slice(0, -1);
     let category = searchParams.get("category").slice(0, -1);
+    let isCategory = searchParams.get("isCategory").slice(0, -1);
     let categoryFilterName = "Tất cả";
     let varMinStar = minStar;
     let varIsSaling = isSaling;
@@ -139,10 +140,14 @@ const ProductList = () => {
     };
 
     const GetCategoryProducts = () => {
+        let keywordNew = keyword;
+        // Get All product in category
+        if (isCategory === "true") keywordNew = "";
+
         axios
             .get("http://localhost:5000/api/products/catalogByKeyWord", {
                 params: {
-                    keyword: keyword,
+                    keyword: keywordNew,
                     type: category,
                 },
             })
@@ -228,7 +233,9 @@ const ProductList = () => {
             <span className="title-text keyword-label">
                 Kết quả hiển thị cho
                 <br />
-                <span className="green-text">"{keyword}"</span>
+                <span className="green-text">
+                    "{keyword === "" ? "Tất cả sản phẩm" : keyword}"
+                </span>
             </span>
             <div className="selects-wrapper">
                 <Select

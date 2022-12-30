@@ -1,10 +1,5 @@
 import React, { useState } from "react";
-import {
-    Link,
-    useNavigate,
-    createSearchParams,
-    useAsyncError,
-} from "react-router-dom";
+import { Link, useNavigate, createSearchParams } from "react-router-dom";
 import "./NavBar.css";
 
 import {
@@ -33,7 +28,9 @@ function NavBar() {
             pathname: "/products",
             search: `?search=${createSearchParams(
                 searchValue
-            )}&category=${createSearchParams(categoryValue)}`,
+            )}&category=${createSearchParams(
+                categoryValue
+            )}&isCategory=${createSearchParams("false")}`,
         });
 
     return (

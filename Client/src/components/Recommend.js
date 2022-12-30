@@ -102,11 +102,13 @@ function Recommend() {
                                             <span className="recommend-price">
                                                 {ThousandSeparator(item.price)}
                                             </span>
-                                            <span className="recommend-old-price">
-                                                {ThousandSeparator(
-                                                    item.salePrice
-                                                )}
-                                            </span>
+                                            {item.salePrice > 0 && (
+                                                <span className="recommend-old-price">
+                                                    {ThousandSeparator(
+                                                        item.salePrice
+                                                    ) + " đ"}
+                                                </span>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
@@ -143,11 +145,13 @@ function Recommend() {
                                             <span className="recommend-price">
                                                 {ThousandSeparator(item.price)}
                                             </span>
-                                            <span className="recommend-old-price">
-                                                {ThousandSeparator(
-                                                    item.salePrice
-                                                )}
-                                            </span>
+                                            {item.salePrice > 0 && (
+                                                <span className="recommend-old-price">
+                                                    {ThousandSeparator(
+                                                        item.salePrice
+                                                    ) + " đ"}
+                                                </span>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
@@ -184,11 +188,13 @@ function Recommend() {
                                             <span className="recommend-price">
                                                 {ThousandSeparator(item.price)}
                                             </span>
-                                            <span className="recommend-old-price">
-                                                {ThousandSeparator(
-                                                    item.salePrice
-                                                )}
-                                            </span>
+                                            {item.salePrice > 0 && (
+                                                <span className="recommend-old-price">
+                                                    {ThousandSeparator(
+                                                        item.salePrice
+                                                    ) + " đ"}
+                                                </span>
+                                            )}
                                         </div>
                                     </div>
                                 </div>

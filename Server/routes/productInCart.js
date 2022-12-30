@@ -35,13 +35,17 @@ router.post("/create", async (req, res) => {
       .json({ success: false, message: "Missing information" });
   try {
     // Check for existing productInFavorite
-    const productInCart = await ProductInCart.findOne({ productId, accountId });
+    const productInCart = await ProductInCart.findOne({
+      productId,
+      accountId,
+      color,
+    });
     if (productInCart) {
       productInCart.count += count;
       productInCart.save();
       return res
         .status(200)
-        .json({ success: true, message: "Created productInCart" });
+        .json({ success: true, message: "Created productInCart(add count)" });
     }
 
     // All Good
@@ -54,7 +58,7 @@ router.post("/create", async (req, res) => {
     await newProductInCart.save();
     return res.status(200).json({
       success: true,
-      message: "Created productCart",
+      message: "Created productInCart",
     });
   } catch (error) {
     console.log(error);

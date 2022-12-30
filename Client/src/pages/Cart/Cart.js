@@ -20,11 +20,11 @@ const Cart = () => {
     let counter = 0;
 
     useEffect(() => {
-        FetchData();
+        FetchData(true);
     }, []);
 
-    const FetchData = () => {
-        setIsLoaded(false);
+    const FetchData = (showLoading) => {
+        setIsLoaded(!showLoading);
         axios
             .get("http://localhost:5000/api/productInCarts/byAccountId", {
                 params: {
@@ -33,6 +33,7 @@ const Cart = () => {
             })
             .then((res) => {
                 let cartProducts = res.data.productInCarts;
+                counter = 0;
                 if (counter === cartProducts.length) {
                     setData(cartProducts);
                     setIsLoaded(true);
@@ -52,6 +53,7 @@ const Cart = () => {
                             totalTemp += item.price * item.count;
                             counter++;
                             if (counter === cartProducts.length) {
+                                console.log("cartProducts: ", cartProducts);
                                 setData(cartProducts);
                                 setTotal(totalTemp);
                                 setIsLoaded(true);
@@ -73,7 +75,10 @@ const Cart = () => {
                 <span className="page-title title-text">Giỏ Hàng</span>
                 <span className="total-count-label">
                     Hiện có
-                    <span className="green-text"> {data.length} sản phẩm </span>
+                    <span className="green-text">
+                        {" "}
+                        {data?.length} sản phẩm{" "}
+                    </span>
                     trong Giỏ hàng của bạn
                 </span>
                 <div className="cart-zone">
@@ -138,7 +143,7 @@ const Cart = () => {
                                     Giảm giá:
                                 </span>
                                 <span className="checkout-value">
-                                    {ThousandSeparator(discount)} đ
+                                    {discount && ThousandSeparator(discount)} đ
                                 </span>
                             </div>
                             <div
@@ -149,7 +154,12 @@ const Cart = () => {
                                     Thành tiền:
                                 </span>
                                 <span className="checkout-value-total">
-                                    {ThousandSeparator(total - discount)} đ
+                                    {total !== "" &&
+                                        discount !== "" &&
+                                        ThousandSeparator(
+                                            total - discount
+                                        )}{" "}
+                                    đ
                                 </span>
                             </div>
                             <Link to="/checkout">

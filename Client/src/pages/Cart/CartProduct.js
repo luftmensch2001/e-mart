@@ -12,8 +12,24 @@ const CartProduct = ({ data, updateFunction }) => {
     const [quantity, setQuantity] = useState(data.count);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
+    const UpdateQuantity = (count) => {
+        axios
+            .put("http://localhost:5000/api/productInCarts/update", {
+                productInCartId: data._id,
+                count: count,
+            })
+            .then((res) => {
+                console.log("res: ", res);
+                updateFunction(false);
+            })
+            .catch((err) => {
+                console.log("err: ", err);
+            });
+    };
+
     const UpQuantityOnClick = () => {
         setQuantity(quantity + 1);
+        UpdateQuantity(quantity + 1);
     };
     const DownQuantityOnClick = () => {
         if (quantity <= 1) {
@@ -30,6 +46,7 @@ const CartProduct = ({ data, updateFunction }) => {
             return;
         }
         setQuantity(quantity - 1);
+        UpdateQuantity(quantity - 1);
     };
 
     const QuantityInputOnChange = (event) => {
@@ -40,6 +57,7 @@ const CartProduct = ({ data, updateFunction }) => {
     };
 
     const DeleteFromCart = () => {
+        console.log("data.productId: ", data.productId);
         axios
             .delete(
                 "http://localhost:5000/api/productInCarts/byProductIdAndAccountId",
@@ -47,6 +65,7 @@ const CartProduct = ({ data, updateFunction }) => {
                     params: {
                         accountId: localStorage.getItem("accountID"),
                         productId: data.productId,
+                        color: data.color,
                     },
                 }
             )
@@ -97,7 +116,7 @@ const CartProduct = ({ data, updateFunction }) => {
                 </div>
             </Link>
             <span className="cart-product-price">
-                {ThousandSeparator(data.price)} đ
+                {data.price && ThousandSeparator(data.price)} đ
             </span>
             <div className="cart-product-quantity">
                 <div style={{ position: "relative", width: "80px" }}>
@@ -121,7 +140,7 @@ const CartProduct = ({ data, updateFunction }) => {
                 </div>
             </div>
             <span className="cart-product-total">
-                {ThousandSeparator(data.price * quantity)} đ
+                {data.price && ThousandSeparator(data.price * quantity)} đ
             </span>
             <div className="cart-product-delete">
                 <button onClick={() => setShowDeleteDialog(true)}>

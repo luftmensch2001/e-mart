@@ -30,7 +30,7 @@ router.get("/byAccountId", async (req, res) => {
 // @desc create productInFavorites
 // @access Public
 router.post("/create", async (req, res) => {
-    const { accountId, productId, color } = req.body;
+    const { accountId, productId } = req.body;
 
     if (!productId || !accountId)
         return res
@@ -52,7 +52,6 @@ router.post("/create", async (req, res) => {
         const newProductInFavorites = new ProductInFavorites({
             productId,
             accountId,
-            color,
         });
         await newProductInFavorites.save();
         return res

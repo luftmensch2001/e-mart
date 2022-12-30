@@ -138,6 +138,7 @@ function PopularProduct() {
 
 function ProductCard({ item, widthPercentItem }) {
     const [isFavorite, setIsFavorite] = useState(false);
+    const [showDialog, setShowDialog] = useState(false);
 
     const isFavoriteOnChange = () => {
         if (!isFavorite) AddToFavorite();
@@ -222,6 +223,12 @@ function ProductCard({ item, widthPercentItem }) {
 
     return (
         <div className="product-item" style={{ width: `${widthPercentItem}%` }}>
+            {showDialog && (
+                <SelectTypeDialog
+                    product={item}
+                    closeFunction={() => setShowDialog(false)}
+                />
+            )}
             <div className="product-info">
                 <Link to={`/product/${item._id}`}>
                     <img
@@ -250,7 +257,10 @@ function ProductCard({ item, widthPercentItem }) {
                     </div>
                 </Link>
                 <div className="product-buttons">
-                    <button className="product-add-to-cart-button">
+                    <button
+                        className="product-add-to-cart-button"
+                        onClick={() => setShowDialog(true)}
+                    >
                         <AiOutlineShoppingCart className="product-add-to-cart-icon" />
                         Thêm Vào Giỏ
                     </button>

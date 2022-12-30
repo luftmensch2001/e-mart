@@ -1,19 +1,44 @@
 import React, { useEffect, useState } from "react";
 import "./SelectTypeDialog.css";
 import axios from "axios";
+import { toast } from "react-toastify";
 
-const SelectTypeDialog = ({ productId, closeFunction }) => {
-    console.log("productId: ", productId);
+const SelectTypeDialog = ({ product, closeFunction }) => {
+    console.log("productId: ", product);
     // productId = "63ae92e236aeb06002c3b800";
 
     const [selectedType, setSelectedType] = useState("");
     const [typeData, setTypeData] = useState([]);
 
+    const AddToCart = () => {
+        axios
+            .post("http://localhost:5000/api/productInCarts/create", {
+                accountId: localStorage.getItem("accountID"),
+                productId: product._id,
+                color: selectedType,
+                count: 1,
+            })
+            .then((res) => {
+                toast.success("Đã thêm vào Giỏ hàng!", {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+                closeFunction();
+            })
+            .catch((err) => console.log("err: ", err));
+    };
+
     useEffect(() => {
         axios
             .get("http://localhost:5000/api/colors", {
                 params: {
-                    productId: productId,
+                    productId: product._id,
                 },
             })
             .then((res) => {
@@ -37,8 +62,8 @@ const SelectTypeDialog = ({ productId, closeFunction }) => {
                     ))}
                 </select>
                 <div className="buttons">
-                    <button className="yes-button" onClick={() => {}}>
-                        Đồng ý
+                    <button className="yes-button" onClick={AddToCart}>
+                        Thêm vào Giỏ
                     </button>
                     <button className="no-button" onClick={closeFunction}>
                         Huỷ

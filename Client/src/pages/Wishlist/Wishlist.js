@@ -8,12 +8,9 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
 import Loading from "../../components/Loading";
-import ConfirmDialog from "../../components/ConfirmDialog";
 
 function Items({ currentItems, filterFunction, count, updateFunction }) {
     const [searchValue, setSearchValue] = useState("");
-    const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-    const [productId, setProductId] = useState();
 
     function SearchInputOnChange(event) {
         setSearchValue(event.target.value);
@@ -23,48 +20,6 @@ function Items({ currentItems, filterFunction, count, updateFunction }) {
         if (event.key === "Enter") {
             filterFunction(searchValue);
         }
-    }
-
-    function DeleteFromWishlist() {
-        console.log("productId: ", productId);
-        axios
-            .delete(
-                "http://localhost:5000/api/productInFavorites/byProductIdAndAccountId",
-                {
-                    params: {
-                        accountId: localStorage.getItem("accountID"),
-                        productId: productId,
-                    },
-                }
-            )
-            .then((res) => {
-                console.log("res: ", res);
-                toast.success("Đã xoá khỏi Yêu thích!", {
-                    position: "bottom-right",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "light",
-                });
-                updateFunction();
-            })
-            .catch((err) => {
-                console.log("err: ", err);
-                toast.error("Xoá không thành công!", {
-                    position: "bottom-right",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "light",
-                });
-            });
-        setShowDeleteDialog(false);
     }
 
     return (
@@ -97,23 +52,11 @@ function Items({ currentItems, filterFunction, count, updateFunction }) {
                     {currentItems.map((item) => (
                         <WishlistProduct
                             data={item}
-                            setProductId={setProductId}
-                            showDeleteFunction={setShowDeleteDialog}
+                            updateFunction={updateFunction}
                         />
                     ))}
                 </div>
             </div>
-            {showDeleteDialog && (
-                <ConfirmDialog
-                    message={
-                        "Bạn có chắc muốn xoá sản phẩm này khỏi Danh Sách Yêu thích ?"
-                    }
-                    yesLabel={"Xoá"}
-                    noLabel={"Huỷ"}
-                    yesFunction={DeleteFromWishlist}
-                    noFunction={() => setShowDeleteDialog(false)}
-                />
-            )}
         </div>
     );
 }

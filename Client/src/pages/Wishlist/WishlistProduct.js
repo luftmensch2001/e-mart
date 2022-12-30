@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./WishlistProduct.css";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { TbShoppingCartPlus } from "react-icons/tb";
@@ -6,11 +6,12 @@ import ThousandSeparator from "../../components/ThousandSeparator";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import ConfirmDialog from "../../components/ConfirmDialog";
 
 function WishlistProduct(props) {
     const data = props.data;
-    const showDeleteFunction = props.showDeleteFunction;
-    const setProductId = props.setProductId;
+    const updateFunction = props.updateFunction;
+    const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
     const AddToCart = () => {
         axios
@@ -34,6 +35,47 @@ function WishlistProduct(props) {
             })
             .catch((err) => console.log("err: ", err));
     };
+
+    function DeleteFromWishlist() {
+        axios
+            .delete(
+                "http://localhost:5000/api/productInFavorites/byProductIdAndAccountId",
+                {
+                    params: {
+                        accountId: localStorage.getItem("accountID"),
+                        productId: data.productId,
+                    },
+                }
+            )
+            .then((res) => {
+                console.log("res: ", res);
+                toast.success("Đã xoá khỏi Yêu thích!", {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+                updateFunction();
+            })
+            .catch((err) => {
+                console.log("err: ", err);
+                toast.error("Xoá không thành công!", {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+            });
+        setShowDeleteDialog(false);
+    }
 
     return (
         <div className="WishlistProduct">
@@ -63,13 +105,23 @@ function WishlistProduct(props) {
                 <button
                     className="wl-product-remove-button"
                     onClick={() => {
-                        setProductId(data.productId);
-                        showDeleteFunction(true);
+                        setShowDeleteDialog(true);
                     }}
                 >
                     <RiDeleteBin6Line className="wl-product-button-icon" />
                 </button>
             </div>
+            {showDeleteDialog && (
+                <ConfirmDialog
+                    message={
+                        "Bạn có chắc muốn xoá sản phẩm này khỏi Danh Sách Yêu thích ?"
+                    }
+                    yesLabel={"Xoá"}
+                    noLabel={"Huỷ"}
+                    yesFunction={DeleteFromWishlist}
+                    noFunction={() => setShowDeleteDialog(false)}
+                />
+            )}
         </div>
     );
 }

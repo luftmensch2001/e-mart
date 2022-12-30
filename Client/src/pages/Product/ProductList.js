@@ -174,6 +174,7 @@ const ProductList = () => {
         arr = arr.filter(checkSaling);
         arr = arr.filter(checkMinStar);
         arr = arr.filter(checkPrice);
+        setData(arr);
         setIsLoaded(true);
     }
 

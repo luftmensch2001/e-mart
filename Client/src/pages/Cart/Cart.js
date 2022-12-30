@@ -10,6 +10,7 @@ import Loading from "../../components/Loading";
 import axios from "axios";
 
 import ThousandSeparator from "../../components/ThousandSeparator";
+import ConfirmDialog from "../../components/ConfirmDialog";
 
 const Cart = () => {
     const [data, setData] = useState([]);
@@ -87,7 +88,10 @@ const Cart = () => {
 
                         <div className="cart-product-list">
                             {data.map((item) => (
-                                <CartProduct data={item} />
+                                <CartProduct
+                                    data={item}
+                                    updateFunction={FetchData}
+                                />
                             ))}
                         </div>
 

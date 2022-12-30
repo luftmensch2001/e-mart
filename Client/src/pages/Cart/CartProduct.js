@@ -5,9 +5,12 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import ThousandSeparator from "../../components/ThousandSeparator";
+import ConfirmDialog from "../../components/ConfirmDialog";
+import axios from "axios";
 
-const CartProduct = ({ data }) => {
+const CartProduct = ({ data, updateFunction }) => {
     const [quantity, setQuantity] = useState(data.count);
+    const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
     const UpQuantityOnClick = () => {
         setQuantity(quantity + 1);
@@ -34,6 +37,45 @@ const CartProduct = ({ data }) => {
         if (event.target.value === "-") return;
         if (event.target.value !== "" && event.target.value < 1) return;
         setQuantity(event.target.value * 1);
+    };
+
+    const DeleteFromCart = () => {
+        axios
+            .delete(
+                "http://localhost:5000/api/productInCarts/byProductIdAndAccountId",
+                {
+                    params: {
+                        accountId: localStorage.getItem("accountID"),
+                        productId: data.productId,
+                    },
+                }
+            )
+            .then((res) => {
+                toast.success("Đã xoá khỏi Giỏ hàng!", {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+                updateFunction();
+            })
+            .catch((err) => {
+                toast.error("Xoá không thành công!", {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+            });
+        setShowDeleteDialog(false);
     };
 
     return (
@@ -82,10 +124,21 @@ const CartProduct = ({ data }) => {
                 {ThousandSeparator(data.price * quantity)} đ
             </span>
             <div className="cart-product-delete">
-                <button>
+                <button onClick={() => setShowDeleteDialog(true)}>
                     <RiDeleteBin6Line className="cart-product-delete-icon" />
                 </button>
             </div>
+            {showDeleteDialog && (
+                <ConfirmDialog
+                    message={
+                        "Bạn có chắc chắn muốn xoá sản phẩm khỏi Giỏ hàng ?"
+                    }
+                    yesLabel={"Xoá"}
+                    noLabel={"Huỷ"}
+                    yesFunction={DeleteFromCart}
+                    noFunction={() => setShowDeleteDialog(false)}
+                />
+            )}
         </div>
     );
 };

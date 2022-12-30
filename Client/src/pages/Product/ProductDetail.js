@@ -119,6 +119,29 @@ const ProductDetail = () => {
         setQuantity(event.target.value * 1);
     };
 
+    const AddToCart = () => {
+        axios
+            .post("http://localhost:5000/api/productInCarts/create", {
+                accountId: localStorage.getItem("accountID"),
+                productId: productID,
+                color: selectedType,
+                count: quantity,
+            })
+            .then((res) => {
+                toast.success("Đã thêm vào Giỏ hàng!", {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+            })
+            .catch((err) => console.log("err: ", err));
+    };
+
     const SendReview = () => {
         if (starVote === 0) {
             toast.warning("Bạn chưa vote sao!", {
@@ -417,7 +440,10 @@ const ProductDetail = () => {
                                     Mua ngay
                                 </button>
                             </Link>
-                            <button className="add-to-cart-button primary-button">
+                            <button
+                                className="add-to-cart-button primary-button"
+                                onClick={AddToCart}
+                            >
                                 <AiOutlineShoppingCart className="icon" />
                                 Thêm vào Giỏ hàng
                             </button>

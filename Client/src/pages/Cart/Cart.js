@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Cart.css";
 import { Link } from "react-router-dom";
 import CartProduct from "./CartProduct";
@@ -6,55 +6,73 @@ import { HiOutlineRefresh } from "react-icons/hi";
 import { BsArrowLeft, BsCartCheck } from "react-icons/bs";
 import { FaMoneyBillWave } from "react-icons/fa";
 import AddToCart from "../../assets/images/illustrations/undraw_Add_to_cart_re_wrdo.png";
+import Loading from "../../components/Loading";
+import axios from "axios";
 
-import pi1 from "../../assets/ExampleProduct/iPhone/1.png";
-import pi2 from "../../assets/ExampleProduct/sach/2.jpg";
-import pi3 from "../../assets/ExampleProduct/giay/1.jpg";
-import pi4 from "../../assets/ExampleProduct/dongho/1.jpeg";
-
-let products = [
-    {
-        image: pi1,
-        name: "iPhone 14 Pro Max",
-        type: "Space Black",
-        quantity: 1,
-        price: 31990000,
-    },
-    {
-        image: pi2,
-        name: "Sách Dám mơ lớn, đừng hoài phí tuổi trẻ - Lư Tư Hạo",
-        type: "Bìa cứng",
-        quantity: 3,
-        price: 96000,
-    },
-    {
-        image: pi3,
-        name: "Giày Da Thể Thao Dành Cho Nam",
-        type: "Size 42",
-        quantity: 2,
-        price: 540000,
-    },
-    {
-        image: pi4,
-        name: "Đồng Hồ Thông Minh Xiaomi Mi Watch",
-        type: "Màu xanh",
-        quantity: 1,
-        price: 1350000,
-    },
-];
+import ThousandSeparator from "../../components/ThousandSeparator";
 
 const Cart = () => {
-    const [data, setData] = useState(products);
+    const [data, setData] = useState([]);
+    const [isLoaded, setIsLoaded] = useState(false);
+    const [total, setTotal] = useState(0);
+    const [discount, setDiscount] = useState(0);
+    let counter = 0;
+
+    useEffect(() => {
+        FetchData();
+    }, []);
+
+    const FetchData = () => {
+        setIsLoaded(false);
+        axios
+            .get("http://localhost:5000/api/productInCarts/byAccountId", {
+                params: {
+                    accountId: localStorage.getItem("accountID"),
+                },
+            })
+            .then((res) => {
+                let cartProducts = res.data.productInCarts;
+                if (counter === cartProducts.length) {
+                    setData(cartProducts);
+                    setIsLoaded(true);
+                }
+                let totalTemp = 0;
+                cartProducts.forEach((item) => {
+                    axios
+                        .get("http://localhost:5000/api/products/byProductId", {
+                            params: {
+                                productId: item.productId,
+                            },
+                        })
+                        .then((res) => {
+                            item.nameProduct = res.data.product.nameProduct;
+                            item.imageURL = res.data.product.imageURLs[0];
+                            item.price = res.data.product.price;
+                            totalTemp += item.price * item.count;
+                            counter++;
+                            if (counter === cartProducts.length) {
+                                setData(cartProducts);
+                                setTotal(totalTemp);
+                                setIsLoaded(true);
+                            }
+                        })
+                        .catch((err) => console.log("err: ", err));
+                });
+            })
+            .catch((err) => {
+                console.log("err: ", err);
+            });
+    };
+
+    if (!isLoaded) return <Loading />;
+
     if (data.length > 0)
         return (
             <div className="Cart content">
                 <span className="page-title title-text">Giỏ Hàng</span>
                 <span className="total-count-label">
                     Hiện có
-                    <span className="green-text">
-                        {" "}
-                        {products.length} sản phẩm{" "}
-                    </span>
+                    <span className="green-text"> {data.length} sản phẩm </span>
                     trong Giỏ hàng của bạn
                 </span>
                 <div className="cart-zone">
@@ -66,11 +84,13 @@ const Cart = () => {
                             <span className="c4">Tổng cộng</span>
                             <span className="c5"></span>
                         </div>
+
                         <div className="cart-product-list">
                             {data.map((item) => (
                                 <CartProduct data={item} />
                             ))}
                         </div>
+
                         <div className="cart-bottom-buttons">
                             <Link to="/">
                                 <button
@@ -81,7 +101,10 @@ const Cart = () => {
                                     Tiếp tục mua sắm
                                 </button>
                             </Link>
-                            <button className="cart-update-button">
+                            <button
+                                className="cart-update-button"
+                                onClick={FetchData}
+                            >
                                 <HiOutlineRefresh
                                     className="cart-button-icon"
                                     style={{ color: "#FFF" }}
@@ -97,7 +120,7 @@ const Cart = () => {
                                     Tổng tiền hàng:
                                 </span>
                                 <span className="checkout-value">
-                                    28,000,000 đ
+                                    {ThousandSeparator(total)} đ
                                 </span>
                             </div>
                             <div className="checkout-row">
@@ -111,7 +134,7 @@ const Cart = () => {
                                     Giảm giá:
                                 </span>
                                 <span className="checkout-value">
-                                    120,000 đ
+                                    {ThousandSeparator(discount)} đ
                                 </span>
                             </div>
                             <div
@@ -122,7 +145,7 @@ const Cart = () => {
                                     Thành tiền:
                                 </span>
                                 <span className="checkout-value-total">
-                                    27,880,000 đ
+                                    {ThousandSeparator(total - discount)} đ
                                 </span>
                             </div>
                             <Link to="/checkout">

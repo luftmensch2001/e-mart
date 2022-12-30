@@ -4,12 +4,37 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { TbShoppingCartPlus } from "react-icons/tb";
 import ThousandSeparator from "../../components/ThousandSeparator";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 function WishlistProduct(props) {
     const data = props.data;
     const showDeleteFunction = props.showDeleteFunction;
     const setProductId = props.setProductId;
-    console.log("data: ", data);
+
+    const AddToCart = () => {
+        axios
+            .post("http://localhost:5000/api/productInCarts/create", {
+                accountId: localStorage.getItem("accountID"),
+                productId: data.productId,
+                color: data.color,
+                count: 1,
+            })
+            .then((res) => {
+                toast.success("Đã thêm vào Giỏ hàng!", {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+            })
+            .catch((err) => console.log("err: ", err));
+    };
+
     return (
         <div className="WishlistProduct">
             <Link
@@ -32,7 +57,7 @@ function WishlistProduct(props) {
                 </span>
             </Link>
             <div className="wl-product-buttons c4">
-                <button className="wl-product-cart-button">
+                <button className="wl-product-cart-button" onClick={AddToCart}>
                     <TbShoppingCartPlus className="wl-product-button-icon" />
                 </button>
                 <button

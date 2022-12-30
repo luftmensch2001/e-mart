@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import ThousandSeparator from "../../components/ThousandSeparator";
 
 const CartProduct = ({ data }) => {
-    const [quantity, setQuantity] = useState(data.quantity);
+    const [quantity, setQuantity] = useState(data.count);
 
     const UpQuantityOnClick = () => {
         setQuantity(quantity + 1);
@@ -38,13 +38,18 @@ const CartProduct = ({ data }) => {
 
     return (
         <div className="CartProduct">
-            <Link to="/product" className="cart-link-product">
+            <Link
+                to={`/product/${data.productId}`}
+                className="cart-link-product"
+            >
                 <div className="cart-product-info">
-                    <img className="cart-product-img" src={data.image} />
+                    <img className="cart-product-img" src={data.imageURL} />
                     <div className="cart-product-name-type">
-                        <span className="cart-product-name">{data.name}</span>
+                        <span className="cart-product-name">
+                            {data.nameProduct}
+                        </span>
                         <span className="cart-product-type">
-                            Phân loại: {data.type}
+                            Phân loại: {data.color}
                         </span>
                     </div>
                 </div>

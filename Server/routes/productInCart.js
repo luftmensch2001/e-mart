@@ -3,6 +3,9 @@ const accounts = require("../Models/accounts");
 const productInCarts = require("../models/productInCarts");
 const router = express.Router();
 
+const multer = require("multer");
+const uploadMultipartForm = multer().none();
+
 const ProductInCart = require("../models/productInCarts");
 
 // @route GET api/productInCarts/byAccountId
@@ -43,9 +46,11 @@ router.post("/create", async (req, res) => {
     if (productInCart) {
       productInCart.count += count;
       productInCart.save();
-      return res
-        .status(200)
-        .json({ success: true, message: "Created productInCart(add count)" });
+      return res.status(200).json({
+        success: true,
+        message: "Created productInCart(add count)",
+        productInCart,
+      });
     }
 
     // All Good
@@ -59,6 +64,7 @@ router.post("/create", async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "Created productInCart",
+      newProductInCart,
     });
   } catch (error) {
     console.log(error);
@@ -102,6 +108,45 @@ router.delete("/byProductIdAndAccountId", async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({ success: false, message: " Internal server error" });
+  }
+});
+// @route PUT api/productInCarts/update
+// @desc update Product
+// @access Public
+router.put("/update", async (req, res) => {
+  try {
+    uploadMultipartForm(req, res, function (err) {
+      const { productInCartId, count } = req.body;
+      ProductInCart.findOneAndUpdate(
+        { _id: productInCartId },
+        {
+          count,
+        },
+        { new: true },
+        function (error, product) {
+          console.log(product);
+          if (!product) {
+            res.status(400).json({
+              success: false,
+              message: "productInCart not found",
+            });
+          } else {
+            res.status(200).json({
+              success: true,
+              message: " Updated Count product in cart",
+              product,
+            });
+          }
+        }
+      );
+      // All Good
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: " Internal server error",
+    });
   }
 });
 

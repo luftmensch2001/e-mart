@@ -11,6 +11,7 @@ import axios from "axios";
 import Loading from "../../components/Loading";
 import GetStarImage from "../../components/GetStarImage";
 import { toast } from "react-toastify";
+import SelectTypeDialog from "../../components/SelectTypeDialog";
 
 import notFoundProduct from "../../assets/images/illustrations/notfoundproduct.jpg";
 
@@ -517,9 +518,97 @@ function Items({ currentItems }) {
 
 const ProductCard = ({ item }) => {
     const [isFavorite, setIsFavorite] = useState(false);
+    const [showDialog, setShowDialog] = useState(false);
+
+    const isFavoriteOnChange = () => {
+        if (!isFavorite) AddToFavorite();
+        else RemoveFromFavorite();
+    };
+
+    const AddToFavorite = () => {
+        console.log("id: ", item._id);
+        // Add to favorite
+        axios
+            .post("http://localhost:5000/api/productInFavorites/create", {
+                accountId: localStorage.getItem("accountID"),
+                productId: item._id,
+                // color: selectedType,
+            })
+            .then((res) => {
+                console.log("res: ", res);
+                toast.success("Đã thêm vào Yêu thích!", {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+            })
+            .catch((err) => {
+                console.log("err: ", err);
+                toast.error("Thêm không thành công!", {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+            });
+    };
+
+    const RemoveFromFavorite = () => {
+        axios
+            .delete(
+                "http://localhost:5000/api/productInFavorites/byProductIdAndAccountId",
+                {
+                    params: {
+                        accountId: localStorage.getItem("accountID"),
+                        productId: item._id,
+                    },
+                }
+            )
+            .then((res) => {
+                console.log("res: ", res);
+                toast.success("Đã xoá khỏi Yêu thích!", {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+            })
+            .catch((err) => {
+                console.log("err: ", err);
+                toast.error("Xoá không thành công!", {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+            });
+    };
 
     return (
         <div className="product-item">
+            {showDialog && (
+                <SelectTypeDialog
+                    product={item}
+                    closeFunction={() => setShowDialog(false)}
+                />
+            )}
             <Link to={`/product/${item._id}`}>
                 <img src={item.imageURLs[0]} className="product-image" />
                 <span className="product-category">{item.type}</span>
@@ -542,7 +631,10 @@ const ProductCard = ({ item }) => {
                 </div>
             </Link>
             <div className="buttons-wrapper">
-                <button className="add-to-cart-button primary-button">
+                <button
+                    className="add-to-cart-button primary-button"
+                    onClick={() => setShowDialog(true)}
+                >
                     <BsCartPlus
                         style={{
                             width: "22px",
@@ -552,7 +644,10 @@ const ProductCard = ({ item }) => {
                     />{" "}
                     Thêm vào Giỏ
                 </button>
-                <div className="add-to-wishlist-wrapper">
+                <div
+                    className="add-to-wishlist-wrapper"
+                    onClick={isFavoriteOnChange}
+                >
                     <input
                         type="checkbox"
                         checked={isFavorite}
@@ -560,6 +655,8 @@ const ProductCard = ({ item }) => {
                         name="favorite-checkbox"
                         value="favorite-button"
                         className="atw-input"
+                        disabled={true}
+                        onChange={() => {}}
                     />
                     <label
                         for="favorite"

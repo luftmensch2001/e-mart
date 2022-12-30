@@ -1,6 +1,6 @@
 import React from "react";
 import "./Categories.css";
-import { Link, useNavigate, createSearchParams } from "react-router-dom";
+import { useNavigate, createSearchParams } from "react-router-dom";
 
 import thoitrangnam from "../assets/images/catagories/thoitrangnam.png";
 import thoitrangnu from "../assets/images/catagories/thoitrangnu.png";

@@ -8,34 +8,11 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import ConfirmDialog from "../../components/ConfirmDialog";
 import GetStarImage from "../../components/GetStarImage";
+import SelectTypeDialog from "../../components/SelectTypeDialog";
 
-function WishlistProduct(props) {
-    const data = props.data;
-    const updateFunction = props.updateFunction;
+function WishlistProduct({ data, updateFunction }) {
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-
-    const AddToCart = () => {
-        axios
-            .post("http://localhost:5000/api/productInCarts/create", {
-                accountId: localStorage.getItem("accountID"),
-                productId: data.productId,
-                color: data.color,
-                count: 1,
-            })
-            .then((res) => {
-                toast.success("Đã thêm vào Giỏ hàng!", {
-                    position: "bottom-right",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "light",
-                });
-            })
-            .catch((err) => console.log("err: ", err));
-    };
+    const [showDialog, setShowDialog] = useState(false);
 
     function DeleteFromWishlist() {
         axios
@@ -102,7 +79,10 @@ function WishlistProduct(props) {
                 </span>
             </Link>
             <div className="wl-product-buttons c4">
-                <button className="wl-product-cart-button" onClick={AddToCart}>
+                <button
+                    className="wl-product-cart-button"
+                    onClick={() => setShowDialog(true)}
+                >
                     <TbShoppingCartPlus className="wl-product-button-icon" />
                 </button>
                 <button
@@ -123,6 +103,13 @@ function WishlistProduct(props) {
                     noLabel={"Huỷ"}
                     yesFunction={DeleteFromWishlist}
                     noFunction={() => setShowDeleteDialog(false)}
+                />
+            )}
+            {showDialog && (
+                <SelectTypeDialog
+                    product={data}
+                    id={data.productId}
+                    closeFunction={() => setShowDialog(false)}
                 />
             )}
         </div>

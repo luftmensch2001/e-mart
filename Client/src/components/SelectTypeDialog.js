@@ -3,8 +3,12 @@ import "./SelectTypeDialog.css";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-const SelectTypeDialog = ({ product, closeFunction }) => {
+const SelectTypeDialog = ({ product, closeFunction, id }) => {
+    console.log("id: ", id);
     console.log("productId: ", product);
+
+    const value = id ? id : product._id;
+    console.log("value: ", value);
     // productId = "63ae92e236aeb06002c3b800";
 
     const [selectedType, setSelectedType] = useState("");
@@ -14,7 +18,7 @@ const SelectTypeDialog = ({ product, closeFunction }) => {
         axios
             .post("http://localhost:5000/api/productInCarts/create", {
                 accountId: localStorage.getItem("accountID"),
-                productId: product._id,
+                productId: value,
                 color: selectedType,
                 count: 1,
             })
@@ -38,10 +42,11 @@ const SelectTypeDialog = ({ product, closeFunction }) => {
         axios
             .get("http://localhost:5000/api/colors", {
                 params: {
-                    productId: product._id,
+                    productId: value,
                 },
             })
             .then((res) => {
+                console.log("res: ", res);
                 setTypeData(res.data.colors);
                 if (res.data.colors.length > 0)
                     setSelectedType(res.data.colors[0].name);

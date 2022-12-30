@@ -3,6 +3,12 @@
     display: flex;
     align-items: center;
     border-bottom: 1px solid lightgray;
+    position: relative;
+}
+
+.WishlistProduct:hover {
+    cursor: pointer;
+    background-color: #fdfdfd;
 }
 
 .WishlistProduct:last-child {
@@ -24,11 +30,12 @@
 }
 
 .WishlistProduct .wl-product-name {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     line-height: 30px;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--text-color-primary);
-    margin: 0 8px;
+    text-align: justify;
+    margin: 0 14px;
 }
 
 .WishlistProduct .c1 {
@@ -48,16 +55,16 @@
 }
 
 .WishlistProduct .wl-product-type {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     line-height: 30px;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--text-color-primary);
     text-align: center;
 }
 
 .WishlistProduct .wl-product-price {
     font-size: 1.5rem;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--text-color-primary);
     text-align: center;
 }
@@ -65,6 +72,8 @@
 .WishlistProduct .wl-product-buttons {
     display: flex;
     justify-content: space-evenly;
+    position: absolute;
+    right: 10px;
 }
 
 .WishlistProduct .wl-product-cart-button {

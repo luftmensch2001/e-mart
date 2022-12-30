@@ -7,46 +7,13 @@ import { BsArrowLeft } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
-
-import pi1 from "../../assets/ExampleProduct/iPhone/1.png";
-import pi2 from "../../assets/ExampleProduct/sach/2.jpg";
-import pi3 from "../../assets/ExampleProduct/giay/1.jpg";
-import pi4 from "../../assets/ExampleProduct/dongho/1.jpeg";
 import Loading from "../../components/Loading";
+import ConfirmDialog from "../../components/ConfirmDialog";
 
-let products = [
-    {
-        image: pi1,
-        name: "iPhone 14 Pro Max",
-        type: "Space Black",
-        quantity: 1,
-        price: 31990000,
-    },
-    {
-        image: pi2,
-        name: "Sách Dám mơ lớn, đừng hoài phí tuổi trẻ - Lư Tư Hạo",
-        type: "Bìa cứng",
-        quantity: 3,
-        price: 96000,
-    },
-    {
-        image: pi3,
-        name: "Giày Da Thể Thao Dành Cho Nam",
-        type: "Size 42",
-        quantity: 2,
-        price: 540000,
-    },
-    {
-        image: pi4,
-        name: "Đồng Hồ Thông Minh Xiaomi Mi Watch",
-        type: "Màu xanh",
-        quantity: 1,
-        price: 1350000,
-    },
-];
-
-function Items({ currentItems, filterFunction, count }) {
+function Items({ currentItems, filterFunction, count, updateFunction }) {
     const [searchValue, setSearchValue] = useState("");
+    const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+    const [productId, setProductId] = useState();
 
     function SearchInputOnChange(event) {
         setSearchValue(event.target.value);
@@ -57,6 +24,49 @@ function Items({ currentItems, filterFunction, count }) {
             filterFunction(searchValue);
         }
     }
+
+    function DeleteFromWishlist() {
+        console.log("productId: ", productId);
+        axios
+            .delete(
+                "http://localhost:5000/api/productInFavorites/byProductIdAndAccountId",
+                {
+                    params: {
+                        accountId: localStorage.getItem("accountID"),
+                        productId: productId,
+                    },
+                }
+            )
+            .then((res) => {
+                console.log("res: ", res);
+                toast.success("Đã xoá khỏi Yêu thích!", {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+                updateFunction();
+            })
+            .catch((err) => {
+                console.log("err: ", err);
+                toast.error("Xoá không thành công!", {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+            });
+        setShowDeleteDialog(false);
+    }
+
     return (
         <div className="Wishlist content">
             <span className="page-title title-text">
@@ -85,15 +95,35 @@ function Items({ currentItems, filterFunction, count }) {
                 </div>
                 <div className="wishlist-list">
                     {currentItems.map((item) => (
-                        <WishlistProduct data={item} />
+                        <WishlistProduct
+                            data={item}
+                            setProductId={setProductId}
+                            showDeleteFunction={setShowDeleteDialog}
+                        />
                     ))}
                 </div>
             </div>
+            {showDeleteDialog && (
+                <ConfirmDialog
+                    message={
+                        "Bạn có chắc muốn xoá sản phẩm này khỏi Danh Sách Yêu thích ?"
+                    }
+                    yesLabel={"Xoá"}
+                    noLabel={"Huỷ"}
+                    yesFunction={DeleteFromWishlist}
+                    noFunction={() => setShowDeleteDialog(false)}
+                />
+            )}
         </div>
     );
 }
 
-function PaginatedItems({ items, itemsPerPage, filterFunction }) {
+function PaginatedItems({
+    items,
+    itemsPerPage,
+    filterFunction,
+    updateFunction,
+}) {
     const [itemOffset, setItemOffset] = useState(0);
     const endOffset = itemOffset + itemsPerPage;
     const currentItems = items.slice(itemOffset, endOffset);
@@ -115,6 +145,7 @@ function PaginatedItems({ items, itemsPerPage, filterFunction }) {
                 currentItems={currentItems}
                 filterFunction={filterFunction}
                 count={items.length}
+                updateFunction={updateFunction}
             />
             <ReactPaginate
                 breakLabel="..."
@@ -141,14 +172,18 @@ function PaginatedItems({ items, itemsPerPage, filterFunction }) {
 }
 
 function Wishlist() {
-    const [data, setData] = useState(products);
-    const [allProduct, setAllProduct] = useState(products);
+    const [data, setData] = useState([]);
+    const [allProduct, setAllProduct] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
 
     let searchValue = "";
     let counter = 0;
 
     useEffect(() => {
+        FetchData();
+    }, []);
+
+    const FetchData = () => {
         setIsLoaded(false);
         counter = 0;
         axios
@@ -159,6 +194,11 @@ function Wishlist() {
             })
             .then((res) => {
                 let favoriteProducts = res.data.productInFavorites;
+                if (counter === favoriteProducts.length) {
+                    setData(favoriteProducts);
+                    setAllProduct(favoriteProducts);
+                    setIsLoaded(true);
+                }
                 favoriteProducts.forEach((item) => {
                     axios
                         .get("http://localhost:5000/api/products/byProductId", {
@@ -183,7 +223,7 @@ function Wishlist() {
             .catch((err) => {
                 console.log("err: ", err);
             });
-    }, []);
+    };
 
     function FilterByName(item) {
         const productNameLow = item.nameProduct.toLowerCase();
@@ -219,6 +259,7 @@ function Wishlist() {
                     items={data}
                     itemsPerPage={8}
                     filterFunction={FilterProduct}
+                    updateFunction={FetchData}
                 />
             </div>
         );

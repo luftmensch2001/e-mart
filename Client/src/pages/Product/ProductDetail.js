@@ -38,6 +38,7 @@ const ProductDetail = () => {
         window.scrollTo(0, 0);
         counter = 0;
         setIsLoaded(false);
+        setIsFavorite(false);
         GetProductData();
         // Get type data
         axios
@@ -48,11 +49,12 @@ const ProductDetail = () => {
             })
             .then((res) => {
                 setTypeData(res.data.colors);
-                setSelectedType(res.data.colors[0].name);
+                if (res.data.colors.length > 0)
+                    setSelectedType(res.data.colors[0].name);
                 counter++;
                 if (counter === 3) setIsLoaded(true);
             })
-            .catch((err) => console.log(err));
+            .catch((err) => console.log("type error", err));
         // Get reviews data
         GetReviewData();
     }, [productID]);

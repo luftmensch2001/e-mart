@@ -8,6 +8,8 @@ import ThousandSeparator from "./ThousandSeparator";
 import Loading from "./Loading";
 import GetStarImage from "./GetStarImage";
 import axios from "axios";
+import { toast } from "react-toastify";
+import SelectTypeDialog from "./SelectTypeDialog";
 
 function PopularProduct() {
     const [data, setData] = useState([]);
@@ -137,6 +139,87 @@ function PopularProduct() {
 function ProductCard({ item, widthPercentItem }) {
     const [isFavorite, setIsFavorite] = useState(false);
 
+    const isFavoriteOnChange = () => {
+        if (!isFavorite) AddToFavorite();
+        else RemoveFromFavorite();
+    };
+
+    const AddToFavorite = () => {
+        console.log("id: ", item._id);
+        // Add to favorite
+        axios
+            .post("http://localhost:5000/api/productInFavorites/create", {
+                accountId: localStorage.getItem("accountID"),
+                productId: item._id,
+                // color: selectedType,
+            })
+            .then((res) => {
+                console.log("res: ", res);
+                toast.success("Đã thêm vào Yêu thích!", {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+            })
+            .catch((err) => {
+                console.log("err: ", err);
+                toast.error("Thêm không thành công!", {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+            });
+    };
+
+    const RemoveFromFavorite = () => {
+        axios
+            .delete(
+                "http://localhost:5000/api/productInFavorites/byProductIdAndAccountId",
+                {
+                    params: {
+                        accountId: localStorage.getItem("accountID"),
+                        productId: item._id,
+                    },
+                }
+            )
+            .then((res) => {
+                console.log("res: ", res);
+                toast.success("Đã xoá khỏi Yêu thích!", {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+            })
+            .catch((err) => {
+                console.log("err: ", err);
+                toast.error("Xoá không thành công!", {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+            });
+    };
+
     return (
         <div className="product-item" style={{ width: `${widthPercentItem}%` }}>
             <div className="product-info">
@@ -171,7 +254,10 @@ function ProductCard({ item, widthPercentItem }) {
                         <AiOutlineShoppingCart className="product-add-to-cart-icon" />
                         Thêm Vào Giỏ
                     </button>
-                    <div className="add-to-wishlist-wrapper">
+                    <div
+                        className="add-to-wishlist-wrapper"
+                        onClick={isFavoriteOnChange}
+                    >
                         <input
                             type="checkbox"
                             checked={isFavorite}
@@ -179,6 +265,8 @@ function ProductCard({ item, widthPercentItem }) {
                             name="favorite-checkbox"
                             value="favorite-button"
                             className="atw-input"
+                            disabled={true}
+                            onChange={() => {}}
                         />
                         <label
                             for="favorite"

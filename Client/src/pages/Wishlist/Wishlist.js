@@ -44,7 +44,7 @@ function Items({ currentItems, filterFunction, count, updateFunction }) {
             <div className="wishlist-container">
                 <div className="wishlist-header">
                     <span className="wishlist-header-field c1">Sản phẩm</span>
-                    <span className="wishlist-header-field c2">Phân loại</span>
+                    <span className="wishlist-header-field c2">Đánh giá</span>
                     <span className="wishlist-header-field c3">Giá</span>
                     <span className="wishlist-header-field c4"></span>
                 </div>
@@ -153,6 +153,7 @@ function Wishlist() {
                             item.nameProduct = res.data.product.nameProduct;
                             item.imageURL = res.data.product.imageURLs[0];
                             item.price = res.data.product.price;
+                            item.countStar = res.data.product.countStar;
                             counter++;
                             if (counter === favoriteProducts.length) {
                                 setData(favoriteProducts);

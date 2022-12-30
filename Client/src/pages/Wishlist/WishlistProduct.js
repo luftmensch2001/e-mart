@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import ConfirmDialog from "../../components/ConfirmDialog";
+import GetStarImage from "../../components/GetStarImage";
 
 function WishlistProduct(props) {
     const data = props.data;
@@ -92,7 +93,9 @@ function WishlistProduct(props) {
                     <span className="wl-product-name">{data.nameProduct}</span>
                 </div>
 
-                <span className="wl-product-type c2">{data.color}</span>
+                <div className="wl-product-type c2">
+                    <img src={GetStarImage(data.countStar)} />
+                </div>
 
                 <span className="wl-product-price c3">
                     {data?.price && ThousandSeparator(data.price)} đ

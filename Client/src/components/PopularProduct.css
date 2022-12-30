@@ -113,7 +113,7 @@
     font-size: 1.9rem;
     margin-right: 12px;
     font-weight: bold;
-    color: var(--text-color-primary);
+    color: var(--primary-color);
 }
 
 .PopularProduct .product-old-price {

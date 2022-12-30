@@ -44,6 +44,8 @@
 
 .WishlistProduct .c2 {
     width: 25%;
+    display: flex;
+    justify-content: center;
 }
 
 .WishlistProduct .c3 {
@@ -54,12 +56,8 @@
     width: 15%;
 }
 
-.WishlistProduct .wl-product-type {
-    font-size: 1.4rem;
-    line-height: 30px;
-    font-weight: 700;
-    color: var(--text-color-primary);
-    text-align: center;
+.WishlistProduct .wl-product-type img {
+    width: 120px;
 }
 
 .WishlistProduct .wl-product-price {

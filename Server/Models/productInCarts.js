@@ -11,12 +11,11 @@ const ProductInCartsSchema = new schema({
     ref: "products",
   },
   count: {
-    type: Long,
+    type: Number,
     require: true,
   },
   color: {
-    type: schema.Types.ObjectId,
-    ref: "colors",
+    type: String,
   },
 });
 

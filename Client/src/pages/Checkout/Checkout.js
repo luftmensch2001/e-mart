@@ -4,6 +4,7 @@ import paypal from "../../assets/images/paypal.png";
 import cod from "../../assets/images/cash-on-delivery.png";
 import { BsCheckCircleFill } from "react-icons/bs";
 import ThousandSeparator from "../../components/ThousandSeparator";
+import Select from "react-select";
 
 const Checkout = ({ products, total, discount }) => {
     const [orderFor, setOrderFor] = useState(false);
@@ -19,6 +20,22 @@ const Checkout = ({ products, total, discount }) => {
     const [ward, setWard] = useState("");
     const [street, setStreet] = useState("");
     const [note, setNote] = useState("");
+
+    const provinceOptions = [
+        { value: "Đăk Nông", label: "Đăk Nông" },
+        { value: "Đồng Nai", label: "Đồng Nai" },
+        { value: "Hà Nội", label: "Hà Nội" },
+    ];
+
+    const districtOptions = [
+        { value: "Đăk R'Lấp", label: "Đăk R'Lấp" },
+        { value: "Gia Nghĩa", label: "Gia Nghĩa" },
+    ];
+
+    const wardOptions = [
+        { value: "Xã Nhân Cơ", label: "Xã Nhân Cơ" },
+        { value: "Phường Nghĩa Tân", label: "Phường Nghĩa Tân" },
+    ];
 
     return (
         <div className="Checkout content">
@@ -111,17 +128,53 @@ const Checkout = ({ products, total, discount }) => {
                         </span>
                     )}
                     <div className="input-row">
-                        <select className="select-2">
-                            <option>Chọn tỉnh / thành phố</option>
-                        </select>
-                        <select className="select-2">
-                            <option>Chọn quận / huyện</option>
-                        </select>
+                        <Select
+                            className="select-2"
+                            defaultValue={null}
+                            onChange={setProvince}
+                            options={provinceOptions}
+                            placeholder="Chọn tỉnh / thành phố"
+                            isSearchable={true}
+                            theme={(theme) => ({
+                                ...theme,
+                                colors: {
+                                    ...theme.colors,
+                                    primary: "var(--primary-color)",
+                                },
+                            })}
+                        />
+                        <Select
+                            className="select-2"
+                            defaultValue={null}
+                            onChange={setDistrict}
+                            options={districtOptions}
+                            placeholder="Chọn quận / huyện"
+                            isSearchable={true}
+                            theme={(theme) => ({
+                                ...theme,
+                                colors: {
+                                    ...theme.colors,
+                                    primary: "var(--primary-color)",
+                                },
+                            })}
+                        />
                     </div>
                     <div className="input-row">
-                        <select className="select-2">
-                            <option>Chọn xã / phường</option>/option>
-                        </select>
+                        <Select
+                            className="select-2"
+                            defaultValue={null}
+                            onChange={setWard}
+                            options={wardOptions}
+                            placeholder="Chọn xã / phường"
+                            isSearchable={true}
+                            theme={(theme) => ({
+                                ...theme,
+                                colors: {
+                                    ...theme.colors,
+                                    primary: "var(--primary-color)",
+                                },
+                            })}
+                        />
                         <input
                             className="input-2"
                             type="text"

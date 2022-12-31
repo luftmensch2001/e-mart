@@ -45,6 +45,7 @@
 .Checkout .checkout-info-container .input-row {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     margin-top: 20px;
 }
 
@@ -75,9 +76,6 @@
     font-size: 1.5rem;
     font-weight: 600;
     color: var(--text-color-primary);
-    border: 1px solid lightgray;
-    border-radius: 6px;
-    padding: 10px 12px;
     width: 47.8%;
 }
 

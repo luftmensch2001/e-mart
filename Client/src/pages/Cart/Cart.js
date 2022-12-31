@@ -51,14 +51,12 @@ const Cart = ({ SetCartData, UpdateNavbar }) => {
                             item.imageURL = res.data.product.imageURLs[0];
                             item.price = res.data.product.price;
                             totalTemp += item.price * item.count;
+                            setData(cartProducts);
+                            setTotal(totalTemp);
+                            SetCartData(cartProducts, totalTemp, discount);
                             counter++;
-                            if (counter === cartProducts.length) {
-                                console.log("cartProducts: ", cartProducts);
-                                setData(cartProducts);
-                                setTotal(totalTemp);
-                                SetCartData(cartProducts, totalTemp, discount);
+                            if (counter === cartProducts.length)
                                 setIsLoaded(true);
-                            }
                         })
                         .catch((err) => console.log("err: ", err));
                 });

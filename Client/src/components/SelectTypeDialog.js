@@ -3,7 +3,7 @@ import "./SelectTypeDialog.css";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-const SelectTypeDialog = ({ product, closeFunction, id }) => {
+const SelectTypeDialog = ({ product, closeFunction, id, UpdateNavbar }) => {
     console.log("id: ", id);
     console.log("productId: ", product);
 
@@ -33,6 +33,7 @@ const SelectTypeDialog = ({ product, closeFunction, id }) => {
                     progress: undefined,
                     theme: "light",
                 });
+                UpdateNavbar();
                 closeFunction();
             })
             .catch((err) => console.log("err: ", err));

@@ -10,8 +10,9 @@ import GetStarImage from "./GetStarImage";
 import axios from "axios";
 import { toast } from "react-toastify";
 import SelectTypeDialog from "./SelectTypeDialog";
+import { updateMetadata } from "firebase/storage";
 
-function PopularProduct() {
+function PopularProduct({ UpdateNavbar }) {
     const [data, setData] = useState([]);
     const [isLoaded, setIsLoaded] = useState();
     const [widthPercent, setWidthPercent] = useState(100);
@@ -125,6 +126,7 @@ function PopularProduct() {
                             <ProductCard
                                 item={item}
                                 widthPercentItem={widthPercentItem}
+                                UpdateNavbar={UpdateNavbar}
                             />
                         ))
                     ) : (
@@ -136,7 +138,7 @@ function PopularProduct() {
     else return <Loading />;
 }
 
-function ProductCard({ item, widthPercentItem }) {
+function ProductCard({ item, widthPercentItem, UpdateNavbar }) {
     const [isFavorite, setIsFavorite] = useState(false);
     const [showDialog, setShowDialog] = useState(false);
 
@@ -166,6 +168,7 @@ function ProductCard({ item, widthPercentItem }) {
                     progress: undefined,
                     theme: "light",
                 });
+                UpdateNavbar();
             })
             .catch((err) => {
                 console.log("err: ", err);
@@ -205,6 +208,7 @@ function ProductCard({ item, widthPercentItem }) {
                     progress: undefined,
                     theme: "light",
                 });
+                UpdateNavbar();
             })
             .catch((err) => {
                 console.log("err: ", err);
@@ -227,6 +231,7 @@ function ProductCard({ item, widthPercentItem }) {
                 <SelectTypeDialog
                     product={item}
                     closeFunction={() => setShowDialog(false)}
+                    UpdateNavbar={UpdateNavbar}
                 />
             )}
             <div className="product-info">

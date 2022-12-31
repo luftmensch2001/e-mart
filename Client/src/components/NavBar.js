@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate, createSearchParams } from "react-router-dom";
 import "./NavBar.css";
+import axios from "axios";
 
 import {
     AiOutlineSearch,
@@ -16,9 +17,7 @@ import {
 } from "react-icons/ti";
 import { FiPhoneCall } from "react-icons/fi";
 
-function NavBar() {
-    const [wishlistCount, setWishlistCount] = useState(8);
-    const [cartCount, setCartCount] = useState(1);
+function NavBar({ wishlistCount, cartCount, setWishlistCount, setCartCount }) {
     const navigate = useNavigate();
     const [searchValue, setSearchValue] = useState("");
     const [categoryValue, setCategoryValue] = useState("All");

@@ -10,7 +10,7 @@ import ConfirmDialog from "../../components/ConfirmDialog";
 import GetStarImage from "../../components/GetStarImage";
 import SelectTypeDialog from "../../components/SelectTypeDialog";
 
-function WishlistProduct({ data, updateFunction }) {
+function WishlistProduct({ data, updateFunction, UpdateNavbar }) {
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const [showDialog, setShowDialog] = useState(false);
 
@@ -38,6 +38,7 @@ function WishlistProduct({ data, updateFunction }) {
                     theme: "light",
                 });
                 updateFunction();
+                UpdateNavbar();
             })
             .catch((err) => {
                 console.log("err: ", err);
@@ -110,6 +111,7 @@ function WishlistProduct({ data, updateFunction }) {
                     product={data}
                     id={data.productId}
                     closeFunction={() => setShowDialog(false)}
+                    UpdateNavbar={UpdateNavbar}
                 />
             )}
         </div>

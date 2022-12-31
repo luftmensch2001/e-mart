@@ -12,7 +12,7 @@ import axios from "axios";
 import ThousandSeparator from "../../components/ThousandSeparator";
 import ConfirmDialog from "../../components/ConfirmDialog";
 
-const Cart = ({ SetCartData }) => {
+const Cart = ({ SetCartData, UpdateNavbar }) => {
     const [data, setData] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
     const [total, setTotal] = useState(0);
@@ -97,6 +97,7 @@ const Cart = ({ SetCartData }) => {
                                 <CartProduct
                                     data={item}
                                     updateFunction={FetchData}
+                                    UpdateNavbar={UpdateNavbar}
                                 />
                             ))}
                         </div>

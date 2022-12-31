@@ -8,7 +8,7 @@ import ThousandSeparator from "../../components/ThousandSeparator";
 import ConfirmDialog from "../../components/ConfirmDialog";
 import axios from "axios";
 
-const CartProduct = ({ data, updateFunction }) => {
+const CartProduct = ({ data, updateFunction, UpdateNavbar }) => {
     const [quantity, setQuantity] = useState(data.count);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
@@ -81,6 +81,7 @@ const CartProduct = ({ data, updateFunction }) => {
                     theme: "light",
                 });
                 updateFunction();
+                UpdateNavbar();
             })
             .catch((err) => {
                 toast.error("Xoá không thành công!", {

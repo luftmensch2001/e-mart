@@ -51,7 +51,7 @@ const categories = [
     { id: 16, name: "Khác" },
 ];
 
-const ProductList = () => {
+const ProductList = ({ UpdateNavbar }) => {
     // states
     const [sortOption, setSortOption] = useState(null);
     const [countOption, setCountOption] = useState(countOptions[1]);
@@ -445,6 +445,7 @@ const ProductList = () => {
                             <PaginatedItems
                                 items={data}
                                 itemsPerPage={countOption.value}
+                                UpdateNavbar={UpdateNavbar}
                             />
                         ) : (
                             <NotFoundProduct />
@@ -467,7 +468,7 @@ function NotFoundProduct() {
     );
 }
 
-function PaginatedItems({ items, itemsPerPage }) {
+function PaginatedItems({ items, itemsPerPage, UpdateNavbar }) {
     const [itemOffset, setItemOffset] = useState(0);
     const endOffset = itemOffset + itemsPerPage;
     const currentItems = items.slice(itemOffset, endOffset);
@@ -481,7 +482,7 @@ function PaginatedItems({ items, itemsPerPage }) {
 
     return (
         <>
-            <Items currentItems={currentItems} />
+            <Items currentItems={currentItems} UpdateNavbar={UpdateNavbar} />
             <ReactPaginate
                 breakLabel="..."
                 nextLabel=">"
@@ -506,17 +507,17 @@ function PaginatedItems({ items, itemsPerPage }) {
     );
 }
 
-function Items({ currentItems }) {
+function Items({ currentItems, UpdateNavbar }) {
     return (
         <div className="product-list">
             {currentItems.map((item) => (
-                <ProductCard item={item} />
+                <ProductCard item={item} UpdateNavbar={UpdateNavbar} />
             ))}
         </div>
     );
 }
 
-const ProductCard = ({ item }) => {
+const ProductCard = ({ item, UpdateNavbar }) => {
     const [isFavorite, setIsFavorite] = useState(false);
     const [showDialog, setShowDialog] = useState(false);
 
@@ -546,6 +547,7 @@ const ProductCard = ({ item }) => {
                     progress: undefined,
                     theme: "light",
                 });
+                UpdateNavbar();
             })
             .catch((err) => {
                 console.log("err: ", err);
@@ -585,6 +587,7 @@ const ProductCard = ({ item }) => {
                     progress: undefined,
                     theme: "light",
                 });
+                UpdateNavbar();
             })
             .catch((err) => {
                 console.log("err: ", err);
@@ -607,6 +610,7 @@ const ProductCard = ({ item }) => {
                 <SelectTypeDialog
                     product={item}
                     closeFunction={() => setShowDialog(false)}
+                    UpdateNavbar={UpdateNavbar}
                 />
             )}
             <Link to={`/product/${item._id}`}>

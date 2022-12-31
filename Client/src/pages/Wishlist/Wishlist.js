@@ -9,7 +9,13 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import Loading from "../../components/Loading";
 
-function Items({ currentItems, filterFunction, count, updateFunction }) {
+function Items({
+    currentItems,
+    filterFunction,
+    count,
+    updateFunction,
+    UpdateNavbar,
+}) {
     const [searchValue, setSearchValue] = useState("");
 
     function SearchInputOnChange(event) {
@@ -53,6 +59,7 @@ function Items({ currentItems, filterFunction, count, updateFunction }) {
                         <WishlistProduct
                             data={item}
                             updateFunction={updateFunction}
+                            UpdateNavbar={UpdateNavbar}
                         />
                     ))}
                 </div>
@@ -66,6 +73,7 @@ function PaginatedItems({
     itemsPerPage,
     filterFunction,
     updateFunction,
+    UpdateNavbar,
 }) {
     const [itemOffset, setItemOffset] = useState(0);
     const endOffset = itemOffset + itemsPerPage;
@@ -89,6 +97,7 @@ function PaginatedItems({
                 filterFunction={filterFunction}
                 count={items.length}
                 updateFunction={updateFunction}
+                UpdateNavbar={UpdateNavbar}
             />
             <ReactPaginate
                 breakLabel="..."
@@ -114,7 +123,7 @@ function PaginatedItems({
     );
 }
 
-function Wishlist() {
+function Wishlist({ UpdateNavbar }) {
     const [data, setData] = useState([]);
     const [allProduct, setAllProduct] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
@@ -204,6 +213,7 @@ function Wishlist() {
                     itemsPerPage={8}
                     filterFunction={FilterProduct}
                     updateFunction={FetchData}
+                    UpdateNavbar={UpdateNavbar}
                 />
             </div>
         );

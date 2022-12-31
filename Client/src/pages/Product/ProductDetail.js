@@ -18,7 +18,7 @@ import NotFound from "../../components/NotFound";
 import ConfirmDialog from "../../components/ConfirmDialog";
 import avatar from "../../assets/images/avatar.png";
 
-const ProductDetail = () => {
+const ProductDetail = ({ UpdateNavbar }) => {
     const [quantity, setQuantity] = useState(1);
     const [isFavorite, setIsFavorite] = useState(false);
     const [reviewData, setReviewData] = useState();
@@ -138,6 +138,7 @@ const ProductDetail = () => {
                     progress: undefined,
                     theme: "light",
                 });
+                UpdateNavbar();
             })
             .catch((err) => console.log("err: ", err));
     };
@@ -251,6 +252,7 @@ const ProductDetail = () => {
                         progress: undefined,
                         theme: "light",
                     });
+                    UpdateNavbar();
                 })
                 .catch((err) => {
                     console.log("err: ", err);
@@ -289,6 +291,7 @@ const ProductDetail = () => {
                         progress: undefined,
                         theme: "light",
                     });
+                    UpdateNavbar();
                 })
                 .catch((err) => {
                     console.log("err: ", err);

@@ -21,14 +21,50 @@ import Voucher from "./pages/StoreManagement/Voucher";
 import ProductList from "./pages/Product/ProductList";
 import EditProduct from "./pages/StoreManagement/EditProduct";
 import OrderDetail from "./pages/Order/OrderDetail";
+import axios from "axios";
 
 function App() {
+    // Hide header and footer in Login / Register screen
     const location = useLocation().pathname;
     const hideHeaderFooter = location === "/login" || location === "/register";
-
+    // show count of products
+    const [wishlistCount, setWishlistCount] = useState(0);
+    const [cartCount, setCartCount] = useState(0);
+    // data for checkout screen
     const [products, setProducts] = useState([]);
     const [total, setTotal] = useState(0);
     const [discount, setDiscount] = useState(0);
+
+    useEffect(() => {
+        UpdateNavbar();
+    }, []);
+
+    const UpdateNavbar = () => {
+        GetCartData();
+        GetWishlistData();
+    };
+
+    const GetCartData = () => {
+        axios
+            .get("http://localhost:5000/api/productInCarts/byAccountId", {
+                params: {
+                    accountId: localStorage.getItem("accountID"),
+                },
+            })
+            .then((res) => setCartCount(res.data.productInCarts.length))
+            .catch((err) => console.log(err));
+    };
+
+    const GetWishlistData = () => {
+        axios
+            .get("http://localhost:5000/api/productInFavorites/byAccountId", {
+                params: {
+                    accountId: localStorage.getItem("accountID"),
+                },
+            })
+            .then((res) => setWishlistCount(res.data.productInFavorites.length))
+            .catch((err) => console.log(err));
+    };
 
     function SetCartData(products, total, discount) {
         setProducts(products);
@@ -38,15 +74,28 @@ function App() {
 
     return (
         <div className="App">
-            {!hideHeaderFooter && <NavBar />}
+            {!hideHeaderFooter && (
+                <NavBar wishlistCount={wishlistCount} cartCount={cartCount} />
+            )}
             <Routes>
-                <Route path="/" element={<Home />} />
+                <Route
+                    path="/"
+                    element={<Home UpdateNavbar={UpdateNavbar} />}
+                />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
-                <Route path="/wishlist" element={<Wishlist />} />
+                <Route
+                    path="/wishlist"
+                    element={<Wishlist UpdateNavbar={UpdateNavbar} />}
+                />
                 <Route
                     path="/cart"
-                    element={<Cart SetCartData={SetCartData} />}
+                    element={
+                        <Cart
+                            SetCartData={SetCartData}
+                            UpdateNavbar={UpdateNavbar}
+                        />
+                    }
                 />
                 <Route
                     path="/checkout"
@@ -62,7 +111,7 @@ function App() {
                 <Route path="/product">
                     <Route
                         path="/product/:productId"
-                        element={<ProductDetail />}
+                        element={<ProductDetail UpdateNavbar={UpdateNavbar} />}
                     />
                 </Route>
                 <Route path="/add-product" element={<AddProduct />} />
@@ -73,7 +122,10 @@ function App() {
                     />
                 </Route>
                 <Route path="/voucher" element={<Voucher />} />
-                <Route path="/products" element={<ProductList />} />
+                <Route
+                    path="/products"
+                    element={<ProductList UpdateNavbar={UpdateNavbar} />}
+                />
                 <Route path="/account" element={<Account tabIndex={1} />}>
                     <Route
                         path="/account/buy-orders"

@@ -6,8 +6,14 @@ import { BsCheckCircleFill } from "react-icons/bs";
 import ThousandSeparator from "../../components/ThousandSeparator";
 import Select from "react-select";
 import AddressData from "../../assets/AddressData.json";
+import axios from "axios";
+import { Navigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import Loading from "../../components/Loading";
 
 const Checkout = ({ products, total, discount }) => {
+    const [isLoaded, setIsLoaded] = useState(true);
+    const [navigate, setNavigate] = useState(false); // Go to complete page
     const [orderFor, setOrderFor] = useState(false);
     const [paymentMethod, setPaymentMethod] = useState(0); // 0 is Paypal
     const [fullName, setFullName] = useState("");
@@ -83,8 +89,88 @@ const Checkout = ({ products, total, discount }) => {
             }
     }, [district]);
 
+    function RemoveInvalidBill(id) {
+        axios
+            .delete("http://localhost:5000/api/bills/", {
+                params: { billId: id },
+            })
+            .then((res) => {})
+            .catch((err) => console.log(err));
+    }
+
+    const CompleteOrder = () => {
+        setIsLoaded(false);
+        axios
+            .post("http://localhost:5000/api/bills/create", {
+                accountBuyerId: localStorage.getItem("accountID"),
+                productId: products[0].productId,
+                state: "1",
+                paymentMethod: "COD",
+                totalPrice: total,
+                discount: discount,
+            })
+            .then((res) => {
+                console.log("res create bill: ", res);
+                const newBillId = res.data.newBill._id;
+                let counter = 0;
+
+                products.forEach((item) => {
+                    axios
+                        .post(
+                            "http://localhost:5000/api/productInBills/create",
+                            {
+                                billId: newBillId,
+                                productId: item.productId,
+                                color: item.color,
+                                count: item.count,
+                            }
+                        )
+                        .then((res) => {
+                            console.log("res create productInBill: ", res);
+                            counter++;
+                            if (counter == products.length) {
+                                setIsLoaded(true);
+                                // setNavigate(true);
+                            }
+                        })
+                        .catch((err) => {
+                            toast.error("Có lỗi xảy ra, vui lòng thử lại!", {
+                                position: "bottom-right",
+                                autoClose: 5000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: "light",
+                            });
+                            RemoveInvalidBill(newBillId);
+                            setIsLoaded(true);
+                            return;
+                        });
+                });
+            })
+            .catch((err) => {
+                toast.error("Có lỗi xảy ra, vui lòng thử lại!", {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+                setIsLoaded(true);
+                return;
+            });
+    };
+
+    if (!isLoaded) return <Loading />;
+
     return (
         <div className="Checkout content">
+            {navigate && <Navigate to="/" />}
             <span className="page-title title-text">
                 Thông tin <span className="green-text">Thanh toán</span>
             </span>
@@ -268,7 +354,10 @@ const Checkout = ({ products, total, discount }) => {
                         </div>
                     </div>
                     <div className="input-row">
-                        <button className="complete-button primary-button">
+                        <button
+                            className="complete-button primary-button"
+                            onClick={CompleteOrder}
+                        >
                             Hoàn tất Đặt hàng
                         </button>
                     </div>

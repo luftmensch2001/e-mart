@@ -2,7 +2,11 @@ const mongoose = require("mongoose");
 const schema = mongoose.Schema;
 
 const BillsSchema = new schema({
-    accountId: {
+    accountSellerId: {
+        type: schema.Types.ObjectId,
+        ref: "accounts",
+    },
+    accountBuyerId: {
         type: schema.Types.ObjectId,
         ref: "accounts",
     },
@@ -18,6 +22,10 @@ const BillsSchema = new schema({
         type: String,
         require: true,
     },
+    paymentMethod: {
+        type: String,
+        require: true,
+    },
     totalPrice: {
         type: Number,
         require: true,
@@ -28,4 +36,4 @@ const BillsSchema = new schema({
     },
 });
 
-module.exports = mongoose.model("bills", ColorsSchema);
+module.exports = mongoose.model("bills", BillsSchema);

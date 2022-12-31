@@ -26,6 +26,16 @@ function App() {
     const location = useLocation().pathname;
     const hideHeaderFooter = location === "/login" || location === "/register";
 
+    const [products, setProducts] = useState([]);
+    const [total, setTotal] = useState(0);
+    const [discount, setDiscount] = useState(0);
+
+    function SetCartData(products, total, discount) {
+        setProducts(products);
+        setTotal(total);
+        setDiscount(discount);
+    }
+
     return (
         <div className="App">
             {!hideHeaderFooter && <NavBar />}
@@ -34,8 +44,20 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/wishlist" element={<Wishlist />} />
-                <Route path="/cart" element={<Cart />} />
-                <Route path="/checkout" element={<Checkout />} />
+                <Route
+                    path="/cart"
+                    element={<Cart SetCartData={SetCartData} />}
+                />
+                <Route
+                    path="/checkout"
+                    element={
+                        <Checkout
+                            products={products}
+                            total={total}
+                            discount={discount}
+                        />
+                    }
+                />
                 <Route path="/order" element={<OrderDetail />} />
                 <Route path="/product">
                     <Route

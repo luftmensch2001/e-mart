@@ -348,7 +348,9 @@ const ProductDetail = () => {
                         </div>
                         <div className="d-product-prices">
                             <span className="d-product-current-price">
-                                {ThousandSeparator(productData?.price)} đ
+                                {productData.price &&
+                                    ThousandSeparator(productData.price)}{" "}
+                                đ
                             </span>
                             <span className="d-product-old-price">
                                 {productData?.salePrice > 0

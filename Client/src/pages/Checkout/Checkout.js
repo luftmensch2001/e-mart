@@ -3,48 +3,22 @@ import "./Checkout.css";
 import paypal from "../../assets/images/paypal.png";
 import cod from "../../assets/images/cash-on-delivery.png";
 import { BsCheckCircleFill } from "react-icons/bs";
-
-import pi1 from "../../assets/ExampleProduct/iPhone/1.png";
-import pi2 from "../../assets/ExampleProduct/sach/2.jpg";
-import pi3 from "../../assets/ExampleProduct/giay/1.jpg";
-import pi4 from "../../assets/ExampleProduct/dongho/1.jpeg";
 import ThousandSeparator from "../../components/ThousandSeparator";
 
-let products = [
-    {
-        image: pi1,
-        name: "iPhone 14 Pro Max",
-        type: "Space Black",
-        quantity: 1,
-        price: 31990000,
-    },
-    {
-        image: pi2,
-        name: "Sách Dám mơ lớn, đừng hoài phí tuổi trẻ - Lư Tư Hạo",
-        type: "Bìa cứng",
-        quantity: 3,
-        price: 96000,
-    },
-    {
-        image: pi3,
-        name: "Giày Da Thể Thao Dành Cho Nam",
-        type: "Size 42",
-        quantity: 2,
-        price: 540000,
-    },
-    {
-        image: pi4,
-        name: "Đồng Hồ Thông Minh Xiaomi Mi Watch",
-        type: "Màu xanh",
-        quantity: 1,
-        price: 1350000,
-    },
-];
-
-const Checkout = () => {
+const Checkout = ({ products, total, discount }) => {
     const [orderFor, setOrderFor] = useState(false);
     const [paymentMethod, setPaymentMethod] = useState(0); // 0 is Paypal
-    const [data, setData] = useState(products);
+    const [fullName, setFullName] = useState("");
+    const [email, setEmail] = useState("");
+    const [phoneNumber, setPhoneNumber] = useState("");
+    const [fullName2, setFullName2] = useState("");
+    const [email2, setEmail2] = useState("");
+    const [phoneNumber2, setPhoneNumber2] = useState("");
+    const [province, setProvince] = useState("");
+    const [district, setDistrict] = useState("");
+    const [ward, setWard] = useState("");
+    const [street, setStreet] = useState("");
+    const [note, setNote] = useState("");
 
     return (
         <div className="Checkout content">
@@ -62,6 +36,8 @@ const Checkout = () => {
                             type="text"
                             required="required"
                             placeholder="Họ và tên"
+                            value={fullName}
+                            onChange={(e) => setFullName(e.target.value)}
                         />
                     </div>
                     <div className="input-row">
@@ -70,12 +46,16 @@ const Checkout = () => {
                             type="email"
                             required="required"
                             placeholder="Địa chỉ E-mail"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                         />
                         <input
                             className="input-2"
-                            type="number"
+                            type="tel"
                             required="required"
                             placeholder="Số điện thoại"
+                            value={phoneNumber}
+                            onChange={(e) => setPhoneNumber(e.target.value)}
                         />
                     </div>
                     <div
@@ -97,6 +77,8 @@ const Checkout = () => {
                                 type="text"
                                 required="required"
                                 placeholder="Họ và tên người nhận"
+                                value={fullName2}
+                                onChange={(e) => setFullName2(e.target.value)}
                             />
                         </div>
                     )}
@@ -107,12 +89,18 @@ const Checkout = () => {
                                 type="email"
                                 required="required"
                                 placeholder="Địa chỉ E-mail người nhận"
+                                value={email2}
+                                onChange={(e) => setEmail2(e.target.value)}
                             />
                             <input
                                 className="input-2"
-                                type="number"
+                                type="tel"
                                 required="required"
                                 placeholder="Số điện thoại người nhận"
+                                value={phoneNumber2}
+                                onChange={(e) =>
+                                    setPhoneNumber2(e.target.value)
+                                }
                             />
                         </div>
                     )}
@@ -138,10 +126,16 @@ const Checkout = () => {
                             className="input-2"
                             type="text"
                             placeholder="Số nhà / đường"
+                            value={street}
+                            onChange={(e) => setStreet(e.target.value)}
                         />
                     </div>
                     <div className="input-row">
-                        <textarea placeholder="Ghi chú cho người bán" />
+                        <textarea
+                            placeholder="Ghi chú cho người bán"
+                            value={note}
+                            onChange={(e) => setNote(e.target.value)}
+                        />
                     </div>
                     <div className="input-row">
                         <span style={{ marginTop: "10px" }}>
@@ -176,26 +170,29 @@ const Checkout = () => {
                 </div>
                 <div className="checkout-bill-container">
                     <div className="bill-product-container">
-                        {data.map((item) => (
+                        {products.map((item) => (
                             <div className="bill-product-item">
                                 <div className="bill-product-info">
                                     <img
                                         className="bill-product-img"
-                                        src={item.image}
+                                        src={item.imageURL}
                                     />
                                     <div className="bill-product-detail">
-                                        <span className="bill-product-name">
-                                            {item.name}
+                                        <div className="bill-product-name-wrapper">
+                                            <span className="bill-product-name">
+                                                {item.nameProduct}
+                                            </span>
+                                        </div>
+                                        <span className="bill-product-quantity">
+                                            Phân loại: {item.color}
                                         </span>
                                         <span className="bill-product-quantity">
-                                            Số lượng: {item.quantity}
+                                            Số lượng: {item.count}
                                         </span>
                                     </div>
                                 </div>
                                 <span className="bill-product-total">
-                                    {ThousandSeparator(
-                                        item.price * item.quantity
-                                    )}{" "}
+                                    {ThousandSeparator(item.price * item.count)}{" "}
                                     đ
                                 </span>
                             </div>
@@ -204,7 +201,9 @@ const Checkout = () => {
                     <div className="bill-money-container">
                         <div className="bill-row">
                             <span className="label">Tổng tiền hàng</span>
-                            <span className="value">28,000,000 đ</span>
+                            <span className="value">
+                                {ThousandSeparator(total)} đ
+                            </span>
                         </div>
                         <div className="bill-row">
                             <span className="label">Phí vận chuyển</span>
@@ -212,7 +211,9 @@ const Checkout = () => {
                         </div>
                         <div className="bill-row">
                             <span className="label">Giảm giá</span>
-                            <span className="value">1,200,000 đ</span>
+                            <span className="value">
+                                {ThousandSeparator(discount)} đ
+                            </span>
                         </div>
                         <div className="bill-row">
                             <span className="label">Thành tiền</span>
@@ -220,7 +221,7 @@ const Checkout = () => {
                                 className="label"
                                 style={{ fontSize: "1.7rem" }}
                             >
-                                27,880,000 đ
+                                {ThousandSeparator(total - discount)} đ
                             </span>
                         </div>
                     </div>

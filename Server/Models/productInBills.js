@@ -11,12 +11,12 @@ const ProductInBillsSchema = new schema({
     ref: "bills",
   },
   count: {
-    type: Long,
+    type: Number,
     require: true,
   },
-  evaluteId: {
-    type: schema.Types.ObjectId,
-    ref: "evalutes",
+  color: {
+    type: String,
+    require: true,
   },
 });
 

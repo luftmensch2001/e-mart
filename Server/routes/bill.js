@@ -5,12 +5,13 @@ const Bill = require("../models/bills");
 const Product = require("../models/products");
 
 // @route GET api/bills
-// @desc get bill buyer
+// @desc get 1 bill
 // @access Public
-router.get("/buyer", async (req, res) => {
+router.get("/byBillId", async (req, res) => {
+  const { billId } = req.body;
   try {
-    const bills = await Bill.find({ productId: req.accountId });
-    res.json({ success: true, posts });
+    const bill = await Bill.findOne({ _id: billId });
+    res.json({ success: true, message: "Got bill", bill });
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -20,13 +21,29 @@ router.get("/buyer", async (req, res) => {
   }
 });
 // @route GET api/bills
-// @des get bill seller
+// @desc get all bill buyer
+// @access Public
+router.get("/buyer", async (req, res) => {
+  const { accountBuyerId } = req.body;
+  try {
+    const bills = await Bill.find({ accountBuyerId });
+    res.json({ success: true, message: "All bill of buyer", bills });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: " Internal server error",
+    });
+  }
+});
+// @route GET api/bills
+// @des get all bill seller
 // @access Public
 router.get("/seller", async (req, res) => {
+  const { accountSellerId } = req.body;
   try {
-    const product = await Product.findById(req.productId);
-    const bills = await Bill.find({ productId: product.accountId });
-    res.json({ success: true, posts });
+    const bills = await Bill.find({ accountSellerId });
+    res.json({ success: true, message: "All bill of seller", bills });
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -40,23 +57,43 @@ router.get("/seller", async (req, res) => {
 // @desc create bill
 // @access Public
 router.post("/create", async (req, res) => {
-  const { productId, accountId, state, totalPrice, discount } = req.body;
+  const {
+    accountBuyerId,
+    productId,
+    state,
+    paymentMethod,
+    totalPrice,
+    discount,
+  } = req.body;
 
-  if (!productId || !accountId || !state || !totalPrice || !discount)
+  if (
+    !accountBuyerId ||
+    !productId ||
+    !state ||
+    !totalPrice ||
+    !paymentMethod ||
+    !discount
+  )
     return res
       .status(400)
       .json({ success: false, message: "Missing information" });
   try {
     // All Good
+    const accountSellerId = (await Product.findOne({ _id: productId }))
+      .accountId;
+    console.log(accountSellerId);
     const newBill = new Bill({
-      productId,
-      accountId,
+      accountBuyerId,
+      accountSellerId,
       state,
+      paymentMethod,
       totalPrice,
       discount,
     });
     await newBill.save();
-    return res.status(200).json({ success: true, message: "Created Bill" });
+    return res
+      .status(200)
+      .json({ success: true, message: "Created Bill", newBill });
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -70,12 +107,13 @@ router.post("/create", async (req, res) => {
 // @desc create color
 // @access Public
 router.delete("/", async (req, res) => {
+  const { billId } = req.body;
   try {
-    const bills = await Bill.find({ accountId: req.accountId });
-    const deleteBill = await colors.findAndDelete(bills);
-    if (!deleteBill)
+    const deletedBill = await Bill.findByIdAndDelete({ _id: billId });
+
+    if (!deletedBill)
       res.status(500).json({ success: false, message: "Bill not found" });
-    res.json({ success: true, message: "Deleted bill" });
+    else res.json({ success: true, message: "Deleted bill", billId });
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -89,28 +127,28 @@ router.delete("/", async (req, res) => {
 // @desc update bill
 // @access Public
 router.put("/update", async (req, res) => {
-  const { productId, accountId, state, totalPrice, discount } = req.body;
-
-  if (!productId || !accountId || !state || !totalPrice || !discount)
-    return res
-      .status(400)
-      .json({ success: false, message: "Missing information" });
+  const { billId, state } = req.body;
   try {
-    // All Good
-    let updateBill = new Bill({
-      productId,
-      accountId,
-      state,
-      totalPrice,
-      discount,
-    });
-    updateBill = await Bill.findOneAndUpdate(updateBill, { new: true });
-    if (!updateBill)
-      res.status(401).json({
-        success: false,
-        message: " Internal server error",
-      });
-    return res.status(200).json({ success: true, message: "Created Bill" });
+    Bill.findByIdAndUpdate(
+      { _id: billId },
+      { state },
+      { new: true },
+      function (error, bill) {
+        console.log(bill);
+        if (!bill) {
+          res.status(400).json({
+            success: false,
+            message: "bill not found",
+          });
+        } else {
+          res.status(200).json({
+            success: true,
+            message: " state bill updated",
+            bill,
+          });
+        }
+      }
+    );
   } catch (error) {
     console.log(error);
     res.status(500).json({

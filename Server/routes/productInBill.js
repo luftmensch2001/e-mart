@@ -7,8 +7,9 @@ const ProductInBill = require("../models/productInBills");
 // @desc get productInBill
 // @access Public
 router.get("/", async (req, res) => {
+  const billId = req.body.billId;
   try {
-    const productInBill = await ProductInBill.find({ productId: req.billId });
+    const productInBill = await ProductInBill.find({ billId });
     res.json({ success: true, productInBill });
   } catch (error) {
     console.log(error);
@@ -20,7 +21,7 @@ router.get("/", async (req, res) => {
 // @desc create productInFavorite
 // @access Public
 router.post("/create", async (req, res) => {
-  const { billId, productId, count } = req.body;
+  const { billId, productId, count, color } = req.body;
 
   if (!productId)
     return res
@@ -32,11 +33,14 @@ router.post("/create", async (req, res) => {
       productId,
       billId,
       count,
+      color,
     });
     await newProductInBill.save();
-    return res
-      .status(200)
-      .json({ success: true, message: "Created productInBill" });
+    return res.status(200).json({
+      success: true,
+      message: "Created productInBill",
+      newProductInBill,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ success: false, message: " Internal server error" });
@@ -47,16 +51,12 @@ router.post("/create", async (req, res) => {
 // @desc delete all productInBills
 // @access Public
 router.delete("/", async (req, res) => {
+  const billId = req.body.billId;
   try {
-    const productInBills = await ProductInBills.find({
-      billId: req.billId,
-    });
-    const deleteProductInBill = await colors.findAndDelete(productInBills);
+    const deleteProductInBill = await ProductInBill.deleteMany({ billId });
     if (!deleteProductInBill)
-      res
-        .status(500)
-        .json({ success: false, message: "ProductInBill not found" });
-    res.json({ success: true, message: "Deleted productInBills" });
+      res.status(500).json({ success: false, message: "Bill not found" });
+    res.json({ success: true, message: "Deleted productInBills", billId });
   } catch (error) {
     console.log(error);
     res.status(500).json({ success: false, message: " Internal server error" });

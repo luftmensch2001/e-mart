@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Checkout.css";
 import paypal from "../../assets/images/paypal.png";
 import cod from "../../assets/images/cash-on-delivery.png";
 import { BsCheckCircleFill } from "react-icons/bs";
 import ThousandSeparator from "../../components/ThousandSeparator";
 import Select from "react-select";
+import AddressData from "../../assets/AddressData.json";
 
 const Checkout = ({ products, total, discount }) => {
     const [orderFor, setOrderFor] = useState(false);
@@ -21,21 +22,66 @@ const Checkout = ({ products, total, discount }) => {
     const [street, setStreet] = useState("");
     const [note, setNote] = useState("");
 
-    const provinceOptions = [
-        { value: "Đăk Nông", label: "Đăk Nông" },
-        { value: "Đồng Nai", label: "Đồng Nai" },
-        { value: "Hà Nội", label: "Hà Nội" },
-    ];
+    const [provinceOptions, setProvinceOptions] = useState([]);
+    const [districtOptions, setDistrictOptions] = useState([]);
+    const [wardOptions, setWardOptions] = useState([]);
 
-    const districtOptions = [
-        { value: "Đăk R'Lấp", label: "Đăk R'Lấp" },
-        { value: "Gia Nghĩa", label: "Gia Nghĩa" },
-    ];
+    // Get Provinces Data
+    useEffect(() => {
+        let arr = [];
+        for (let i = 0; i < AddressData.length; i++) {
+            let option = {
+                value: AddressData[i].Name,
+                label: AddressData[i].Name,
+            };
+            arr.push(option);
+        }
+        setProvinceOptions(arr);
+        setDistrict(null);
+        setWard(null);
+    }, []);
 
-    const wardOptions = [
-        { value: "Xã Nhân Cơ", label: "Xã Nhân Cơ" },
-        { value: "Phường Nghĩa Tân", label: "Phường Nghĩa Tân" },
-    ];
+    // Get Districts Data
+    useEffect(() => {
+        for (let i = 0; i < AddressData.length; i++)
+            if (AddressData[i].Name === province.value) {
+                let arr = [];
+                AddressData[i].Districts.forEach((element) => {
+                    let option = {
+                        value: element.Name,
+                        label: element.Name,
+                    };
+                    arr.push(option);
+                });
+                setDistrictOptions(arr);
+                break;
+            }
+        setWard(null);
+    }, [province]);
+
+    // Get Wards Data
+    useEffect(() => {
+        if (!district) return;
+
+        for (let i = 0; i < AddressData.length; i++)
+            if (AddressData[i].Name === province.value) {
+                for (let j = 0; j < AddressData[i].Districts.length; j++) {
+                    if (AddressData[i].Districts[j].Name === district) {
+                        let arr = [];
+                        AddressData[i].Districts[j].Wards.forEach((element) => {
+                            let option = {
+                                value: element.Name,
+                                label: element.Name,
+                            };
+                            arr.push(option);
+                        });
+                        setWardOptions(arr);
+                        break;
+                    }
+                }
+                break;
+            }
+    }, [district]);
 
     return (
         <div className="Checkout content">
@@ -146,7 +192,10 @@ const Checkout = ({ products, total, discount }) => {
                         <Select
                             className="select-2"
                             defaultValue={null}
-                            onChange={setDistrict}
+                            value={districtOptions.filter(function (option) {
+                                return option.value === district;
+                            })}
+                            onChange={(e) => setDistrict(e.value)}
                             options={districtOptions}
                             placeholder="Chọn quận / huyện"
                             isSearchable={true}
@@ -163,7 +212,10 @@ const Checkout = ({ products, total, discount }) => {
                         <Select
                             className="select-2"
                             defaultValue={null}
-                            onChange={setWard}
+                            value={wardOptions.filter(function (option) {
+                                return option.value === ward;
+                            })}
+                            onChange={(e) => setWard(e.value)}
                             options={wardOptions}
                             placeholder="Chọn xã / phường"
                             isSearchable={true}

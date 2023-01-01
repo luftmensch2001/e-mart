@@ -105,9 +105,21 @@ const Checkout = ({ products, total, discount }) => {
                 accountBuyerId: localStorage.getItem("accountID"),
                 productId: products[0].productId,
                 state: "1",
-                paymentMethod: "COD",
+                paymentMethod: paymentMethod === 0 ? "Paypal" : "COD",
                 totalPrice: total,
                 discount: discount,
+                fullName: fullName,
+                phoneNumber: phoneNumber,
+                email: email,
+                city: province ? province.value : "",
+                district: district ? district : "",
+                ward: ward ? ward : "",
+                detail: street,
+                note: note,
+                orderFor: orderFor,
+                fullName2: orderFor ? fullName2 : "",
+                phoneNumber2: orderFor ? phoneNumber2 : "",
+                email2: orderFor ? email2 : "",
             })
             .then((res) => {
                 console.log("res create bill: ", res);
@@ -130,7 +142,7 @@ const Checkout = ({ products, total, discount }) => {
                             counter++;
                             if (counter == products.length) {
                                 setIsLoaded(true);
-                                // setNavigate(true);
+                                setNavigate(true);
                             }
                         })
                         .catch((err) => {
@@ -170,7 +182,7 @@ const Checkout = ({ products, total, discount }) => {
 
     return (
         <div className="Checkout content">
-            {navigate && <Navigate to="/" />}
+            {navigate && <Navigate to="/order-completed" />}
             <span className="page-title title-text">
                 Thông tin <span className="green-text">Thanh toán</span>
             </span>

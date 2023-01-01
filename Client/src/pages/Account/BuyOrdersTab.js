@@ -2,80 +2,9 @@ import { React, useState, useEffect } from "react";
 import ReactPaginate from "react-paginate";
 import Order from "../../components/Order";
 import "./BuyOrdersTab.css";
-import StatusLabel from "../../components/StatusLabel";
 import { AiOutlineSearch } from "react-icons/ai";
-import productImage from "../../assets/images/products/5.jpg";
-import productImage2 from "../../assets/images/products/product-290274-160922-071637-600x600.jpg";
-import iphone from "../../assets/ExampleProduct/iPhone/1.png";
-import sach from "../../assets/ExampleProduct/sach/3.jpg";
-import giay from "../../assets/ExampleProduct/giay/1.jpg";
-
-let day1 = new Date(2022, 10, 13);
-let day2 = new Date(2022, 10, 8);
-let day3 = new Date(2022, 10, 2);
-let day4 = new Date(2022, 8, 22);
-let day5 = new Date(2020, 7, 1);
-
-let dataRaw = [
-    {
-        orderDate: day1,
-        productName: "Bình Giữ Nhiệt Lock&Lock 450ML",
-        productImg: productImage2,
-        count: 1,
-        total: 165000,
-        status: 1,
-    },
-    {
-        orderDate: day2,
-        productName: "iPhone 14 Pro Max 1TB",
-        productImg: iphone,
-        count: 2,
-        total: 365000,
-        status: 2,
-    },
-    {
-        orderDate: day3,
-        productName: "Sách Dám mơ lớn, đừng phí hoài tuổi trẻ - Lư Tư Hạo",
-        productImg: sach,
-        count: 3,
-        total: 465000,
-        status: 3,
-    },
-    {
-        orderDate: day4,
-        productName: "Giày Da Nam Cao cấp",
-        productImg: giay,
-        count: 3,
-        total: 565000,
-        status: 4,
-    },
-    {
-        orderDate: day5,
-        productName: "Bình Giữ Nhiệt Lock&Lock 450ML",
-        productImg: productImage,
-        count: 3,
-        total: 465000,
-        status: 3,
-    },
-    {
-        orderDate: day2,
-        productName: "Bình Giữ Nhiệt Lock&Lock 450ML",
-        productImg: productImage2,
-        count: 3,
-        total: 465000,
-        status: 3,
-    },
-    {
-        orderDate: day3,
-        productName: "Bình Giữ Nhiệt Lock&Lock 450ML",
-        productImg: productImage,
-        count: 3,
-        total: 465000,
-        status: 3,
-    },
-];
-
-dataRaw = dataRaw.concat(dataRaw);
+import axios from "axios";
+import Loading from "../../components/Loading";
 
 function Items({ currentItems, filterFunction }) {
     const [statusFilterValue, setStatusFilterValue] = useState(1);
@@ -249,10 +178,14 @@ function Items({ currentItems, filterFunction }) {
                     </span>
                     <span className="orders-header-label c5">Trạng thái</span>
                 </div>
-                <div className="orders-list">
-                    {currentItems &&
-                        currentItems.map((item) => <Order data={item} />)}
-                </div>
+                {currentItems.length === 0 ? (
+                    <span className="no-order">Không có đơn hàng nào</span>
+                ) : (
+                    <div className="orders-list">
+                        {currentItems &&
+                            currentItems.map((item) => <Order data={item} />)}
+                    </div>
+                )}
             </div>
         </>
     );
@@ -306,11 +239,74 @@ function PaginatedItems({ items, itemsPerPage, filterFunction }) {
 }
 
 function BuyOrdersTab() {
-    const [allOrders, setAllOrders] = useState(dataRaw);
-    const [orders, setOrders] = useState(dataRaw);
+    const [allOrders, setAllOrders] = useState([]);
+    const [orders, setOrders] = useState([]);
+    const [isLoaded, setIsLoaded] = useState(false);
     let searchValue = "";
     let dateValue = 1;
     let statusValue = 1;
+
+    useEffect(() => {
+        setIsLoaded(false);
+        axios
+            .get("http://localhost:5000/api/bills/buyer", {
+                params: {
+                    accountBuyerId: localStorage.getItem("accountID"),
+                },
+            })
+            .then((res) => {
+                console.log("res get buy order: ", res);
+                let arrBill = res.data.bills;
+                if (arrBill.length === 0) {
+                    setIsLoaded(true);
+                    return;
+                }
+                let counter = 0;
+                arrBill.forEach((bill) => {
+                    axios
+                        .get("http://localhost:5000/api/productInBills/", {
+                            params: {
+                                billId: bill._id,
+                            },
+                        })
+                        .then((res) => {
+                            console.log("res productinbill: ", res);
+                            bill.color = res.data.productInBill[0].color;
+                            bill.count = res.data.productInBill[0].count;
+                            bill.productId =
+                                res.data.productInBill[0].productId;
+                            bill.productCount = res.data.productInBill.length;
+                            axios
+                                .get(
+                                    "http://localhost:5000/api/products/byProductId",
+                                    {
+                                        params: {
+                                            productId:
+                                                res.data.productInBill[0]
+                                                    .productId,
+                                        },
+                                    }
+                                )
+                                .then((res) => {
+                                    console.log("res first product: ", res);
+                                    bill.nameProduct =
+                                        res.data.product.nameProduct;
+                                    bill.imageURL =
+                                        res.data.product.imageURLs[0];
+                                    counter++;
+                                    if (counter === arrBill.length)
+                                        setIsLoaded(true);
+                                    setOrders(arrBill.slice(0));
+                                    setAllOrders(arrBill.slice(0));
+                                })
+                                .catch((err) => console.log(err));
+                        })
+                        .catch((err) => console.log(err));
+                });
+                console.log("arrBill: ", arrBill);
+            })
+            .catch((err) => console.log(err));
+    }, []);
 
     function FilterOrders(searchVal, statusVal, dateVal) {
         statusValue = statusVal;
@@ -323,38 +319,41 @@ function BuyOrdersTab() {
     }
 
     function FilterByName(item) {
-        const productNameLow = item.productName.toLowerCase();
+        const productNameLow = item.nameProduct.toLowerCase();
         const searchString = searchValue.toLowerCase();
         return productNameLow.includes(searchString);
     }
 
     function FilterByStatus(item) {
         if (statusValue === 1) return true;
-        return item.status + 1 === statusValue;
+        return parseInt(item.state) + 1 === statusValue;
     }
 
     function FilterByDate(item) {
         if (dateValue === 1) return true;
         const today = new Date();
+        const orderDate = new Date(item.createdAt);
+        if (!orderDate) return true;
         const milisecondsInDay = 1000 * 60 * 60 * 24;
         if (dateValue === 2) {
-            const daySubtract = Math.abs(today - item.orderDate);
+            const daySubtract = Math.abs(today - orderDate);
             return daySubtract <= milisecondsInDay;
         }
         if (dateValue === 3) {
-            const daySubtract = Math.abs(today - item.orderDate);
+            const daySubtract = Math.abs(today - orderDate);
             return daySubtract <= milisecondsInDay * 7;
         }
         if (dateValue === 4) {
             return (
-                today.getFullYear() === item.orderDate.getFullYear() &&
-                today.getMonth() === item.orderDate.getMonth()
+                today.getFullYear() === orderDate.getFullYear() &&
+                today.getMonth() === orderDate.getMonth()
             );
         }
         if (dateValue === 5) {
-            return today.getFullYear() === item.orderDate.getFullYear();
+            return today.getFullYear() === orderDate.getFullYear();
         }
     }
+    if (!isLoaded) return <Loading />;
 
     return (
         <div className="BuyOrdersTab">

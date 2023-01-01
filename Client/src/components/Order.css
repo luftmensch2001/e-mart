@@ -2,8 +2,10 @@
     width: calc(100% - 12px);
     display: flex;
     padding: 25px 0;
+    padding-bottom: 40px;
     padding-left: 12px;
     align-items: center;
+    position: relative;
 }
 
 .Order:hover {
@@ -58,4 +60,17 @@
 
 .Order .product-name {
     margin: 0 8px;
+    line-height: 20px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.Order .order-product-count {
+    position: absolute;
+    bottom: 10px;
+    color: var(--text-color-secondary);
+    left: calc(15% + 12px);
 }

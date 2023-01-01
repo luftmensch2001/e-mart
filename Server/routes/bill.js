@@ -24,7 +24,7 @@ router.get("/byBillId", async (req, res) => {
 // @desc get all bill buyer
 // @access Public
 router.get("/buyer", async (req, res) => {
-    const { accountBuyerId } = req.body;
+    const { accountBuyerId } = req.query;
     try {
         const bills = await Bill.find({ accountBuyerId });
         res.json({ success: true, message: "All bill of buyer", bills });
@@ -40,7 +40,7 @@ router.get("/buyer", async (req, res) => {
 // @des get all bill seller
 // @access Public
 router.get("/seller", async (req, res) => {
-    const { accountSellerId } = req.body;
+    const { accountSellerId } = req.query;
     try {
         const bills = await Bill.find({ accountSellerId });
         res.json({ success: true, message: "All bill of seller", bills });
@@ -64,6 +64,18 @@ router.post("/create", async (req, res) => {
         paymentMethod,
         totalPrice,
         discount,
+        fullName,
+        phoneNumber,
+        email,
+        city,
+        district,
+        ward,
+        detail,
+        note,
+        orderFor,
+        fullName2,
+        phoneNumber2,
+        email2,
     } = req.body;
 
     if (!accountBuyerId || !productId || !state || !paymentMethod)
@@ -82,6 +94,18 @@ router.post("/create", async (req, res) => {
             paymentMethod,
             totalPrice,
             discount,
+            fullName,
+            phoneNumber,
+            email,
+            city,
+            district,
+            ward,
+            detail,
+            note,
+            orderFor,
+            fullName2,
+            phoneNumber2,
+            email2,
         });
         await newBill.save();
         return res

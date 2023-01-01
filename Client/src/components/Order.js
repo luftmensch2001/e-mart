@@ -18,17 +18,22 @@ function Order(props) {
 
     return (
         <div className="Order">
-            <span className="order-col c1">{DateToString(data.orderDate)}</span>
+            <span className="order-col c1">
+                {DateToString(new Date(data.createdAt))}
+            </span>
             <div className="order-col c2 product-container">
-                <img className="product-img" src={data.productImg} />
-                <span className="product-name">{data.productName}</span>
+                <img className="product-img" src={data.imageURL} />
+                <span className="product-name">{data.nameProduct}</span>
             </div>
             <span className="order-col c3">{data.count}</span>
             <span className="order-col c4">
-                {ThousandSeparator(data.total)} VNĐ
+                {ThousandSeparator(data.totalPrice)} VNĐ
             </span>
             <span className="order-col c5">
-                <StatusLabel type={data.status} />
+                <StatusLabel type={data.state} />
+            </span>
+            <span className="order-product-count">
+                Đơn hàng gồm {data.productCount} sản phẩm
             </span>
         </div>
     );

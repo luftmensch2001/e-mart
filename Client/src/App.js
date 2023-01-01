@@ -22,6 +22,7 @@ import ProductList from "./pages/Product/ProductList";
 import EditProduct from "./pages/StoreManagement/EditProduct";
 import OrderDetail from "./pages/Order/OrderDetail";
 import axios from "axios";
+import OrderCompleted from "./components/OrderCompleted";
 
 function App() {
     // Hide header and footer in Login / Register screen
@@ -122,6 +123,7 @@ function App() {
                     />
                 </Route>
                 <Route path="/voucher" element={<Voucher />} />
+                <Route path="/order-completed" element={<OrderCompleted />} />
                 <Route
                     path="/products"
                     element={<ProductList UpdateNavbar={UpdateNavbar} />}

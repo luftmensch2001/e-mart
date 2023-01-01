@@ -183,7 +183,9 @@ function Items({ currentItems, filterFunction }) {
                 ) : (
                     <div className="orders-list">
                         {currentItems &&
-                            currentItems.map((item) => <Order data={item} />)}
+                            currentItems.map((item) => (
+                                <Order data={item} isBuyOrder={true} />
+                            ))}
                     </div>
                 )}
             </div>

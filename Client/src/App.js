@@ -108,7 +108,18 @@ function App() {
                         />
                     }
                 />
-                <Route path="/order" element={<OrderDetail />} />
+                <Route path="/buy-order">
+                    <Route
+                        path="/buy-order/:billId"
+                        element={<OrderDetail isBuyOrder={true} />}
+                    />
+                </Route>
+                <Route path="/sell-order">
+                    <Route
+                        path="/sell-order/:billId"
+                        element={<OrderDetail isBuyOrder={false} />}
+                    />
+                </Route>
                 <Route path="/product">
                     <Route
                         path="/product/:productId"

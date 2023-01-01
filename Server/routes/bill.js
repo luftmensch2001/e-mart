@@ -8,7 +8,7 @@ const Product = require("../models/products");
 // @desc get 1 bill
 // @access Public
 router.get("/byBillId", async (req, res) => {
-    const { billId } = req.body;
+    const { billId } = req.query;
     try {
         const bill = await Bill.findOne({ _id: billId });
         res.json({ success: true, message: "Got bill", bill });

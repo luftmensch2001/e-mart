@@ -83,7 +83,10 @@ function App() {
                     path="/"
                     element={<Home UpdateNavbar={UpdateNavbar} />}
                 />
-                <Route path="/login" element={<Login />} />
+                <Route
+                    path="/login"
+                    element={<Login UpdateNavbar={UpdateNavbar} />}
+                />
                 <Route path="/register" element={<Register />} />
                 <Route
                     path="/wishlist"
@@ -105,6 +108,7 @@ function App() {
                             products={products}
                             total={total}
                             discount={discount}
+                            UpdateNavbar={UpdateNavbar}
                         />
                     }
                 />

@@ -7,7 +7,9 @@ import { Link } from "react-router-dom";
 function Order(props) {
     const data = props.data;
     const isBuyOrder = props.isBuyOrder;
-    const url = isBuyOrder ? `/buy-order/${data._id}` : "/";
+    const url = isBuyOrder
+        ? `/buy-order/${data._id}`
+        : `/sell-order/${data._id}`;
 
     function DateToString(myDate) {
         const yyyy = myDate.getFullYear();

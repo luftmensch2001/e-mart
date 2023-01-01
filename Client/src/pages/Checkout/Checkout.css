@@ -65,6 +65,7 @@
     font-size: 1.5rem;
     outline: none;
     border: 1px solid lightgray;
+    color: var(--text-color-primary);
     border-radius: 6px;
     padding: 10px 16px;
     width: 100%;

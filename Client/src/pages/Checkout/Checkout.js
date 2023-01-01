@@ -11,7 +11,7 @@ import { Navigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Loading from "../../components/Loading";
 
-const Checkout = ({ products, total, discount }) => {
+const Checkout = ({ products, total, discount, UpdateNavbar }) => {
     const [isLoaded, setIsLoaded] = useState(true);
     const [navigate, setNavigate] = useState(false); // Go to complete page
     const [orderFor, setOrderFor] = useState(false);
@@ -98,6 +98,18 @@ const Checkout = ({ products, total, discount }) => {
             .catch((err) => console.log(err));
     }
 
+    function RemoveProductInCart() {
+        axios
+            .delete("http://localhost:5000/api/productInCarts/byAccountId", {
+                params: { accountId: localStorage.getItem("accountID") },
+            })
+            .then((res) => {
+                console.log(res);
+                UpdateNavbar();
+            })
+            .catch((err) => console.log(err));
+    }
+
     const CompleteOrder = () => {
         setIsLoaded(false);
         axios
@@ -125,7 +137,7 @@ const Checkout = ({ products, total, discount }) => {
                 console.log("res create bill: ", res);
                 const newBillId = res.data.newBill._id;
                 let counter = 0;
-
+                // Create product in bill
                 products.forEach((item) => {
                     axios
                         .post(
@@ -161,6 +173,7 @@ const Checkout = ({ products, total, discount }) => {
                             return;
                         });
                 });
+                RemoveProductInCart();
             })
             .catch((err) => {
                 toast.error("Có lỗi xảy ra, vui lòng thử lại!", {

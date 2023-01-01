@@ -5,30 +5,17 @@ import paypal from "../../assets/images/paypal.png";
 import cod from "../../assets/images/cash-on-delivery.png";
 import { BsCheckCircleFill } from "react-icons/bs";
 import ThousandSeparator from "../../components/ThousandSeparator";
-import Select from "react-select";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Loading from "../../components/Loading";
+import StatusLabel from "../../components/StatusLabel";
 
 const OrderDetail = ({ isBuyOrder }) => {
     const [isLoaded, setIsLoaded] = useState(true);
-    const [orderFor, setOrderFor] = useState(false);
-    const [paymentMethod, setPaymentMethod] = useState(0); // 0 is Paypal
-    const [fullName, setFullName] = useState("");
-    const [email, setEmail] = useState("");
-    const [phoneNumber, setPhoneNumber] = useState("");
-    const [fullName2, setFullName2] = useState("");
-    const [email2, setEmail2] = useState("");
-    const [phoneNumber2, setPhoneNumber2] = useState("");
-    const [province, setProvince] = useState("");
-    const [district, setDistrict] = useState("");
-    const [ward, setWard] = useState("");
-    const [street, setStreet] = useState("");
-    const [note, setNote] = useState("");
     const [products, setProducts] = useState();
     const [billData, setBillData] = useState();
-
+    const navigate = useNavigate();
     const billId = useParams().billId;
 
     useEffect(() => {
@@ -81,6 +68,66 @@ const OrderDetail = ({ isBuyOrder }) => {
             .catch((err) => console.log(err));
     }, [billId]);
 
+    function SetBillState(status) {
+        console.log("billId: ", billId);
+        let message;
+        switch (status) {
+            case "2":
+                message = "Đã chấp nhận đơn hàng!";
+                break;
+            case "3":
+                message =
+                    "Đã nhận hàng thành công! Bạn nhận được " +
+                    Math.round(billData.totalPrice / 100).toString() +
+                    " E-Coin";
+                break;
+            case "4":
+                message = "Đã huỷ đơn hàng!";
+                break;
+        }
+        axios
+            .put("http://localhost:5000/api/bills/update", {
+                billId: billId,
+                state: status,
+            })
+            .then((res) => {
+                console.log("res update state: ", res);
+                toast.success(message, {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+                BackToOrders();
+            })
+            .catch((err) => {
+                console.log(err);
+                toast.error("Có lỗi xảy ra!", {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+            });
+    }
+
+    function BackToOrders() {
+        window.scrollTo(0, 0);
+        navigate({
+            pathname: isBuyOrder
+                ? "/account/buy-orders"
+                : "/account/sell-orders",
+        });
+    }
+
     if (!isLoaded) return <Loading />;
 
     return (
@@ -90,6 +137,9 @@ const OrderDetail = ({ isBuyOrder }) => {
             </span>
             <div className="checkout-container">
                 <div className="checkout-info-container">
+                    <span className="title-of-zone green-text">
+                        Thông tin người nhận
+                    </span>
                     <div className="input-row">
                         <input
                             className="input-1"
@@ -156,6 +206,9 @@ const OrderDetail = ({ isBuyOrder }) => {
                             hàng đến E-mail của người nhận
                         </span>
                     )}
+                    <span className="title-of-zone green-text">
+                        Địa chỉ nhận hàng
+                    </span>
                     <div className="input-row">
                         <input
                             className="input-2"
@@ -191,31 +244,61 @@ const OrderDetail = ({ isBuyOrder }) => {
                             readOnly={true}
                         />
                     </div>
+                    <span className="title-of-zone green-text">
+                        Phương thức thanh toán
+                    </span>
                     <div className="input-row">
-                        <span style={{ marginTop: "10px" }}>
-                            Chọn phương thức thanh toán:
-                        </span>
-                    </div>
-                    <div className="input-row">
-                        <div
-                            className="payment-img-container"
-                            onClick={() => setPaymentMethod(0)}
-                        >
+                        <div className="payment-img-container">
                             <img className="payment-img" src={paypal} />
                             {billData?.paymentMethod === "Paypal" && (
                                 <BsCheckCircleFill className="icon" />
                             )}
                         </div>
-                        <div
-                            className="payment-img-container"
-                            onClick={() => setPaymentMethod(1)}
-                        >
+                        <div className="payment-img-container">
                             <img className="payment-img" src={cod} />
                             {billData?.paymentMethod === "COD" && (
                                 <BsCheckCircleFill className="icon" />
                             )}
                         </div>
                     </div>
+                    {isBuyOrder ? (
+                        <div className="input-row button-wrapper">
+                            {billData?.state === "2" && (
+                                <button
+                                    className="primary-button button-green"
+                                    onClick={() => SetBillState("3")}
+                                >
+                                    Đã Nhận Được Hàng
+                                </button>
+                            )}
+                            {billData?.state === "1" && (
+                                <button
+                                    className="primary-button button-red"
+                                    style={{ marginLeft: 0 }}
+                                    onClick={() => SetBillState("4")}
+                                >
+                                    Huỷ Đơn Hàng
+                                </button>
+                            )}
+                        </div>
+                    ) : (
+                        billData?.state === "1" && (
+                            <div className="input-row button-wrapper">
+                                <button
+                                    className="primary-button button-green"
+                                    onClick={() => SetBillState("2")}
+                                >
+                                    Chấp nhận Đơn Hàng
+                                </button>
+                                <button
+                                    className="primary-button button-red"
+                                    onClick={() => SetBillState("4")}
+                                >
+                                    Từ Chối Đơn Hàng
+                                </button>
+                            </div>
+                        )
+                    )}
                 </div>
                 <div className="checkout-bill-container">
                     <div className="bill-product-container">
@@ -284,6 +367,9 @@ const OrderDetail = ({ isBuyOrder }) => {
                                     : "0"}{" "}
                                 đ
                             </span>
+                        </div>
+                        <div className="bill-row">
+                            <StatusLabel type={billData?.state} />
                         </div>
                     </div>
                 </div>

@@ -145,6 +145,8 @@ router.delete("/", async (req, res) => {
 // @access Public
 router.put("/update", async (req, res) => {
     const { billId, state } = req.body;
+    console.log("state: ", state);
+    console.log("billId: ", billId);
     try {
         Bill.findByIdAndUpdate(
             { _id: billId },

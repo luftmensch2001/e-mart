@@ -22,6 +22,7 @@ import ProductList from "./pages/Product/ProductList";
 import EditProduct from "./pages/StoreManagement/EditProduct";
 import OrderDetail from "./pages/Order/OrderDetail";
 import axios from "axios";
+import OrderCompleted from "./components/OrderCompleted";
 
 function App() {
     // Hide header and footer in Login / Register screen
@@ -82,7 +83,10 @@ function App() {
                     path="/"
                     element={<Home UpdateNavbar={UpdateNavbar} />}
                 />
-                <Route path="/login" element={<Login />} />
+                <Route
+                    path="/login"
+                    element={<Login UpdateNavbar={UpdateNavbar} />}
+                />
                 <Route path="/register" element={<Register />} />
                 <Route
                     path="/wishlist"
@@ -104,10 +108,22 @@ function App() {
                             products={products}
                             total={total}
                             discount={discount}
+                            UpdateNavbar={UpdateNavbar}
                         />
                     }
                 />
-                <Route path="/order" element={<OrderDetail />} />
+                <Route path="/buy-order">
+                    <Route
+                        path="/buy-order/:billId"
+                        element={<OrderDetail isBuyOrder={true} />}
+                    />
+                </Route>
+                <Route path="/sell-order">
+                    <Route
+                        path="/sell-order/:billId"
+                        element={<OrderDetail isBuyOrder={false} />}
+                    />
+                </Route>
                 <Route path="/product">
                     <Route
                         path="/product/:productId"
@@ -122,6 +138,7 @@ function App() {
                     />
                 </Route>
                 <Route path="/voucher" element={<Voucher />} />
+                <Route path="/order-completed" element={<OrderCompleted />} />
                 <Route
                     path="/products"
                     element={<ProductList UpdateNavbar={UpdateNavbar} />}

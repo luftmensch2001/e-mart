@@ -8,9 +8,11 @@ const productRouter = require("./routes/product");
 const imageProductRouter = require("./routes/imageProduct");
 const colorRouter = require("./routes/color");
 const productInCartRouter = require("./routes/productInCart");
-const productInCartFavorite = require("./routes/productInFavorite");
+const productInFavorite = require("./routes/productInFavorite");
 const discountCodeRouter = require("./routes/discountCode");
 const evalutesRouter = require("./routes/evalute");
+const billRouter = require("./routes/bill");
+const productInBillRouter = require("./routes/productInBill");
 
 //const colorRouter = require("./routes/color");
 
@@ -46,9 +48,11 @@ app.use("/api/products", productRouter);
 app.use("/api/imageProducts", imageProductRouter);
 app.use("/api/colors", colorRouter);
 app.use("/api/productInCarts", productInCartRouter);
-app.use("/api/productInFavorites", productInCartFavorite);
+app.use("/api/productInFavorites", productInFavorite);
 app.use("/api/discountCodes", discountCodeRouter);
 app.use("/api/evalutes", evalutesRouter);
+app.use("/api/bills", billRouter);
+app.use("/api/productInBills", productInBillRouter);
 
 const PORT = 5000;
 

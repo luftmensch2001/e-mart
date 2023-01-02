@@ -1,12 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Checkout.css";
 import paypal from "../../assets/images/paypal.png";
 import cod from "../../assets/images/cash-on-delivery.png";
 import { BsCheckCircleFill } from "react-icons/bs";
 import ThousandSeparator from "../../components/ThousandSeparator";
 import Select from "react-select";
+import AddressData from "../../assets/AddressData.json";
+import axios from "axios";
+import { Navigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import Loading from "../../components/Loading";
 
-const Checkout = ({ products, total, discount }) => {
+const Checkout = ({ products, total, discount, UpdateNavbar }) => {
+    const [isLoaded, setIsLoaded] = useState(true);
+    const [navigate, setNavigate] = useState(false); // Go to complete page
     const [orderFor, setOrderFor] = useState(false);
     const [paymentMethod, setPaymentMethod] = useState(0); // 0 is Paypal
     const [fullName, setFullName] = useState("");
@@ -21,24 +28,174 @@ const Checkout = ({ products, total, discount }) => {
     const [street, setStreet] = useState("");
     const [note, setNote] = useState("");
 
-    const provinceOptions = [
-        { value: "Đăk Nông", label: "Đăk Nông" },
-        { value: "Đồng Nai", label: "Đồng Nai" },
-        { value: "Hà Nội", label: "Hà Nội" },
-    ];
+    const [provinceOptions, setProvinceOptions] = useState([]);
+    const [districtOptions, setDistrictOptions] = useState([]);
+    const [wardOptions, setWardOptions] = useState([]);
 
-    const districtOptions = [
-        { value: "Đăk R'Lấp", label: "Đăk R'Lấp" },
-        { value: "Gia Nghĩa", label: "Gia Nghĩa" },
-    ];
+    // Get Provinces Data
+    useEffect(() => {
+        let arr = [];
+        for (let i = 0; i < AddressData.length; i++) {
+            let option = {
+                value: AddressData[i].Name,
+                label: AddressData[i].Name,
+            };
+            arr.push(option);
+        }
+        setProvinceOptions(arr);
+        setDistrict(null);
+        setWard(null);
+    }, []);
 
-    const wardOptions = [
-        { value: "Xã Nhân Cơ", label: "Xã Nhân Cơ" },
-        { value: "Phường Nghĩa Tân", label: "Phường Nghĩa Tân" },
-    ];
+    // Get Districts Data
+    useEffect(() => {
+        for (let i = 0; i < AddressData.length; i++)
+            if (AddressData[i].Name === province.value) {
+                let arr = [];
+                AddressData[i].Districts.forEach((element) => {
+                    let option = {
+                        value: element.Name,
+                        label: element.Name,
+                    };
+                    arr.push(option);
+                });
+                setDistrictOptions(arr);
+                break;
+            }
+        setWard(null);
+    }, [province]);
+
+    // Get Wards Data
+    useEffect(() => {
+        if (!district) return;
+
+        for (let i = 0; i < AddressData.length; i++)
+            if (AddressData[i].Name === province.value) {
+                for (let j = 0; j < AddressData[i].Districts.length; j++) {
+                    if (AddressData[i].Districts[j].Name === district) {
+                        let arr = [];
+                        AddressData[i].Districts[j].Wards.forEach((element) => {
+                            let option = {
+                                value: element.Name,
+                                label: element.Name,
+                            };
+                            arr.push(option);
+                        });
+                        setWardOptions(arr);
+                        break;
+                    }
+                }
+                break;
+            }
+    }, [district]);
+
+    function RemoveInvalidBill(id) {
+        axios
+            .delete("http://localhost:5000/api/bills/", {
+                params: { billId: id },
+            })
+            .then((res) => {})
+            .catch((err) => console.log(err));
+    }
+
+    function RemoveProductInCart() {
+        axios
+            .delete("http://localhost:5000/api/productInCarts/byAccountId", {
+                params: { accountId: localStorage.getItem("accountID") },
+            })
+            .then((res) => {
+                console.log(res);
+                UpdateNavbar();
+            })
+            .catch((err) => console.log(err));
+    }
+
+    const CompleteOrder = () => {
+        setIsLoaded(false);
+        axios
+            .post("http://localhost:5000/api/bills/create", {
+                accountBuyerId: localStorage.getItem("accountID"),
+                productId: products[0].productId,
+                state: "1",
+                paymentMethod: paymentMethod === 0 ? "Paypal" : "COD",
+                totalPrice: total,
+                discount: discount,
+                fullName: fullName,
+                phoneNumber: phoneNumber,
+                email: email,
+                city: province ? province.value : "",
+                district: district ? district : "",
+                ward: ward ? ward : "",
+                detail: street,
+                note: note,
+                orderFor: orderFor,
+                fullName2: orderFor ? fullName2 : "",
+                phoneNumber2: orderFor ? phoneNumber2 : "",
+                email2: orderFor ? email2 : "",
+            })
+            .then((res) => {
+                console.log("res create bill: ", res);
+                const newBillId = res.data.newBill._id;
+                let counter = 0;
+                // Create product in bill
+                products.forEach((item) => {
+                    axios
+                        .post(
+                            "http://localhost:5000/api/productInBills/create",
+                            {
+                                billId: newBillId,
+                                productId: item.productId,
+                                color: item.color,
+                                count: item.count,
+                            }
+                        )
+                        .then((res) => {
+                            console.log("res create productInBill: ", res);
+                            counter++;
+                            if (counter == products.length) {
+                                setIsLoaded(true);
+                                setNavigate(true);
+                            }
+                        })
+                        .catch((err) => {
+                            toast.error("Có lỗi xảy ra, vui lòng thử lại!", {
+                                position: "bottom-right",
+                                autoClose: 5000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: "light",
+                            });
+                            RemoveInvalidBill(newBillId);
+                            setIsLoaded(true);
+                            return;
+                        });
+                });
+                RemoveProductInCart();
+            })
+            .catch((err) => {
+                toast.error("Có lỗi xảy ra, vui lòng thử lại!", {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+                setIsLoaded(true);
+                return;
+            });
+    };
+
+    if (!isLoaded) return <Loading />;
 
     return (
         <div className="Checkout content">
+            {navigate && <Navigate to="/order-completed" />}
             <span className="page-title title-text">
                 Thông tin <span className="green-text">Thanh toán</span>
             </span>
@@ -146,7 +303,10 @@ const Checkout = ({ products, total, discount }) => {
                         <Select
                             className="select-2"
                             defaultValue={null}
-                            onChange={setDistrict}
+                            value={districtOptions.filter(function (option) {
+                                return option.value === district;
+                            })}
+                            onChange={(e) => setDistrict(e.value)}
                             options={districtOptions}
                             placeholder="Chọn quận / huyện"
                             isSearchable={true}
@@ -163,7 +323,10 @@ const Checkout = ({ products, total, discount }) => {
                         <Select
                             className="select-2"
                             defaultValue={null}
-                            onChange={setWard}
+                            value={wardOptions.filter(function (option) {
+                                return option.value === ward;
+                            })}
+                            onChange={(e) => setWard(e.value)}
                             options={wardOptions}
                             placeholder="Chọn xã / phường"
                             isSearchable={true}
@@ -216,7 +379,10 @@ const Checkout = ({ products, total, discount }) => {
                         </div>
                     </div>
                     <div className="input-row">
-                        <button className="complete-button primary-button">
+                        <button
+                            className="complete-button primary-button"
+                            onClick={CompleteOrder}
+                        >
                             Hoàn tất Đặt hàng
                         </button>
                     </div>

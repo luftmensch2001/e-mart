@@ -4,7 +4,7 @@ import "./Login.css";
 import { toast } from "react-toastify";
 import axios from "axios";
 
-function Login() {
+function Login({ UpdateNavbar }) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [loginSucess, setLoginSuccess] = useState(false);
@@ -42,6 +42,7 @@ function Login() {
                     progress: undefined,
                     theme: "light",
                 });
+                UpdateNavbar();
                 setLoginSuccess(true);
             })
             .catch((err) => {

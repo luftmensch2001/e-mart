@@ -120,6 +120,22 @@ const ProductDetail = ({ UpdateNavbar }) => {
     };
 
     const AddToCart = () => {
+        if (productData.accountId === localStorage.getItem("accountID")) {
+            toast.error(
+                "Không thể thêm sản phẩm trong Cửa hàng của bạn vào Giỏ hàng!",
+                {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                }
+            );
+            return;
+        }
         axios
             .post("http://localhost:5000/api/productInCarts/create", {
                 accountId: localStorage.getItem("accountID"),
@@ -232,6 +248,24 @@ const ProductDetail = ({ UpdateNavbar }) => {
     };
 
     const AddToFavoriteOnChange = () => {
+        if (productData.accountId === localStorage.getItem("accountID")) {
+            toast.error(
+                "Không thể thêm sản phẩm trong Cửa hàng của bạn vào Yêu thích!",
+                {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                }
+            );
+            setIsFavorite(!isFavorite);
+            return;
+        }
+
         if (isFavorite) {
             // Add to favorite
             axios

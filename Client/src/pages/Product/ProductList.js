@@ -522,6 +522,23 @@ const ProductCard = ({ item, UpdateNavbar }) => {
     const [showDialog, setShowDialog] = useState(false);
 
     const isFavoriteOnChange = () => {
+        if (CheckProductInStore(item.accountId)) {
+            toast.error(
+                "Không thể thêm sản phẩm trong Cửa hàng của bạn vào Giỏ hàng!",
+                {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                }
+            );
+            setIsFavorite(isFavorite);
+            return;
+        }
         if (!isFavorite) AddToFavorite();
         else RemoveFromFavorite();
     };
@@ -604,6 +621,10 @@ const ProductCard = ({ item, UpdateNavbar }) => {
             });
     };
 
+    function CheckProductInStore(accountId) {
+        return accountId === localStorage.getItem("accountID");
+    }
+
     return (
         <div className="product-item">
             {showDialog && (
@@ -637,7 +658,24 @@ const ProductCard = ({ item, UpdateNavbar }) => {
             <div className="buttons-wrapper">
                 <button
                     className="add-to-cart-button primary-button"
-                    onClick={() => setShowDialog(true)}
+                    onClick={() => {
+                        if (!CheckProductInStore(item.accountId))
+                            setShowDialog(true);
+                        else
+                            toast.error(
+                                "Không thể thêm sản phẩm trong Cửa hàng của bạn vào Giỏ hàng!",
+                                {
+                                    position: "bottom-right",
+                                    autoClose: 5000,
+                                    hideProgressBar: false,
+                                    closeOnClick: true,
+                                    pauseOnHover: true,
+                                    draggable: true,
+                                    progress: undefined,
+                                    theme: "light",
+                                }
+                            );
+                    }}
                 >
                     <BsCartPlus
                         style={{

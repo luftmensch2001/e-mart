@@ -81,6 +81,7 @@ const OrderDetail = ({ isBuyOrder }) => {
                     "Đã nhận hàng thành công! Bạn nhận được " +
                     Math.round(billData.totalPrice / 100).toString() +
                     " E-Coin";
+                UpdateCoin();
                 break;
             case "4":
                 message = "Đã huỷ đơn hàng!";
@@ -127,6 +128,18 @@ const OrderDetail = ({ isBuyOrder }) => {
                 ? "/account/buy-orders"
                 : "/account/sell-orders",
         });
+    }
+
+    function UpdateCoin() {
+        axios
+            .put("http://localhost:5000/api/accounts/updateCoin", {
+                accountId: localStorage.getItem("accountID"),
+                coin: Math.round(billData?.totalPrice / 100),
+            })
+            .then((res) => {
+                console.log("res coin update", res);
+            })
+            .catch((err) => console.log(err));
     }
 
     if (!isLoaded) return <Loading />;

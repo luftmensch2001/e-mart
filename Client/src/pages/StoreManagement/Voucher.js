@@ -194,7 +194,7 @@ const Voucher = () => {
                                 </span>
                                 <span className="column-4">
                                     {ThoudsandSeparator(item.value)}
-                                    {item.type}
+                                    {" " + item.type}
                                 </span>
                                 <span className="column-5">
                                     {item.maxValue > 0
@@ -272,6 +272,20 @@ const AddVoucherModal = ({ id, voucher, closeFunction, update }) => {
     }, [id]);
 
     const AddVoucher = () => {
+        if (!CheckValidInfo()) {
+            toast.warn("Vui lòng kiểm tra lại thông tin!", {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+            return;
+        }
+
         axios
             .post("http://localhost:5000/api/discountCodes/create", {
                 code: code.toUpperCase(),
@@ -313,6 +327,73 @@ const AddVoucherModal = ({ id, voucher, closeFunction, update }) => {
             });
     };
 
+    const UpdateVoucher = () => {
+        if (!CheckValidInfo()) {
+            toast.warn("Vui lòng kiểm tra lại thông tin!", {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+            return;
+        }
+
+        axios
+            .put("http://localhost:5000/api/discountCodes/update", {
+                code: code.toUpperCase(),
+                count: count,
+                timeStart: timeStart,
+                timeEnd: timeEnd,
+                value: value,
+                type: unit.label,
+                maxValue: max,
+                codeId: id,
+            })
+            .then((res) => {
+                console.log("res create voucher: ", res);
+                toast.success("Cập nhật thông tin thành công", {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+                update();
+                closeFunction();
+            })
+            .catch((err) => {
+                console.log(err);
+                toast.error("Có lỗi xảy ra!", {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+            });
+    };
+
+    function CheckValidInfo() {
+        if (code.trim().length < 6 || code.trim.length > 10) return false;
+        if (!count) return false;
+        if (!timeStart || !timeEnd) return false;
+        if (timeStart > timeEnd) return false;
+        if (!value) return false;
+        console.log("unit.label: ", unit.label);
+        if (unit.label === "%" && (value < 1 || value > 99)) return false;
+        return true;
+    }
+
     if (id === 0)
         // Add Modal
         return (
@@ -331,7 +412,9 @@ const AddVoucherModal = ({ id, voucher, closeFunction, update }) => {
                                 className="code-input"
                                 type="text"
                                 value={code}
-                                onChange={(e) => setCode(e.target.value)}
+                                onChange={(e) =>
+                                    setCode(e.target.value.replace(/ /g, ""))
+                                }
                             />
                             <span
                                 className="label"
@@ -448,7 +531,9 @@ const AddVoucherModal = ({ id, voucher, closeFunction, update }) => {
                                 type="text"
                                 placeholder="VD: VOUCHER012"
                                 value={code}
-                                onChange={(e) => setCode(e.target.value)}
+                                onChange={(e) =>
+                                    setCode(e.target.value.replace(/ /g, ""))
+                                }
                             />
                             <span
                                 className="label"
@@ -536,7 +621,10 @@ const AddVoucherModal = ({ id, voucher, closeFunction, update }) => {
                         </div>
                     </div>
                     <div className="row save-form">
-                        <button className="add-button primary-button save-form">
+                        <button
+                            className="add-button primary-button save-form"
+                            onClick={UpdateVoucher}
+                        >
                             Lưu thông tin
                         </button>
                         <button className="add-button primary-button save-form">

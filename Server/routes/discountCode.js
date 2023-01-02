@@ -136,59 +136,57 @@ router.post("/checkExist", async (req, res) => {
 // @access Public
 router.put("/update", async (req, res) => {
     try {
-        uploadMultipartForm(req, res, async function (err) {
-            const {
-                codeId,
-                code,
-                count,
-                timeStart,
-                timeEnd,
-                value,
-                type,
-                maxValue,
-            } = req.body;
+        const {
+            codeId,
+            code,
+            count,
+            timeStart,
+            timeEnd,
+            value,
+            type,
+            maxValue,
+        } = req.body;
 
-            const oldCode = await DiscountCode.findOne({ _id: codeId });
-            console.log(oldCode.code);
-            if (String(oldCode.code) != String(code)) {
-                const checkNewCode = await DiscountCode.findOne({ code });
-                if (checkNewCode != null)
-                    return res.status(401).json({
-                        success: false,
-                        message: " String Code Already Existed",
-                    });
-            }
-            if (oldCode.code)
-                DiscountCode.findOneAndUpdate(
-                    { _id: codeId },
-                    {
-                        code,
-                        count,
-                        timeStart,
-                        timeEnd,
-                        value,
-                        type,
-                        maxValue,
-                    },
-                    { new: true },
-                    function (error, discountCode) {
-                        console.log(discountCode);
-                        if (!discountCode) {
-                            res.status(400).json({
-                                success: false,
-                                message: "discountCode not found",
-                            });
-                        } else {
-                            res.status(200).json({
-                                success: true,
-                                message: " Updated discountCode",
-                                discountCode,
-                            });
-                        }
+        const oldCode = await DiscountCode.findOne({ _id: codeId });
+        console.log(oldCode.code);
+        if (String(oldCode.code) != String(code)) {
+            const checkNewCode = await DiscountCode.findOne({ code });
+            if (checkNewCode != null)
+                return res.status(401).json({
+                    success: false,
+                    message: " String Code Already Existed",
+                });
+        }
+        if (oldCode.code)
+            DiscountCode.findOneAndUpdate(
+                { _id: codeId },
+                {
+                    code,
+                    count,
+                    timeStart,
+                    timeEnd,
+                    value,
+                    type,
+                    maxValue,
+                },
+                { new: true },
+                function (error, discountCode) {
+                    console.log(discountCode);
+                    if (!discountCode) {
+                        res.status(400).json({
+                            success: false,
+                            message: "discountCode not found",
+                        });
+                    } else {
+                        res.status(200).json({
+                            success: true,
+                            message: " Updated discountCode",
+                            discountCode,
+                        });
                     }
-                );
-            // All Good
-        });
+                }
+            );
+        // All Good
     } catch (error) {
         console.log(error);
         res.status(500).json({

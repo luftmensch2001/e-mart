@@ -116,7 +116,9 @@ router.get("/", async (req, res) => {
 // @desc Get by code id
 // @access Public
 router.post("/checkExist", async (req, res) => {
-    const { code, accountId } = req.query;
+    const { code, accountId } = req.body;
+    console.log("accountId: ", accountId);
+    console.log("code: ", code);
     try {
         const discountCodes = await DiscountCode.findOne({ code, accountId });
         if (discountCodes == null)
@@ -241,7 +243,7 @@ router.delete("/outDate", async (req, res) => {
         const date = Date.now().toString();
         console.log(date);
         const deleteDiscountCode = await DiscountCode.deleteMany({
-            timeEnd: { $gt: date },
+            timeEnd: { $lt: date },
             accountId,
         });
         const deleteDiscountCodeCount0 = await DiscountCode.deleteMany({

@@ -4,24 +4,45 @@ import { Link } from "react-router-dom";
 import CartProduct from "./CartProduct";
 import { HiOutlineRefresh } from "react-icons/hi";
 import { BsArrowLeft, BsCartCheck } from "react-icons/bs";
-import { FaMoneyBillWave } from "react-icons/fa";
+import { FaMoneyBillWave, FaBitcoin } from "react-icons/fa";
 import AddToCart from "../../assets/images/illustrations/undraw_Add_to_cart_re_wrdo.png";
 import Loading from "../../components/Loading";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 import ThousandSeparator from "../../components/ThousandSeparator";
-import ConfirmDialog from "../../components/ConfirmDialog";
 
 const Cart = ({ SetCartData, UpdateNavbar }) => {
     const [data, setData] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
     const [total, setTotal] = useState(0);
     const [discount, setDiscount] = useState(0);
+    const [coinData, setCoinData] = useState(0);
+    const [coin, setCoin] = useState();
+    const [coinUsed, setCoinUsed] = useState(0);
+    const [voucherCode, setVoucherCode] = useState("");
     let counter = 0;
 
     useEffect(() => {
         FetchData(true);
+        GetUserData();
     }, []);
+
+    const GetUserData = () => {
+        setIsLoaded(false);
+        axios
+            .get("http://localhost:5000/api/accounts/getInfo", {
+                params: {
+                    accountId: localStorage.getItem("accountID"),
+                },
+            })
+            .then((res) => {
+                console.log("res user: ", res);
+                setCoinData(res.data.userId.coin);
+                setIsLoaded(true);
+            })
+            .catch((err) => console.log(err));
+    };
 
     const FetchData = (showLoading) => {
         setIsLoaded(!showLoading);
@@ -64,6 +85,126 @@ const Cart = ({ SetCartData, UpdateNavbar }) => {
             .catch((err) => {
                 console.log("err: ", err);
             });
+    };
+
+    const CoinCheck = () => {
+        if (!coin) return;
+        if (coin != Math.round(coin)) {
+            toast.error("Vui lòng nhập số nguyên", {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+            return;
+        }
+        if (coin > coinData) {
+            toast.error("Số E-Coin tối đa của bạn là " + coinData.toString(), {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+            return;
+        }
+        setCoinUsed(parseInt(coin));
+        setDiscount(discount - coinUsed + parseInt(coin));
+    };
+
+    function CheckValidVoucher(voucher) {
+        if (voucher.count <= 0) return false;
+        const start = new Date(voucher.timeStart);
+        const end = new Date(voucher.timeEnd);
+        const now = new Date();
+        if (now < start || now > end) return false;
+        return true;
+    }
+
+    const VoucherCheck = () => {
+        axios
+            .get("http://localhost:5000/api/products/byProductId", {
+                params: {
+                    productId: data[0].productId,
+                },
+            })
+            .then((res) => {
+                console.log("res product: ", res);
+
+                axios
+                    .post(
+                        "http://localhost:5000/api/discountCodes/checkExist",
+                        {
+                            code: voucherCode,
+                            accountId: res.data.product.accountId,
+                        }
+                    )
+                    .then((res) => {
+                        console.log("res voucher: ", res);
+                        if (res.data.success === false) {
+                            toast.error("Mã giảm giá không tồn tại!", {
+                                position: "bottom-right",
+                                autoClose: 5000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: "light",
+                            });
+                            return;
+                        }
+                        // Check valid voucher
+                        const voucher = res.data.discountCodes;
+                        if (!CheckValidVoucher(voucher)) {
+                            toast.error("Mã giảm giá không khả dụng!", {
+                                position: "bottom-right",
+                                autoClose: 5000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: "light",
+                            });
+                        } else {
+                            // is valid voucher
+                            if (voucher.type === "VNĐ") {
+                                setDiscount(coinUsed + voucher.value);
+                            } else {
+                                if (!voucher.maxValue)
+                                    setDiscount(
+                                        coinUsed + (total * voucher.value) / 100
+                                    );
+
+                                let value = Math.min(
+                                    voucher.maxValue,
+                                    (total * voucher.value) / 100
+                                );
+                                setDiscount(coinUsed + value);
+                            }
+                            toast.success("Áp dụng mã thành công!", {
+                                position: "bottom-right",
+                                autoClose: 5000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: "light",
+                            });
+                        }
+                    })
+                    .catch((err) => console.log(err));
+            })
+            .catch((err) => console.log(err));
     };
 
     if (!isLoaded) return <Loading />;
@@ -177,10 +318,40 @@ const Cart = ({ SetCartData, UpdateNavbar }) => {
                                 className="coupon-input"
                                 type="text"
                                 placeholder="Mã giảm giá"
+                                value={voucherCode}
+                                onChange={(e) =>
+                                    setVoucherCode(
+                                        e.target.value
+                                            .replace(/ /g, "")
+                                            .toUpperCase()
+                                    )
+                                }
                             />
-                            <button className="coupon-apply-button primary-button">
+                            <button
+                                className="coupon-apply-button primary-button"
+                                onClick={VoucherCheck}
+                            >
                                 <FaMoneyBillWave className="coupon-icon" />
                                 Áp dụng
+                            </button>
+                        </div>
+                        <div className="coupon-wrapper">
+                            <input
+                                className="coupon-input"
+                                type="number"
+                                placeholder="Sử dụng E-Coin"
+                                value={coin}
+                                onChange={(e) => setCoin(e.target.value)}
+                            />
+                            <button
+                                className="coupon-apply-button primary-button"
+                                style={{
+                                    backgroundColor: "var(--primary-color)",
+                                }}
+                                onClick={CoinCheck}
+                            >
+                                <FaBitcoin className="coupon-icon" />
+                                Sử dụng
                             </button>
                         </div>
                     </div>

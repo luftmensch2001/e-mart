@@ -10,6 +10,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Loading from "../../components/Loading";
 import StatusLabel from "../../components/StatusLabel";
+import emailjs from "@emailjs/browser";
 
 const OrderDetail = ({ isBuyOrder }) => {
     const [isLoaded, setIsLoaded] = useState(true);
@@ -266,7 +267,9 @@ const OrderDetail = ({ isBuyOrder }) => {
                             {billData?.state === "2" && (
                                 <button
                                     className="primary-button button-green"
-                                    onClick={() => SetBillState("3")}
+                                    onClick={() => {
+                                        SetBillState("3");
+                                    }}
                                 >
                                     Đã Nhận Được Hàng
                                 </button>
@@ -275,7 +278,26 @@ const OrderDetail = ({ isBuyOrder }) => {
                                 <button
                                     className="primary-button button-red"
                                     style={{ marginLeft: 0 }}
-                                    onClick={() => SetBillState("4")}
+                                    onClick={() => {
+                                        SetBillState("4");
+                                        emailjs.send(
+                                            "service_cki5lbq",
+                                            "template_jfnoubx",
+                                            {
+                                                name_customer:
+                                                    billData?.fullName,
+                                                name_first_product:
+                                                    products[0]?.nameProduct,
+                                                count_other_product:
+                                                    products.length - 1,
+                                                cancel_reason:
+                                                    "Người mua huỷ đơn hàng",
+                                                url: `/buy-order/${billData?._id}`,
+                                                email_customer: billData?.email,
+                                            },
+                                            "KbVTEVlkRxDF3qYFd"
+                                        );
+                                    }}
                                 >
                                     Huỷ Đơn Hàng
                                 </button>
@@ -286,13 +308,49 @@ const OrderDetail = ({ isBuyOrder }) => {
                             <div className="input-row button-wrapper">
                                 <button
                                     className="primary-button button-green"
-                                    onClick={() => SetBillState("2")}
+                                    onClick={() => {
+                                        SetBillState("2");
+                                        emailjs.send(
+                                            "service_cki5lbq",
+                                            "template_c9f9ohd",
+                                            {
+                                                name_customer:
+                                                    billData?.fullName,
+                                                name_first_product:
+                                                    products[0]?.nameProduct,
+                                                count_other_product:
+                                                    products.length - 1,
+                                                url: `/buy-order/${billData?._id}`,
+                                                email_customer: billData?.email,
+                                            },
+                                            "KbVTEVlkRxDF3qYFd"
+                                        );
+                                    }}
                                 >
                                     Chấp nhận Đơn Hàng
                                 </button>
                                 <button
                                     className="primary-button button-red"
-                                    onClick={() => SetBillState("4")}
+                                    onClick={() => {
+                                        SetBillState("4");
+                                        emailjs.send(
+                                            "service_cki5lbq",
+                                            "template_jfnoubx",
+                                            {
+                                                name_customer:
+                                                    billData?.fullName,
+                                                name_first_product:
+                                                    products[0]?.nameProduct,
+                                                count_other_product:
+                                                    products.length - 1,
+                                                cancel_reason:
+                                                    "Người bán từ chối đơn hàng",
+                                                url: `/buy-order/${billData?._id}`,
+                                                email_customer: billData?.email,
+                                            },
+                                            "KbVTEVlkRxDF3qYFd"
+                                        );
+                                    }}
                                 >
                                     Từ Chối Đơn Hàng
                                 </button>

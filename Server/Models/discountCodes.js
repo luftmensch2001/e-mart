@@ -6,6 +6,10 @@ const DiscountCodeSchema = new schema({
     type: String,
     require: true,
   },
+  accountId: {
+    type: schema.Types.ObjectId,
+    ref: "accounts",
+  },
   count: {
     type: Number,
     require: true,

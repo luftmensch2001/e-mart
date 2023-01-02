@@ -10,18 +10,21 @@ const uploadMultipartForm = multer().none();
 // @desc Create discountCode
 // @access Public
 router.post("/create", async (req, res) => {
-  const { code, count, timeStart, timeEnd, value, type, maxValue } = req.body;
+  const { code, count, timeStart, timeEnd, value, type, maxValue, accountId } =
+    req.body;
 
   // Simple validation
-  if (!code || !count || !value || !type)
+  if (!code || !count || !value || !type || !accountId)
     return res
       .status(400)
       .json({ success: false, message: "Missing information" });
   try {
     //Check for existing user
-    const discountCode = await DiscountCode.findOne({ code });
+    const discountCode = await DiscountCode.findOne({ code, accountId });
     if (discountCode)
-      return res.status(400).json({ success: false, message: "Code already" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Code already in this account" });
 
     // All good
     const newDiscountCode = new DiscountCode({
@@ -32,6 +35,7 @@ router.post("/create", async (req, res) => {
       value,
       type,
       maxValue,
+      accountId,
     });
     await newDiscountCode.save();
 
@@ -65,12 +69,30 @@ router.get("/all", async (req, res) => {
   }
 });
 // @route GET api/discountCodes/
-// @desc Get all DiscountCode
+// @desc Get by code id
 // @access Public
 router.get("/", async (req, res) => {
-  const codeId = req.query.codeId;
+  const { codeId } = req.query.codeId;
   try {
     const discountCodes = await DiscountCode.findOne({ _id: codeId });
+    if (discountCodes == null)
+      res.json({ success: false, message: "not found" });
+    else res.json({ success: true, discountCodes });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: " Internal server error",
+    });
+  }
+});
+// @route POST api/discountCodes/checkExist
+// @desc Get by code id
+// @access Public
+router.post("/checkExist", async (req, res) => {
+  const { code, accountId } = req.query;
+  try {
+    const discountCodes = await DiscountCode.findOne({ code, accountId });
     if (discountCodes == null)
       res.json({ success: false, message: "not found" });
     else res.json({ success: true, discountCodes });
@@ -146,10 +168,11 @@ router.put("/update", async (req, res) => {
 // @desc delete 1 Discount by code Id
 // @access Public
 router.delete("/byCodeId", async (req, res) => {
-  const codeId = req.query.codeId;
+  const { codeId, accountId } = req.query;
   try {
     const deleteDiscountCode = await DiscountCode.findByIdAndDelete({
       _id: codeId,
+      accountId,
     });
     if (!deleteDiscountCode)
       res.status(500).json({
@@ -174,14 +197,24 @@ router.delete("/byCodeId", async (req, res) => {
 // @desc delete all outDate
 // @access Public
 router.delete("/outDate", async (req, res) => {
+  const accountId = req.query.accountId;
+  if (!accountId) {
+    res.status(500).json({
+      success: false,
+      message: "missing accountId",
+    });
+    return;
+  }
   try {
     const date = Date.now().toString();
     console.log(date);
     const deleteDiscountCode = await DiscountCode.deleteMany({
       timeEnd: { $gt: date },
+      accountId,
     });
     const deleteDiscountCodeCount0 = await DiscountCode.deleteMany({
       count: 0,
+      accountId,
     });
     if (!deleteDiscountCode && !deleteDiscountCodeCount0)
       res.status(500).json({

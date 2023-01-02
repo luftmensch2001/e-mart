@@ -209,4 +209,42 @@ router.put("/changePassword", async (req, res) => {
   }
 });
 
+// @route PUT api/accounts/updateCoin
+// @desc update coin
+// @access Public
+router.put("/updateCoin", async (req, res) => {
+  const { accountId, coin } = req.query;
+
+  try {
+    Account.findOneAndUpdate(
+      { _id: accountId },
+      {
+        coin,
+      },
+      { new: true },
+      function (error, account) {
+        console.log(account);
+        if (!account) {
+          res.status(400).json({
+            success: false,
+            message: "Account not found",
+          });
+        } else {
+          res.status(200).json({
+            success: true,
+            message: " Updated account",
+            account,
+          });
+        }
+      }
+    );
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: " Internal server error",
+    });
+  }
+});
+
 module.exports = router;

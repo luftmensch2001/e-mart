@@ -30,12 +30,10 @@ router.post("/create", async (req, res) => {
         //Check for existing user
         const discountCode = await DiscountCode.findOne({ code, accountId });
         if (discountCode)
-            return res
-                .status(400)
-                .json({
-                    success: false,
-                    message: "Code already in this account",
-                });
+            return res.status(400).json({
+                success: false,
+                message: "Code already in this account",
+            });
 
         // All good
         const newDiscountCode = new DiscountCode({
@@ -79,11 +77,28 @@ router.get("/all", async (req, res) => {
         });
     }
 });
+// @route GET api/discountCodes/byAccountId
+// @desc Get all DiscountCode
+// @access Public
+router.get("/byAccountId", async (req, res) => {
+    try {
+        const { accountId } = req.query;
+        const discountCodes = await DiscountCode.find({ accountId });
+        res.json({ success: true, discountCodes });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            success: false,
+            message: " Internal server error",
+        });
+    }
+});
 // @route GET api/discountCodes/
 // @desc Get by code id
 // @access Public
 router.get("/", async (req, res) => {
-    const { codeId } = req.query.codeId;
+    const codeId = req.query.codeId;
+    console.log("codeId: ", codeId);
     try {
         const discountCodes = await DiscountCode.findOne({ _id: codeId });
         if (discountCodes == null)

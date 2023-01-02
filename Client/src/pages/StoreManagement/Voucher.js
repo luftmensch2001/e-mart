@@ -7,6 +7,8 @@ import VoucherStatus from "../../components/VoucherStatus";
 import { HiOutlineRefresh } from "react-icons/hi";
 import { AiOutlineDelete } from "react-icons/ai";
 import { IoMdClose } from "react-icons/io";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 const sortOptions = [
     { value: "1", label: "Mới nhất trước" },
@@ -31,93 +33,54 @@ const unitOptions = [
 const today = new Date();
 
 const Voucher = () => {
+    const [isLoaded, setIsLoaded] = useState(false);
     const [sortOption, setSortOption] = useState(null);
     const [filterOption, setFilterOption] = useState(null);
     const [showAddModal, setShowAddModal] = useState(-1);
     // -1 : hide, 0: add modal, 1 2 ....: edit voucher id
-    const [data, setData] = useState([
-        {
-            id: 1,
-            code: "VOUCHER001",
-            start: today,
-            end: today,
-            value: {
-                isPercent: false,
-                money: 15000,
-                max: 0,
-            },
-            count: 30,
-            status: 2, //1: chưa đến ngày, 2: có thể dùng, 3: đã hết lượt, 4: đã hết hạn
-        },
-        {
-            id: 2,
-            code: "VOUCHER002",
-            start: today,
-            end: today,
-            value: {
-                isPercent: true,
-                money: 5,
-                max: 10000,
-            },
-            count: 40,
-            status: 1, //1: chưa đến ngày, 2: có thể dùng, 3: đã hết lượt, 4: đã hết hạn
-        },
-        {
-            id: 3,
-            code: "VOUCHER003",
-            start: today,
-            end: today,
-            value: {
-                isPercent: false,
-                money: 25000,
-                max: 0,
-            },
-            count: 0,
-            status: 3, //1: chưa đến ngày, 2: có thể dùng, 3: đã hết lượt, 4: đã hết hạn
-        },
-        {
-            id: 4,
-            code: "VOUCHER004",
-            start: today,
-            end: today,
-            value: {
-                isPercent: true,
-                money: 15,
-                max: 20000,
-            },
-            count: 30,
-            status: 4, //1: chưa đến ngày, 2: có thể dùng, 3: đã hết lượt, 4: đã hết hạn
-        },
-        {
-            id: 5,
-            code: "VOUCHER005",
-            start: today,
-            end: today,
-            value: {
-                isPercent: true,
-                money: 5,
-                max: 10000,
-            },
-            count: 40,
-            status: 2, //1: chưa đến ngày, 2: có thể dùng, 3: đã hết lượt, 4: đã hết hạn
-        },
-        {
-            id: 6,
-            code: "VOUCHER006",
-            start: today,
-            end: today,
-            value: {
-                isPercent: false,
-                money: 25000,
-                max: 0,
-            },
-            count: 0,
-            status: 3, //1: chưa đến ngày, 2: có thể dùng, 3: đã hết lượt, 4: đã hết hạn
-        },
-    ]);
+    const [data, setData] = useState();
+    //1: chưa đến ngày, 2: có thể dùng, 3: đã hết lượt, 4: đã hết hạn
+    useEffect(() => {
+        FetchData();
+    }, []);
+
+    function FetchData() {
+        setIsLoaded(false);
+        axios
+            .get("http://localhost:5000/api/discountCodes/byAccountId", {
+                params: {
+                    accountId: localStorage.getItem("accountID"),
+                },
+            })
+            .then((res) => {
+                console.log("res voucher: ", res);
+                let arrDiscounts = res.data.discountCodes;
+                arrDiscounts.forEach((item) => {
+                    if (item.count <= 0) {
+                        item.status = 3; // het luot
+                        return;
+                    }
+                    const start = new Date(item.timeStart);
+                    const end = new Date(item.timeEnd);
+                    const now = new Date();
+                    if (now < start) {
+                        item.status = 1; // chua den ngay
+                    } else {
+                        if (now > end) {
+                            item.status = 4; // da het han
+                        } else {
+                            item.status = 2; // co the dung
+                        }
+                    }
+                });
+                setData(arrDiscounts);
+                setIsLoaded(true);
+            })
+            .catch((err) => console.log(err));
+    }
 
     const VoucherItemOnClick = (voucher) => {
-        setShowAddModal(voucher.id);
+        setShowAddModal(voucher._id);
     };
 
     useEffect(() => {
@@ -138,7 +101,7 @@ const Voucher = () => {
                     <MdAdd />
                     Thêm mới
                 </button>
-                <button className="update-button">
+                <button className="update-button" onClick={FetchData}>
                     <HiOutlineRefresh
                         style={{ color: "#FFF", marginRight: "4px" }}
                     />
@@ -192,36 +155,50 @@ const Voucher = () => {
                     <span className="column-7">Trạng thái</span>
                 </div>
                 <div className="voucher-list">
-                    {data.length > 0 ? (
-                        data.map((item) => (
+                    {data?.length > 0 ? (
+                        data?.map((item) => (
                             <div
                                 className="voucher-item"
                                 onClick={() => VoucherItemOnClick(item)}
                             >
-                                <span className="column-1">{item.code}</span>
+                                <span
+                                    className="column-1"
+                                    style={{ textTransform: "uppercase" }}
+                                >
+                                    {item.code}
+                                </span>
                                 <span className="column-2">
-                                    {item.start.toLocaleDateString()} -{" "}
-                                    {item.start.toLocaleTimeString([], {
+                                    {new Date(
+                                        item.timeStart
+                                    ).toLocaleDateString()}{" "}
+                                    -{" "}
+                                    {new Date(
+                                        item.timeStart
+                                    ).toLocaleTimeString([], {
                                         hour: "2-digit",
                                         minute: "2-digit",
                                     })}
                                 </span>
                                 <span className="column-3">
-                                    {item.end.toLocaleDateString()} -{" "}
-                                    {item.end.toLocaleTimeString([], {
-                                        hour: "2-digit",
-                                        minute: "2-digit",
-                                    })}
+                                    {new Date(
+                                        item.timeEnd
+                                    ).toLocaleDateString()}{" "}
+                                    -{" "}
+                                    {new Date(item.timeEnd).toLocaleTimeString(
+                                        [],
+                                        {
+                                            hour: "2-digit",
+                                            minute: "2-digit",
+                                        }
+                                    )}
                                 </span>
                                 <span className="column-4">
-                                    {ThoudsandSeparator(item.value.money)}
-                                    {item.value.isPercent === true
-                                        ? "%"
-                                        : " VNĐ"}
+                                    {ThoudsandSeparator(item.value)}
+                                    {item.type}
                                 </span>
                                 <span className="column-5">
-                                    {item.value.max > 0
-                                        ? ThoudsandSeparator(item.value.max) +
+                                    {item.maxValue > 0
+                                        ? ThoudsandSeparator(item.maxValue) +
                                           " VNĐ"
                                         : "-"}
                                 </span>
@@ -238,29 +215,106 @@ const Voucher = () => {
                     )}
                 </div>
             </div>
-            {showAddModal >= 0 && (
+            {showAddModal !== -1 && (
                 <AddVoucherModal
                     id={showAddModal}
                     voucher={data.find((item) => item.id === showAddModal)}
                     closeFunction={() => setShowAddModal(-1)}
+                    update={FetchData}
                 />
             )}
         </div>
     );
 };
 
-const AddVoucherModal = ({ id, voucher, closeFunction }) => {
+const AddVoucherModal = ({ id, voucher, closeFunction, update }) => {
     const [unit, setUnit] = useState(unitOptions[0]);
 
-    useEffect(() => {
-        if (id > 0 && voucher.value.isPercent === false) {
-            setUnit(unitOptions[1]);
-        }
-    });
+    const [code, setCode] = useState("");
+    const [count, setCount] = useState("");
+    const [timeStart, setTimeStart] = useState("");
+    const [timeEnd, setTimeEnd] = useState("");
+    const [value, setValue] = useState("");
+    const [max, setMax] = useState("");
 
-    console.log("unit: ", unit);
+    const ConvertToGMT7 = (time) => {
+        let timeString = time.slice(0, 16);
+        let hourInGMT7 = parseInt(timeString.slice(11, 13)) + 7;
+        timeString =
+            timeString.slice(0, 11) + hourInGMT7 + timeString.slice(13);
+        return timeString;
+    };
+
+    useEffect(() => {
+        if (id === 0) return;
+        axios
+            .get("http://localhost:5000/api/discountCodes/", {
+                params: {
+                    codeId: id,
+                },
+            })
+            .then((res) => {
+                console.log("res update discount: ", res);
+                console.log("res: ", res);
+                let data = res.data.discountCodes;
+                console.log("data: ", data);
+                setCode(data.code);
+                setCount(data.count);
+                setTimeStart(ConvertToGMT7(data.timeStart));
+                setTimeEnd(ConvertToGMT7(data.timeEnd));
+                setValue(data.value);
+                setMax(data.maxValue);
+                setUnit(data.type === "%" ? unitOptions[0] : unitOptions[1]);
+            })
+            .catch((err) => {
+                console.log("err: ", err);
+            });
+    }, [id]);
+
+    const AddVoucher = () => {
+        axios
+            .post("http://localhost:5000/api/discountCodes/create", {
+                code: code.toUpperCase(),
+                count: count,
+                timeStart: timeStart,
+                timeEnd: timeEnd,
+                value: value,
+                type: unit.label,
+                maxValue: max,
+                accountId: localStorage.getItem("accountID"),
+            })
+            .then((res) => {
+                console.log("res create voucher: ", res);
+                toast.success("Thêm Mã giảm giá thành công", {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+                update();
+                closeFunction();
+            })
+            .catch((err) => {
+                console.log(err);
+                toast.error("Có lỗi xảy ra!", {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+            });
+    };
 
     if (id === 0)
+        // Add Modal
         return (
             <div className="AddVoucherModal">
                 <div className="container">
@@ -273,7 +327,12 @@ const AddVoucherModal = ({ id, voucher, closeFunction }) => {
                     <div className="row">
                         <span className="label">Mã giảm giá</span>
                         <div className="info">
-                            <input className="code-input" type="text" />
+                            <input
+                                className="code-input"
+                                type="text"
+                                value={code}
+                                onChange={(e) => setCode(e.target.value)}
+                            />
                             <span
                                 className="label"
                                 style={{
@@ -287,6 +346,8 @@ const AddVoucherModal = ({ id, voucher, closeFunction }) => {
                                 className="count-input"
                                 type="number"
                                 placeholder="Số lượt"
+                                value={count}
+                                onChange={(e) => setCount(e.target.value)}
                             />
                         </div>
                     </div>
@@ -302,6 +363,8 @@ const AddVoucherModal = ({ id, voucher, closeFunction }) => {
                             <input
                                 className="date-input"
                                 type="datetime-local"
+                                value={timeStart}
+                                onChange={(e) => setTimeStart(e.target.value)}
                             />
                         </div>
                     </div>
@@ -311,6 +374,8 @@ const AddVoucherModal = ({ id, voucher, closeFunction }) => {
                             <input
                                 className="date-input"
                                 type="datetime-local"
+                                value={timeEnd}
+                                onChange={(e) => setTimeEnd(e.target.value)}
                             />
                         </div>
                     </div>
@@ -321,6 +386,8 @@ const AddVoucherModal = ({ id, voucher, closeFunction }) => {
                                 className="value-input"
                                 type="number"
                                 placeholder="Giá trị"
+                                value={value}
+                                onChange={(e) => setValue(e.target.value)}
                             />
                             <Select
                                 className="unit-select"
@@ -346,11 +413,16 @@ const AddVoucherModal = ({ id, voucher, closeFunction }) => {
                                 type="number"
                                 placeholder="Giảm tối đa"
                                 disabled={unit !== unitOptions[0]}
+                                value={unit === unitOptions[0] ? max : " "}
+                                onChange={(e) => setMax(e.target.value)}
                             />
                         </div>
                     </div>
                     <div className="row">
-                        <button className="add-button primary-button">
+                        <button
+                            className="add-button primary-button"
+                            onClick={AddVoucher}
+                        >
                             Thêm Mã Giảm Giá
                         </button>
                     </div>
@@ -359,6 +431,7 @@ const AddVoucherModal = ({ id, voucher, closeFunction }) => {
         );
     else
         return (
+            //Update Modal
             <div className="AddVoucherModal">
                 <div className="container">
                     <button className="close-button" onClick={closeFunction}>
@@ -374,7 +447,8 @@ const AddVoucherModal = ({ id, voucher, closeFunction }) => {
                                 className="code-input"
                                 type="text"
                                 placeholder="VD: VOUCHER012"
-                                value={voucher.code}
+                                value={code}
+                                onChange={(e) => setCode(e.target.value)}
                             />
                             <span
                                 className="label"
@@ -389,7 +463,8 @@ const AddVoucherModal = ({ id, voucher, closeFunction }) => {
                                 className="count-input"
                                 type="number"
                                 placeholder="Số lượt"
-                                value={voucher.count}
+                                value={count}
+                                onChange={(e) => setCount(e.target.value)}
                             />
                         </div>
                     </div>
@@ -405,6 +480,8 @@ const AddVoucherModal = ({ id, voucher, closeFunction }) => {
                             <input
                                 className="date-input"
                                 type="datetime-local"
+                                value={timeStart}
+                                onChange={(e) => setTimeStart(e.target.value)}
                             />
                         </div>
                     </div>
@@ -414,6 +491,8 @@ const AddVoucherModal = ({ id, voucher, closeFunction }) => {
                             <input
                                 className="date-input"
                                 type="datetime-local"
+                                value={timeEnd}
+                                onChange={(e) => setTimeEnd(e.target.value)}
                             />
                         </div>
                     </div>
@@ -424,7 +503,8 @@ const AddVoucherModal = ({ id, voucher, closeFunction }) => {
                                 className="value-input"
                                 type="number"
                                 placeholder="Giá trị"
-                                value={voucher.value.money}
+                                value={value}
+                                onChange={(e) => setValue(e.target.value)}
                             />
                             <Select
                                 className="unit-select"
@@ -449,11 +529,8 @@ const AddVoucherModal = ({ id, voucher, closeFunction }) => {
                                 className="max-input"
                                 type="number"
                                 placeholder="Giảm tối đa"
-                                value={
-                                    voucher.value.max > 0
-                                        ? voucher.value.max
-                                        : ""
-                                }
+                                value={unit === unitOptions[0] ? max : ""}
+                                onChange={(e) => setMax(e.target.value)}
                                 disabled={unit === unitOptions[1]}
                             />
                         </div>

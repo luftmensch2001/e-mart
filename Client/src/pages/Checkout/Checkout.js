@@ -120,17 +120,18 @@ const Checkout = ({
     const CompleteOrder = () => {
         setIsLoaded(false);
         // Reduce Coin and Voucher count
-        axios
-            .put("http://localhost:5000/api/accounts/updateCoin", {
-                accountId: localStorage.getItem("accountID"),
-                coin: usedCoin * -1,
-            })
-            .then((res) => {
-                console.log("res update coin: ", res);
-            })
-            .catch((err) => {
-                console.log("err: ", err);
-            });
+        if (usedCoin)
+            axios
+                .put("http://localhost:5000/api/accounts/updateCoin", {
+                    accountId: localStorage.getItem("accountID"),
+                    coin: usedCoin * -1,
+                })
+                .then((res) => {
+                    console.log("res update coin: ", res);
+                })
+                .catch((err) => {
+                    console.log("err: ", err);
+                });
         if (usedVoucher)
             axios
                 .put("http://localhost:5000/api/discountCodes/down1count", {

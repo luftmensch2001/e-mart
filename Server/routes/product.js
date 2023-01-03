@@ -118,19 +118,29 @@ router.delete("/byProductId", async (req, res) => {
   console.log("productId: ", productId);
 
   try {
-    const deleteProduct = await Product.findByIdAndDelete({
-      _id: productId,
-    });
-    if (!deleteProduct)
-      res.status(500).json({
-        success: false,
-        message: "Product not found",
-      });
-    else
-      res.json({
-        success: true,
-        message: "Deleted Product id: " + productId,
-      });
+    const state = "deleted";
+    Product.findOneAndUpdate(
+      { _id: productId },
+      {
+        state,
+      },
+      { new: true },
+      function (error, product) {
+        console.log(product);
+        if (!product) {
+          res.status(404).json({
+            success: false,
+            message: "product not found",
+          });
+        } else {
+          res.status(200).json({
+            success: true,
+            message: " Updated product state to  deleted",
+            product,
+          });
+        }
+      }
+    );
   } catch (error) {
     console.log(error);
     res.status(500).json({

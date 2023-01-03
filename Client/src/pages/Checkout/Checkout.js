@@ -11,7 +11,14 @@ import { Navigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Loading from "../../components/Loading";
 
-const Checkout = ({ products, total, discount, UpdateNavbar }) => {
+const Checkout = ({
+    products,
+    total,
+    discount,
+    usedVoucher,
+    usedCoin,
+    UpdateNavbar,
+}) => {
     const [isLoaded, setIsLoaded] = useState(true);
     const [navigate, setNavigate] = useState(false); // Go to complete page
     const [orderFor, setOrderFor] = useState(false);
@@ -112,6 +119,32 @@ const Checkout = ({ products, total, discount, UpdateNavbar }) => {
 
     const CompleteOrder = () => {
         setIsLoaded(false);
+        // Reduce Coin and Voucher count
+        axios
+            .put("http://localhost:5000/api/accounts/updateCoin", {
+                accountId: localStorage.getItem("accountID"),
+                coin: usedCoin * -1,
+            })
+            .then((res) => {
+                console.log("res update coin: ", res);
+            })
+            .catch((err) => {
+                console.log("err: ", err);
+            });
+
+        axios
+            .put("http://localhost:5000/api/discountCodes/down1count", {
+                codeId: usedVoucher._id,
+            })
+            .then((res) => {
+                console.log("res update voucher: ", res);
+            })
+            .catch((err) => {
+                console.log("err: ", err);
+            });
+
+        // Create bill and product in bill
+
         axios
             .post("http://localhost:5000/api/bills/create", {
                 accountBuyerId: localStorage.getItem("accountID"),
@@ -192,6 +225,9 @@ const Checkout = ({ products, total, discount, UpdateNavbar }) => {
     };
 
     if (!isLoaded) return <Loading />;
+
+    console.log("usedCoin: ", usedCoin);
+    console.log("usedVoucher: ", usedVoucher);
 
     return (
         <div className="Checkout content">

@@ -12,7 +12,7 @@ import { toast } from "react-toastify";
 
 import ThousandSeparator from "../../components/ThousandSeparator";
 
-const Cart = ({ SetCartData, UpdateNavbar }) => {
+const Cart = ({ SetCartData, SetDiscountData, UpdateNavbar }) => {
     const [data, setData] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
     const [total, setTotal] = useState(0);
@@ -21,6 +21,7 @@ const Cart = ({ SetCartData, UpdateNavbar }) => {
     const [coin, setCoin] = useState();
     const [coinUsed, setCoinUsed] = useState(0);
     const [voucherCode, setVoucherCode] = useState("");
+    const [voucherUsed, setVoucherUsed] = useState();
     let counter = 0;
 
     useEffect(() => {
@@ -190,6 +191,7 @@ const Cart = ({ SetCartData, UpdateNavbar }) => {
                                 );
                                 setDiscount(coinUsed + value);
                             }
+                            setVoucherUsed(voucher);
                             toast.success("Áp dụng mã thành công!", {
                                 position: "bottom-right",
                                 autoClose: 5000,
@@ -306,7 +308,10 @@ const Cart = ({ SetCartData, UpdateNavbar }) => {
                             <Link to="/checkout">
                                 <button
                                     className="checkout-button primary-button"
-                                    onClick={() => window.scrollTo(0, 0)}
+                                    onClick={() => {
+                                        window.scrollTo(0, 0);
+                                        SetDiscountData(voucherUsed, coinUsed);
+                                    }}
                                 >
                                     <BsCartCheck className="checkout-button-icon" />
                                     Thanh toán

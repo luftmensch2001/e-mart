@@ -35,6 +35,8 @@ function App() {
     const [products, setProducts] = useState([]);
     const [total, setTotal] = useState(0);
     const [discount, setDiscount] = useState(0);
+    const [usedVoucher, setUsedVoucher] = useState();
+    const [usedCoin, setUsedCoin] = useState(0);
 
     useEffect(() => {
         UpdateNavbar();
@@ -73,6 +75,11 @@ function App() {
         setDiscount(discount);
     }
 
+    function SetDiscountData(usedVoucher, usedCoin) {
+        setUsedVoucher(usedVoucher);
+        setUsedCoin(usedCoin);
+    }
+
     return (
         <div className="App">
             {!hideHeaderFooter && (
@@ -97,6 +104,7 @@ function App() {
                     element={
                         <Cart
                             SetCartData={SetCartData}
+                            SetDiscountData={SetDiscountData}
                             UpdateNavbar={UpdateNavbar}
                         />
                     }
@@ -108,6 +116,8 @@ function App() {
                             products={products}
                             total={total}
                             discount={discount}
+                            usedVoucher={usedVoucher}
+                            usedCoin={usedCoin}
                             UpdateNavbar={UpdateNavbar}
                         />
                     }

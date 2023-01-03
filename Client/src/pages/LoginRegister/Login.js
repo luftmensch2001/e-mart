@@ -82,6 +82,13 @@ function Login({ UpdateNavbar }) {
             });
     };
 
+    const LoginAsGuess = () => {
+        localStorage.setItem("accountID", "63b45a0cea761f3e65d83673");
+        // axios
+        //     .delete("http://localhost:5000/productInCarts/")
+        setLoginSuccess(true);
+    };
+
     return (
         <div className="Login">
             <div className="login-card">

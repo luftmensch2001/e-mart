@@ -131,17 +131,17 @@ const Checkout = ({
             .catch((err) => {
                 console.log("err: ", err);
             });
-
-        axios
-            .put("http://localhost:5000/api/discountCodes/down1count", {
-                codeId: usedVoucher._id,
-            })
-            .then((res) => {
-                console.log("res update voucher: ", res);
-            })
-            .catch((err) => {
-                console.log("err: ", err);
-            });
+        if (usedVoucher)
+            axios
+                .put("http://localhost:5000/api/discountCodes/down1count", {
+                    codeId: usedVoucher._id,
+                })
+                .then((res) => {
+                    console.log("res update voucher: ", res);
+                })
+                .catch((err) => {
+                    console.log("err: ", err);
+                });
 
         // Create bill and product in bill
 

@@ -14,7 +14,8 @@ function Account(props) {
     const location = useLocation();
 
     useEffect(() => {
-        if (localStorage.getItem("username")) setLoggedIn(true);
+        if (localStorage.getItem("accountID") !== "63b45a0cea761f3e65d83673")
+            setLoggedIn(true);
         if (location.pathname == "/account/profile") setSelectedTab(1);
         else if (location.pathname == "/account/store") setSelectedTab(2);
         else if (location.pathname == "/account/buy-orders") setSelectedTab(3);

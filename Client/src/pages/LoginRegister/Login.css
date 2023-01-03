@@ -1,5 +1,5 @@
 .Login {
-    background-image: url('../../assets/images/background/1_auto_x2.jpg');
+    background-image: url("../../assets/images/background/1_auto_x2.jpg");
     background-position: center; /* Center the image */
     background-repeat: no-repeat; /* Do not repeat the image */
     background-size: cover; /* Resize the background image to cover the entire container */
@@ -7,16 +7,15 @@
     position: relative;
 }
 
-
 .login-card {
     width: 480px;
-    height: 410px;
-    background-color: #FFF;
+    height: 440px;
+    background-color: #fff;
     margin: 0 auto;
     position: absolute;
     top: 50%;
     left: 50%;
-    transform:translate(-50%,-50%);
+    transform: translate(-50%, -50%);
     border-radius: 28px;
     box-shadow: -3px 3px 3px 6px rgb(0 0 0 /3%);
     display: flex;
@@ -82,3 +81,18 @@
     opacity: 0.9;
 }
 
+.Login .no-login-label {
+    font-size: 1.4rem;
+    color: var(--text-color-primary);
+    font-weight: bold;
+    margin-top: 16px;
+    cursor: pointer;
+    display: block;
+    padding: 8px 12px;
+    border-radius: 12px;
+    border: 2px solid lightgray;
+}
+
+.Login .no-login-label:hover {
+    opacity: 0.9;
+}

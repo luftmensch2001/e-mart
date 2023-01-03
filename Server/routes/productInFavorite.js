@@ -70,7 +70,7 @@ router.post("/create", async (req, res) => {
 // @desc delete productInFavorites by accountId
 // @access Public
 router.delete("/byAccountId", async (req, res) => {
-    const { accountId } = req.body;
+    const { accountId } = req.query;
     try {
         const deleteProductInFavorites = await ProductInFavorites.deleteMany({
             accountId,

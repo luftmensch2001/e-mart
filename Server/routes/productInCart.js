@@ -78,6 +78,7 @@ router.post("/create", async (req, res) => {
 // @access Public
 router.delete("/byAccountId", async (req, res) => {
     const { accountId } = req.query;
+    console.log("accountId: ", accountId);
     try {
         const deleteProductInCart = await ProductInCart.deleteMany({
             accountId,

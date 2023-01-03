@@ -84,8 +84,37 @@ function Login({ UpdateNavbar }) {
 
     const LoginAsGuess = () => {
         localStorage.setItem("accountID", "63b45a0cea761f3e65d83673");
-        // axios
-        //     .delete("http://localhost:5000/productInCarts/")
+        // Remove product in cart
+        axios
+            .delete("http://localhost:5000/api/productInCarts/byAccountId", {
+                params: {
+                    accountId: "63b45a0cea761f3e65d83673",
+                },
+            })
+            .then((res) => {
+                console.log("res delete product cart: ", res);
+                UpdateNavbar();
+            })
+            .catch((err) => {
+                console.log("err: ", err);
+            });
+        // Remove Wishlist
+        axios
+            .delete(
+                "http://localhost:5000/api/productInFavorites/byAccountId",
+                {
+                    params: {
+                        accountId: "63b45a0cea761f3e65d83673",
+                    },
+                }
+            )
+            .then((res) => {
+                console.log("res delete wishlist: ", res);
+                UpdateNavbar();
+            })
+            .catch((err) => {
+                console.log("err: ", err);
+            });
         setLoginSuccess(true);
     };
 
@@ -125,6 +154,9 @@ function Login({ UpdateNavbar }) {
                     <Link to="/register">
                         <span className="login-bold-text"> Đăng ký ngay</span>
                     </Link>
+                </span>
+                <span className="no-login-label" onClick={LoginAsGuess}>
+                    Tiếp tục mà không Đăng nhập >
                 </span>
             </div>
         </div>

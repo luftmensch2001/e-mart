@@ -144,6 +144,20 @@ const Checkout = ({
                     console.log("err: ", err);
                 });
 
+        products.forEach((product) => {
+            axios
+                .put("http://localhost:5000/api/products/upSoldCount", {
+                    productId: product.productId,
+                    count: product.count,
+                })
+                .then((res) => {
+                    console.log("res update product count: ", res);
+                })
+                .catch((err) => {
+                    console.log("err: ", err);
+                });
+        });
+
         // Create bill and product in bill
 
         axios

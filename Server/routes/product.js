@@ -220,6 +220,46 @@ router.put("/update", async (req, res) => {
     }
 });
 
+// @route PUT api/products/upSoldCount
+// @desc update
+// @access Public
+router.put("/upSoldCount", async (req, res) => {
+    try {
+        const { productId, count } = req.body;
+        const oldProduct = await Product.findOne({ _id: productId });
+        const newCount = oldProduct.countSold + count;
+        Product.findOneAndUpdate(
+            { _id: productId },
+            {
+                countSold: newCount,
+            },
+            { new: true },
+            function (error, product) {
+                console.log(product);
+                if (!product) {
+                    res.status(400).json({
+                        success: false,
+                        message: "product not found",
+                    });
+                } else {
+                    res.status(200).json({
+                        success: true,
+                        message: " Updated product",
+                        product,
+                    });
+                }
+            }
+        );
+        // All Good
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            success: false,
+            message: " Internal server error",
+        });
+    }
+});
+
 // @route GET api/products/populate
 // @desc Get Count Product populate
 // @access Public

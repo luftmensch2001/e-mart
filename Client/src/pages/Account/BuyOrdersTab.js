@@ -290,7 +290,6 @@ function BuyOrdersTab() {
                                     }
                                 )
                                 .then((res) => {
-                                    console.log("res first product: ", res);
                                     bill.nameProduct =
                                         res.data.product.nameProduct;
                                     bill.imageURL =

@@ -48,9 +48,15 @@ async function changeVNDtoUSD(price) {
 
 changeVNDtoUSD(20000);
 router.post("/pay", async function (req, res) {
-  const { items, totalPrice } = req.body;
+  const { items } = req.body;
+  let totalPrice = 0;
   for (let i = 0; i < items.length; i++) {
-    items[i].price = items[i].price.toFixed();
+    if (items[i].price > 0)
+      items[i].price = (await changeVNDtoUSD(items[i].price)).toFixed();
+    else
+      items[i].price =
+        -1 * (await changeVNDtoUSD(Math.abs(items[i].price))).toFixed();
+    totalPrice += items[i].price * items[i].quantity;
   }
   console.log(items);
   // const newPrice = await changeVNDtoUSD(price);
@@ -70,7 +76,7 @@ router.post("/pay", async function (req, res) {
         },
         amount: {
           currency: "USD",
-          total: totalPrice.toFixed(),
+          total: totalPrice,
         },
         description: "This is the payment description.",
       },

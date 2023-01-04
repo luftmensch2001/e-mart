@@ -32,24 +32,23 @@ async function changeVNDtoUSD(price) {
   return re;
 }
 
-///////TEST////////
-const items [
-  // items
-  {
-     "name": "item1",
-     "sku": "001",
-     "currency": "USD",
-     "price": "1",
-     "quantity": "1",
-  },
-]
+// ///////TEST////////
+// const items [
+//   // items
+//   {
+//      "name": "item1",
+//      "sku": "001",
+//      "currency": "USD",
+//      "price": "1",
+//      "quantity": "1",
+//   },
+// ]
 
 ///////////////////
 
-
 changeVNDtoUSD(20000);
 router.post("/pay", async function (req, res) {
-  const { accountId, name, price, count } = req.body;
+  const { items, totalPrice } = req.body;
   const newPrice = await changeVNDtoUSD(price);
   console.log(newPrice);
   var create_payment_json = {
@@ -58,25 +57,17 @@ router.post("/pay", async function (req, res) {
       payment_method: "paypal",
     },
     redirect_urls: {
-      return_url: "http://localhost:5000/api/payment_paypal/success",
+      return_url: "http://localhost:3000/login?",
       cancel_url: "http://localhost:5000/api/payment_paypal/fail",
     },
     transactions: [
       {
         item_list: {
-          items: [
-            // {
-            //   name: name,
-            //   sku: "001",
-            //   currency: "USD",
-            //   price: newPrice.toFixed(),
-            //   quantity: Number(count),
-            // },
-          ],
+          items: items,
         },
         amount: {
           currency: "USD",
-          total: newPrice.toFixed() * count,
+          total: totalPrice.toFixed(),
         },
         description: "This is the payment description.",
       },
@@ -104,7 +95,7 @@ router.get("/success", function (req, res) {
       {
         amount: {
           currency: "USD",
-          total: "25",
+          total: 1,
         },
       },
     ],

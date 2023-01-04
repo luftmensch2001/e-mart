@@ -75,7 +75,7 @@ const Cart = ({ SetCartData, SetDiscountData, UpdateNavbar }) => {
                             totalTemp += item.price * item.count;
                             setData(cartProducts);
                             setTotal(totalTemp);
-                            SetCartData(cartProducts, totalTemp, discount);
+                            SetCartData(cartProducts, totalTemp);
                             counter++;
                             if (counter === cartProducts.length)
                                 setIsLoaded(true);
@@ -310,7 +310,11 @@ const Cart = ({ SetCartData, SetDiscountData, UpdateNavbar }) => {
                                     className="checkout-button primary-button"
                                     onClick={() => {
                                         window.scrollTo(0, 0);
-                                        SetDiscountData(voucherUsed, coinUsed);
+                                        SetDiscountData(
+                                            voucherUsed,
+                                            coinUsed,
+                                            discount
+                                        );
                                     }}
                                 >
                                     <BsCartCheck className="checkout-button-icon" />

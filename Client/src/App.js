@@ -69,15 +69,15 @@ function App() {
             .catch((err) => console.log(err));
     };
 
-    function SetCartData(products, total, discount) {
+    function SetCartData(products, total) {
         setProducts(products);
         setTotal(total);
-        setDiscount(discount);
     }
 
-    function SetDiscountData(usedVoucher, usedCoin) {
+    function SetDiscountData(usedVoucher, usedCoin, discount) {
         setUsedVoucher(usedVoucher);
         setUsedCoin(usedCoin);
+        setDiscount(discount);
     }
 
     return (
@@ -148,7 +148,15 @@ function App() {
                     />
                 </Route>
                 <Route path="/voucher" element={<Voucher />} />
-                <Route path="/order-completed" element={<OrderCompleted />} />
+                <Route
+                    path="/order-completed"
+                    element={<OrderCompleted Paypal={false} />}
+                />
+                <Route
+                    path="/order-paypal-completed"
+                    element={<OrderCompleted Paypal={true} />}
+                />
+
                 <Route
                     path="/products"
                     element={<ProductList UpdateNavbar={UpdateNavbar} />}

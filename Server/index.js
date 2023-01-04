@@ -13,6 +13,7 @@ const discountCodeRouter = require("./routes/discountCode");
 const evalutesRouter = require("./routes/evalute");
 const billRouter = require("./routes/bill");
 const productInBillRouter = require("./routes/productInBill");
+const Payment_PaypalRouter = require("./routes/payment_paypal");
 
 //const colorRouter = require("./routes/color");
 
@@ -53,6 +54,7 @@ app.use("/api/discountCodes", discountCodeRouter);
 app.use("/api/evalutes", evalutesRouter);
 app.use("/api/bills", billRouter);
 app.use("/api/productInBills", productInBillRouter);
+app.use("/api/payment_paypal", Payment_PaypalRouter);
 
 const PORT = 5000;
 

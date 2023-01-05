@@ -35,6 +35,8 @@ function App() {
     const [products, setProducts] = useState([]);
     const [total, setTotal] = useState(0);
     const [discount, setDiscount] = useState(0);
+    const [usedVoucher, setUsedVoucher] = useState();
+    const [usedCoin, setUsedCoin] = useState(0);
 
     useEffect(() => {
         UpdateNavbar();
@@ -67,9 +69,14 @@ function App() {
             .catch((err) => console.log(err));
     };
 
-    function SetCartData(products, total, discount) {
+    function SetCartData(products, total) {
         setProducts(products);
         setTotal(total);
+    }
+
+    function SetDiscountData(usedVoucher, usedCoin, discount) {
+        setUsedVoucher(usedVoucher);
+        setUsedCoin(usedCoin);
         setDiscount(discount);
     }
 
@@ -97,6 +104,7 @@ function App() {
                     element={
                         <Cart
                             SetCartData={SetCartData}
+                            SetDiscountData={SetDiscountData}
                             UpdateNavbar={UpdateNavbar}
                         />
                     }
@@ -108,6 +116,8 @@ function App() {
                             products={products}
                             total={total}
                             discount={discount}
+                            usedVoucher={usedVoucher}
+                            usedCoin={usedCoin}
                             UpdateNavbar={UpdateNavbar}
                         />
                     }
@@ -138,7 +148,15 @@ function App() {
                     />
                 </Route>
                 <Route path="/voucher" element={<Voucher />} />
-                <Route path="/order-completed" element={<OrderCompleted />} />
+                <Route
+                    path="/order-completed"
+                    element={<OrderCompleted Paypal={false} />}
+                />
+                <Route
+                    path="/order-paypal-completed"
+                    element={<OrderCompleted Paypal={true} />}
+                />
+
                 <Route
                     path="/products"
                     element={<ProductList UpdateNavbar={UpdateNavbar} />}

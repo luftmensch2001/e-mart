@@ -11,11 +11,13 @@ import { toast } from "react-toastify";
 import Loading from "../../components/Loading";
 import StatusLabel from "../../components/StatusLabel";
 import emailjs from "@emailjs/browser";
+import apiHosting from "../../apiHosting";
 
 const OrderDetail = ({ isBuyOrder }) => {
     const [isLoaded, setIsLoaded] = useState(true);
     const [products, setProducts] = useState();
     const [billData, setBillData] = useState();
+    console.log("billData: ", billData);
     const navigate = useNavigate();
     const billId = useParams().billId;
 
@@ -24,7 +26,7 @@ const OrderDetail = ({ isBuyOrder }) => {
         let counter = 0;
         // Get Products in bill
         axios
-            .get("http://localhost:5000/api/productInBills/", {
+            .get(apiHosting() + "/api/productInBills/", {
                 params: {
                     billId: billId,
                 },
@@ -35,7 +37,7 @@ const OrderDetail = ({ isBuyOrder }) => {
                 let productsArr = res.data.productInBill;
                 productsArr.forEach((product) => {
                     axios
-                        .get("http://localhost:5000/api/products/byProductId", {
+                        .get(apiHosting() + "/api/products/byProductId", {
                             params: {
                                 productId: product.productId,
                             },
@@ -55,7 +57,7 @@ const OrderDetail = ({ isBuyOrder }) => {
             .catch((err) => console.log(err));
         // Get Bill data
         axios
-            .get("http://localhost:5000/api/bills/byBillId", {
+            .get(apiHosting() + "/api/bills/byBillId", {
                 params: {
                     billId: billId,
                 },
@@ -88,7 +90,7 @@ const OrderDetail = ({ isBuyOrder }) => {
                 break;
         }
         axios
-            .put("http://localhost:5000/api/bills/update", {
+            .put(apiHosting() + "/api/bills/update", {
                 billId: billId,
                 state: status,
             })
@@ -132,14 +134,29 @@ const OrderDetail = ({ isBuyOrder }) => {
 
     function UpdateCoin() {
         axios
-            .put("http://localhost:5000/api/accounts/updateCoin", {
+            .put(apiHosting() + "/api/accounts/updateCoin", {
                 accountId: localStorage.getItem("accountID"),
-                coin: Math.round(billData?.totalPrice / 100),
+                coin: Math.round(
+                    (billData?.totalPrice - billData?.discount) / 100
+                ),
             })
             .then((res) => {
                 console.log("res coin update", res);
             })
             .catch((err) => console.log(err));
+
+        // Add coin for seller
+        if (billData.paymentMethod === "Paypal") {
+            axios
+                .put(apiHosting() + "/api/accounts/updateCoin", {
+                    accountId: billData?.accountSellerId,
+                    coin: billData?.totalPrice - billData?.discount,
+                })
+                .then((res) => {
+                    console.log("res coin update", res);
+                })
+                .catch((err) => console.log(err));
+        }
     }
 
     if (!isLoaded) return <Loading />;

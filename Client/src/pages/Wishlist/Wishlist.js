@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
 import Loading from "../../components/Loading";
+import apiHosting from "../../apiHosting";
 
 function Items({
     currentItems,
@@ -139,7 +140,7 @@ function Wishlist({ UpdateNavbar }) {
         setIsLoaded(false);
         counter = 0;
         axios
-            .get("http://localhost:5000/api/productInFavorites/byAccountId", {
+            .get(apiHosting() + "/api/productInFavorites/byAccountId", {
                 params: {
                     accountId: localStorage.getItem("accountID"),
                 },
@@ -153,7 +154,7 @@ function Wishlist({ UpdateNavbar }) {
                 }
                 favoriteProducts.forEach((item) => {
                     axios
-                        .get("http://localhost:5000/api/products/byProductId", {
+                        .get(apiHosting() + "/api/products/byProductId", {
                             params: {
                                 productId: item.productId,
                             },

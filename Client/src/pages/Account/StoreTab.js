@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 import Loading from "../../components/Loading";
 import { toast } from "react-toastify";
 
-import starImg from "../../assets/images/reviews/4.png";
+import apiHosting from "../../apiHosting";
 import ThousandSeparator from "../../components/ThousandSeparator";
 import axios from "axios";
 import ConfirmDialog from "../../components/ConfirmDialog";
@@ -28,7 +28,7 @@ function Items({ currentItems, refetchFunction }) {
 
     const DeleteProduct = (productID) => {
         axios
-            .delete("http://localhost:5000/api/products/byProductId", {
+            .delete(apiHosting() + "/api/products/byProductId", {
                 params: { productId: productID },
             })
             .then((res) => {
@@ -203,7 +203,7 @@ function StoreTab() {
         window.scrollTo(0, 0);
         setIsLoaded(false);
         axios
-            .get("http://localhost:5000/api/products/byAccountId", {
+            .get(apiHosting() + "/api/products/byAccountId", {
                 params: {
                     accountId: localStorage.getItem("accountID"),
                 },
@@ -218,7 +218,7 @@ function StoreTab() {
         window.scrollTo(0, 0);
         setIsLoaded(false);
         axios
-            .get("http://localhost:5000/api/products/byAccountId", {
+            .get(apiHosting() + "/api/products/byAccountId", {
                 params: {
                     accountId: localStorage.getItem("accountID"),
                 },

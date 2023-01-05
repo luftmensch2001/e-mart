@@ -116,7 +116,9 @@ router.get("/", async (req, res) => {
 // @desc Get by code id
 // @access Public
 router.post("/checkExist", async (req, res) => {
-    const { code, accountId } = req.query;
+    const { code, accountId } = req.body;
+    console.log("accountId: ", accountId);
+    console.log("code: ", code);
     try {
         const discountCodes = await DiscountCode.findOne({ code, accountId });
         if (discountCodes == null)
@@ -195,6 +197,45 @@ router.put("/update", async (req, res) => {
         });
     }
 });
+// @route PUT api/discountCode/down1count
+// @desc update discountCode down1count
+// @access Public
+router.put("/down1count", async (req, res) => {
+    try {
+        const { codeId } = req.body;
+        const oldCode = await DiscountCode.findOne({ _id: codeId });
+        const newCount = oldCode.count - 1;
+        DiscountCode.findOneAndUpdate(
+            { _id: codeId },
+            {
+                count: newCount,
+            },
+            { new: true },
+            function (error, discountCode) {
+                console.log(discountCode);
+                if (!discountCode) {
+                    res.status(400).json({
+                        success: false,
+                        message: "discountCode not found",
+                    });
+                } else {
+                    res.status(200).json({
+                        success: true,
+                        message: " Updated discountCode",
+                        discountCode,
+                    });
+                }
+            }
+        );
+        // All Good
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            success: false,
+            message: " Internal server error",
+        });
+    }
+});
 
 // @route Delete api/discountCodes/byCodeId
 // @desc delete 1 Discount by code Id
@@ -241,7 +282,7 @@ router.delete("/outDate", async (req, res) => {
         const date = Date.now().toString();
         console.log(date);
         const deleteDiscountCode = await DiscountCode.deleteMany({
-            timeEnd: { $gt: date },
+            timeEnd: { $lt: date },
             accountId,
         });
         const deleteDiscountCodeCount0 = await DiscountCode.deleteMany({

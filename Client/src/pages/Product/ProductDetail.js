@@ -17,6 +17,7 @@ import GetStarImage from "../../components/GetStarImage";
 import NotFound from "../../components/NotFound";
 import ConfirmDialog from "../../components/ConfirmDialog";
 import avatar from "../../assets/images/avatar.png";
+import apiHosting from "../../apiHosting";
 
 const ProductDetail = ({ UpdateNavbar }) => {
     const [quantity, setQuantity] = useState(1);
@@ -42,7 +43,7 @@ const ProductDetail = ({ UpdateNavbar }) => {
         GetProductData();
         // Get type data
         axios
-            .get("http://localhost:5000/api/colors", {
+            .get(apiHosting() + "/api/colors", {
                 params: {
                     productId: productID,
                 },
@@ -62,7 +63,7 @@ const ProductDetail = ({ UpdateNavbar }) => {
     const GetProductData = () => {
         // Get product data
         axios
-            .get("http://localhost:5000/api/products/byProductId", {
+            .get(apiHosting() + "/api/products/byProductId", {
                 params: {
                     productId: productID,
                 },
@@ -78,7 +79,7 @@ const ProductDetail = ({ UpdateNavbar }) => {
 
     const GetReviewData = () => {
         axios
-            .get("http://localhost:5000/api/evalutes", {
+            .get(apiHosting() + "/api/evalutes", {
                 params: {
                     productId: productID,
                 },
@@ -137,7 +138,7 @@ const ProductDetail = ({ UpdateNavbar }) => {
             return;
         }
         axios
-            .post("http://localhost:5000/api/productInCarts/create", {
+            .post(apiHosting() + "/api/productInCarts/create", {
                 accountId: localStorage.getItem("accountID"),
                 productId: productID,
                 color: selectedType,
@@ -174,7 +175,7 @@ const ProductDetail = ({ UpdateNavbar }) => {
             return;
         }
         axios
-            .post("http://localhost:5000/api/evalutes/create", {
+            .post(apiHosting() + "/api/evalutes/create", {
                 accountId: localStorage.getItem("accountID"),
                 productId: productID,
                 describe: reviewContent,
@@ -214,7 +215,7 @@ const ProductDetail = ({ UpdateNavbar }) => {
 
     const DeleteEvalute = () => {
         axios
-            .delete("http://localhost:5000/api/evalutes/", {
+            .delete(apiHosting() + "/api/evalutes/", {
                 params: { evaluteId: evaluteID },
             })
             .then((res) => {
@@ -269,7 +270,7 @@ const ProductDetail = ({ UpdateNavbar }) => {
         if (isFavorite) {
             // Add to favorite
             axios
-                .post("http://localhost:5000/api/productInFavorites/create", {
+                .post(apiHosting() + "/api/productInFavorites/create", {
                     accountId: localStorage.getItem("accountID"),
                     productId: productID,
                     color: selectedType,
@@ -305,7 +306,8 @@ const ProductDetail = ({ UpdateNavbar }) => {
             // Remove
             axios
                 .delete(
-                    "http://localhost:5000/api/productInFavorites/byProductIdAndAccountId",
+                    apiHosting() +
+                        "/api/productInFavorites/byProductIdAndAccountId",
                     {
                         params: {
                             accountId: localStorage.getItem("accountID"),
@@ -749,7 +751,7 @@ function OtherProduct({ productID, category }) {
     useEffect(() => {
         setIsLoaded(false);
         axios
-            .get("http://localhost:5000/api/products/populateCatalog", {
+            .get(apiHosting() + "/api/products/populateCatalog", {
                 params: {
                     count: 9,
                     catalog: category,

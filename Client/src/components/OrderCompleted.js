@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./OrderCompleted.css";
 import img from "../assets/images/illustrations/orderConfirmed.svg";
 import { Link } from "react-router-dom";
-const OrderCompleted = () => {
+const OrderCompleted = ({ Paypal }) => {
+    useEffect(() => {});
     return (
         <div className="OrderCompleted">
             <img src={img} alt="image" />

@@ -3,6 +3,7 @@ import { Link, Navigate } from "react-router-dom";
 import "./Login.css";
 import { toast } from "react-toastify";
 import axios from "axios";
+import apiHosting from "../../apiHosting";
 
 function Login({ UpdateNavbar }) {
     const [username, setUsername] = useState("");
@@ -25,7 +26,7 @@ function Login({ UpdateNavbar }) {
             return;
         }
         axios
-            .post("http://localhost:5000/api/accounts/login", {
+            .post(apiHosting() + "/api/accounts/login", {
                 username: username,
                 password: password,
             })
@@ -82,6 +83,45 @@ function Login({ UpdateNavbar }) {
             });
     };
 
+    function LoginOnKeyDown(event) {
+        if (event.key === "Enter") {
+            LoginButtonOnClick();
+        }
+    }
+
+    const LoginAsGuess = () => {
+        localStorage.setItem("accountID", "63b45a0cea761f3e65d83673");
+        // Remove product in cart
+        axios
+            .delete(apiHosting() + "/api/productInCarts/byAccountId", {
+                params: {
+                    accountId: "63b45a0cea761f3e65d83673",
+                },
+            })
+            .then((res) => {
+                console.log("res delete product cart: ", res);
+                UpdateNavbar();
+            })
+            .catch((err) => {
+                console.log("err: ", err);
+            });
+        // Remove Wishlist
+        axios
+            .delete(apiHosting() + "/api/productInFavorites/byAccountId", {
+                params: {
+                    accountId: "63b45a0cea761f3e65d83673",
+                },
+            })
+            .then((res) => {
+                console.log("res delete wishlist: ", res);
+                UpdateNavbar();
+            })
+            .catch((err) => {
+                console.log("err: ", err);
+            });
+        setLoginSuccess(true);
+    };
+
     return (
         <div className="Login">
             <div className="login-card">
@@ -95,6 +135,7 @@ function Login({ UpdateNavbar }) {
                     value={username}
                     onChange={(event) => setUsername(event.target.value)}
                     placeholder="Số điện thoại / E-mail / Tên đăng nhập"
+                    onKeyDown={LoginOnKeyDown}
                 />
                 <input
                     className="login-input"
@@ -102,6 +143,7 @@ function Login({ UpdateNavbar }) {
                     value={password}
                     onChange={(event) => setPassword(event.target.value)}
                     placeholder="Mật khẩu"
+                    onKeyDown={LoginOnKeyDown}
                 />
                 <a className="login-forgot-pass-link" href="#">
                     Quên mật khẩu ?
@@ -118,6 +160,9 @@ function Login({ UpdateNavbar }) {
                     <Link to="/register">
                         <span className="login-bold-text"> Đăng ký ngay</span>
                     </Link>
+                </span>
+                <span className="no-login-label" onClick={LoginAsGuess}>
+                    Tiếp tục mà không Đăng nhập >
                 </span>
             </div>
         </div>

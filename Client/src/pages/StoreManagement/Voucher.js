@@ -9,6 +9,7 @@ import { AiOutlineDelete } from "react-icons/ai";
 import { IoMdClose } from "react-icons/io";
 import { toast } from "react-toastify";
 import axios from "axios";
+import apiHosting from "../../apiHosting";
 
 const sortOptions = [
     { value: "1", label: "Mới nhất trước" },
@@ -44,10 +45,46 @@ const Voucher = () => {
         FetchData();
     }, []);
 
+    function DeleteOutdatedVoucher() {
+        axios
+            .delete(apiHosting() + "/api/discountCodes/outDate", {
+                params: {
+                    accountId: localStorage.getItem("accountID"),
+                },
+            })
+            .then((res) => {
+                console.log("res delete", res);
+                toast.success("Xoá thành công!", {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+                FetchData();
+            })
+            .catch((err) => {
+                console.log("err: ", err);
+                toast.error("Có lỗi xảy ra!", {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+            });
+    }
+
     function FetchData() {
         setIsLoaded(false);
         axios
-            .get("http://localhost:5000/api/discountCodes/byAccountId", {
+            .get(apiHosting() + "/api/discountCodes/byAccountId", {
                 params: {
                     accountId: localStorage.getItem("accountID"),
                 },
@@ -107,7 +144,10 @@ const Voucher = () => {
                     />
                     Cập nhật
                 </button>
-                <button className="update-button remove-button">
+                <button
+                    className="update-button remove-button"
+                    onClick={DeleteOutdatedVoucher}
+                >
                     <AiOutlineDelete
                         style={{ color: "#FFF", marginRight: "4px" }}
                     />
@@ -248,7 +288,7 @@ const AddVoucherModal = ({ id, voucher, closeFunction, update }) => {
     useEffect(() => {
         if (id === 0) return;
         axios
-            .get("http://localhost:5000/api/discountCodes/", {
+            .get(apiHosting() + "/api/discountCodes/", {
                 params: {
                     codeId: id,
                 },
@@ -287,7 +327,7 @@ const AddVoucherModal = ({ id, voucher, closeFunction, update }) => {
         }
 
         axios
-            .post("http://localhost:5000/api/discountCodes/create", {
+            .post(apiHosting() + "/api/discountCodes/create", {
                 code: code.toUpperCase(),
                 count: count,
                 timeStart: timeStart,
@@ -343,7 +383,7 @@ const AddVoucherModal = ({ id, voucher, closeFunction, update }) => {
         }
 
         axios
-            .put("http://localhost:5000/api/discountCodes/update", {
+            .put(apiHosting() + "/api/discountCodes/update", {
                 code: code.toUpperCase(),
                 count: count,
                 timeStart: timeStart,
@@ -392,6 +432,44 @@ const AddVoucherModal = ({ id, voucher, closeFunction, update }) => {
         console.log("unit.label: ", unit.label);
         if (unit.label === "%" && (value < 1 || value > 99)) return false;
         return true;
+    }
+
+    function DeleteCurrentVoucher() {
+        axios
+            .delete(apiHosting() + "/api/discountCodes/byCodeId", {
+                params: {
+                    codeId: id,
+                    accountId: localStorage.getItem("accountID"),
+                },
+            })
+            .then((res) => {
+                console.log("res delete", res);
+                toast.success("Xoá mã giảm giá thành công!", {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+                update();
+                closeFunction();
+            })
+            .catch((err) => {
+                console.log("err: ", err);
+                toast.error("Có lỗi xảy ra!", {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+            });
     }
 
     if (id === 0)
@@ -627,7 +705,10 @@ const AddVoucherModal = ({ id, voucher, closeFunction, update }) => {
                         >
                             Lưu thông tin
                         </button>
-                        <button className="add-button primary-button save-form">
+                        <button
+                            className="add-button primary-button save-form"
+                            onClick={DeleteCurrentVoucher}
+                        >
                             Xoá Mã
                         </button>
                     </div>

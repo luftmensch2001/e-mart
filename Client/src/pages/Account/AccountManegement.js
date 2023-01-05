@@ -5,6 +5,7 @@ import avatar from "../../assets/images/avatar.png";
 import axios from "axios";
 import Loading from "../../components/Loading";
 import { toast } from "react-toastify";
+import apiHosting from "../../apiHosting";
 
 function AccountManagement() {
     const [userData, setUserData] = useState();
@@ -16,7 +17,7 @@ function AccountManagement() {
     useEffect(() => {
         setIsLoaded(false);
         axios
-            .get("http://localhost:5000/api/accounts/getInfo", {
+            .get(apiHosting() + "/api/accounts/getInfo", {
                 params: {
                     accountId: localStorage.getItem("accountID"),
                 },
@@ -56,7 +57,7 @@ function AccountManagement() {
             return;
         }
         axios
-            .put("http://localhost:5000/api/accounts/changePassword", {
+            .put(apiHosting() + "/api/accounts/changePassword", {
                 accountId: localStorage.getItem("accountID"),
                 oldPassword: password,
                 newPassword: newPassword,

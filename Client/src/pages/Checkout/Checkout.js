@@ -10,8 +10,17 @@ import axios from "axios";
 import { Navigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Loading from "../../components/Loading";
+import apiHosting from "../../apiHosting";
 
-const Checkout = ({ products, total, discount, UpdateNavbar }) => {
+const Checkout = ({
+    products,
+    total,
+    discount,
+    usedVoucher,
+    usedCoin,
+    UpdateNavbar,
+    SetCompleteOrderData,
+}) => {
     const [isLoaded, setIsLoaded] = useState(true);
     const [navigate, setNavigate] = useState(false); // Go to complete page
     const [orderFor, setOrderFor] = useState(false);
@@ -89,9 +98,11 @@ const Checkout = ({ products, total, discount, UpdateNavbar }) => {
             }
     }, [district]);
 
+    console.log("usedCoin: ", usedCoin);
+
     function RemoveInvalidBill(id) {
         axios
-            .delete("http://localhost:5000/api/bills/", {
+            .delete(apiHosting() + "/api/bills/", {
                 params: { billId: id },
             })
             .then((res) => {})
@@ -100,7 +111,7 @@ const Checkout = ({ products, total, discount, UpdateNavbar }) => {
 
     function RemoveProductInCart() {
         axios
-            .delete("http://localhost:5000/api/productInCarts/byAccountId", {
+            .delete(apiHosting() + "/api/productInCarts/byAccountId", {
                 params: { accountId: localStorage.getItem("accountID") },
             })
             .then((res) => {
@@ -110,10 +121,124 @@ const Checkout = ({ products, total, discount, UpdateNavbar }) => {
             .catch((err) => console.log(err));
     }
 
-    const CompleteOrder = () => {
-        setIsLoaded(false);
+    function fullInfo() {
+        if (!fullName.trim() || !email.trim() || !phoneNumber.trim())
+            return false;
+        if (orderFor) {
+            if (!fullName2.trim() || !email2.trim() || !phoneNumber2.trim())
+                return false;
+        }
+        if (!province || !district || !ward) return false;
+        return true;
+    }
+
+    const Checkout = () => {
+        if (!fullInfo()) {
+            toast.warn("Vui lòng nhập đầy đủ thông tin!", {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+            return;
+        }
+        // COD
+        if (paymentMethod === 1) {
+            CompleteOrder(false);
+            return;
+        }
+
+        // Paypal
+        // prepare products data
+        let items = [];
+        let index = 0;
+        products.forEach((product) => {
+            let item = {
+                name: product.nameProduct,
+                sku: (++index).toString(),
+                currency: "USD",
+                price: product.price,
+                quantity: product.count,
+            };
+            items = items.concat(item);
+        });
+        if (discount) {
+            let itemDiscount = {
+                name: "Giảm giá",
+                sku: index.toString(),
+                currency: "USD",
+                price: discount * -1,
+                quantity: 1,
+            };
+
+            items = items.concat(itemDiscount);
+        }
+        console.log("items: ", items);
+
         axios
-            .post("http://localhost:5000/api/bills/create", {
+            .post(apiHosting() + "/api/payment_paypal/pay", {
+                items: items,
+                totalPrice: total,
+            })
+            .then((res) => {
+                console.log("res paypal: ", res);
+                window.open(res.data.link);
+                CompleteOrder(true);
+            })
+            .catch((err) => {
+                console.log("err: ", err);
+            });
+    };
+
+    function CompleteOrder(isPaypal) {
+        setIsLoaded(false);
+        // Reduce Coin and Voucher count
+        if (usedCoin)
+            axios
+                .put(apiHosting() + "/api/accounts/updateCoin", {
+                    accountId: localStorage.getItem("accountID"),
+                    coin: usedCoin * -1,
+                })
+                .then((res) => {
+                    console.log("res update coin: ", res);
+                })
+                .catch((err) => {
+                    console.log("err: ", err);
+                });
+        if (usedVoucher)
+            axios
+                .put(apiHosting() + "/api/discountCodes/down1count", {
+                    codeId: usedVoucher._id,
+                })
+                .then((res) => {
+                    console.log("res update voucher: ", res);
+                })
+                .catch((err) => {
+                    console.log("err: ", err);
+                });
+
+        products.forEach((product) => {
+            axios
+                .put(apiHosting() + "/api/products/upSoldCount", {
+                    productId: product.productId,
+                    count: product.count,
+                })
+                .then((res) => {
+                    console.log("res update product count: ", res);
+                })
+                .catch((err) => {
+                    console.log("err: ", err);
+                });
+        });
+
+        // Create bill and product in bill
+
+        axios
+            .post(apiHosting() + "/api/bills/create", {
                 accountBuyerId: localStorage.getItem("accountID"),
                 productId: products[0].productId,
                 state: "1",
@@ -140,21 +265,18 @@ const Checkout = ({ products, total, discount, UpdateNavbar }) => {
                 // Create product in bill
                 products.forEach((item) => {
                     axios
-                        .post(
-                            "http://localhost:5000/api/productInBills/create",
-                            {
-                                billId: newBillId,
-                                productId: item.productId,
-                                color: item.color,
-                                count: item.count,
-                            }
-                        )
+                        .post(apiHosting() + "/api/productInBills/create", {
+                            billId: newBillId,
+                            productId: item.productId,
+                            color: item.color,
+                            count: item.count,
+                        })
                         .then((res) => {
                             console.log("res create productInBill: ", res);
                             counter++;
                             if (counter == products.length) {
-                                setIsLoaded(true);
-                                setNavigate(true);
+                                if (!isPaypal) setIsLoaded(true);
+                                if (!isPaypal) setNavigate(true);
                             }
                         })
                         .catch((err) => {
@@ -189,9 +311,12 @@ const Checkout = ({ products, total, discount, UpdateNavbar }) => {
                 setIsLoaded(true);
                 return;
             });
-    };
+    }
 
     if (!isLoaded) return <Loading />;
+
+    console.log("usedCoin: ", usedCoin);
+    console.log("usedVoucher: ", usedVoucher);
 
     return (
         <div className="Checkout content">
@@ -381,7 +506,7 @@ const Checkout = ({ products, total, discount, UpdateNavbar }) => {
                     <div className="input-row">
                         <button
                             className="complete-button primary-button"
-                            onClick={CompleteOrder}
+                            onClick={Checkout}
                         >
                             Hoàn tất Đặt hàng
                         </button>

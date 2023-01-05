@@ -5,6 +5,7 @@ import "./SellOrdersTab.css";
 import { AiOutlineSearch } from "react-icons/ai";
 import axios from "axios";
 import Loading from "../../components/Loading";
+import apiHosting from "../../apiHosting";
 
 function Items({ currentItems, filterFunction }) {
     const [statusFilterValue, setStatusFilterValue] = useState(1);
@@ -249,7 +250,7 @@ function BuyOrdersTab() {
     useEffect(() => {
         setIsLoaded(false);
         axios
-            .get("http://localhost:5000/api/bills/seller", {
+            .get(apiHosting() + "/api/bills/seller", {
                 params: {
                     accountSellerId: localStorage.getItem("accountID"),
                 },
@@ -264,7 +265,7 @@ function BuyOrdersTab() {
                 let counter = 0;
                 arrBill.forEach((bill) => {
                     axios
-                        .get("http://localhost:5000/api/productInBills/", {
+                        .get(apiHosting() + "/api/productInBills/", {
                             params: {
                                 billId: bill._id,
                             },
@@ -278,7 +279,7 @@ function BuyOrdersTab() {
                             bill.productCount = res.data.productInBill.length;
                             axios
                                 .get(
-                                    "http://localhost:5000/api/products/byProductId",
+                                    apiHosting() + "/api/products/byProductId",
                                     {
                                         params: {
                                             productId:
@@ -336,8 +337,9 @@ function BuyOrdersTab() {
         if (!orderDate) return true;
         const milisecondsInDay = 1000 * 60 * 60 * 24;
         if (dateValue === 2) {
-            const daySubtract = Math.abs(today - orderDate);
-            return daySubtract <= milisecondsInDay;
+            // const daySubtract = Math.abs(today - orderDate);
+            // return daySubtract <= milisecondsInDay;
+            return today.getDate() === orderDate.getDate();
         }
         if (dateValue === 3) {
             const daySubtract = Math.abs(today - orderDate);

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./SelectTypeDialog.css";
 import axios from "axios";
 import { toast } from "react-toastify";
+import apiHosting from "../apiHosting";
 
 const SelectTypeDialog = ({ product, closeFunction, id, UpdateNavbar }) => {
     console.log("id: ", id);
@@ -16,7 +17,7 @@ const SelectTypeDialog = ({ product, closeFunction, id, UpdateNavbar }) => {
 
     const AddToCart = () => {
         axios
-            .post("http://localhost:5000/api/productInCarts/create", {
+            .post(apiHosting() + "/api/productInCarts/create", {
                 accountId: localStorage.getItem("accountID"),
                 productId: value,
                 color: selectedType,
@@ -41,7 +42,7 @@ const SelectTypeDialog = ({ product, closeFunction, id, UpdateNavbar }) => {
 
     useEffect(() => {
         axios
-            .get("http://localhost:5000/api/colors", {
+            .get(apiHosting() + "/api/colors", {
                 params: {
                     productId: value,
                 },

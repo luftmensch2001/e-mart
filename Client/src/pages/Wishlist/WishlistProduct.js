@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import ConfirmDialog from "../../components/ConfirmDialog";
 import GetStarImage from "../../components/GetStarImage";
 import SelectTypeDialog from "../../components/SelectTypeDialog";
+import apiHosting from "../../apiHosting";
 
 function WishlistProduct({ data, updateFunction, UpdateNavbar }) {
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -17,7 +18,8 @@ function WishlistProduct({ data, updateFunction, UpdateNavbar }) {
     function DeleteFromWishlist() {
         axios
             .delete(
-                "http://localhost:5000/api/productInFavorites/byProductIdAndAccountId",
+                apiHosting() +
+                    "/api/productInFavorites/byProductIdAndAccountId",
                 {
                     params: {
                         accountId: localStorage.getItem("accountID"),

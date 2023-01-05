@@ -2,7 +2,7 @@ const express = require("express");
 const multer = require("multer");
 const router = express.Router();
 
-const Product = require("../models/products");
+const Product = require("../Models/products");
 
 const uploadMultipartForm = multer().none();
 
@@ -64,7 +64,7 @@ router.post("/create", async (req, res) => {
 // @access Public
 router.get("/all", async (req, res) => {
   try {
-    const products = await Product.find({state: { $ne: "deleted" }});
+    const products = await Product.find({ state: { $ne: "deleted" } });
     res.json({ success: true, products });
   } catch (error) {
     console.log(error);
@@ -82,7 +82,10 @@ router.get("/byAccountId", async (req, res) => {
   const accountId = req.query.accountId;
   try {
     console.log(accountId);
-    const products = await Product.find({ accountId,state: { $ne: "deleted" }, });
+    const products = await Product.find({
+      accountId,
+      state: { $ne: "deleted" },
+    });
     res.json({ success: true, products });
   } catch (error) {
     console.log(error);
@@ -99,7 +102,10 @@ router.get("/byAccountId", async (req, res) => {
 router.get("/byProductId", async (req, res) => {
   const productId = req.query.productId;
   try {
-    const product = await Product.findOne({ _id: productId,state: { $ne: "deleted" }, });
+    const product = await Product.findOne({
+      _id: productId,
+      state: { $ne: "deleted" },
+    });
     res.json({ success: true, product });
   } catch (error) {
     console.log(error);

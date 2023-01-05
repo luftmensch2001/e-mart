@@ -20,19 +20,15 @@ const Payment_PaypalRouter = require("./routes/payment_paypal");
 console.log(process.env.DB_USERNAME);
 
 const connectDB = async () => {
-    try {
-        await mongoose.connect(
-            `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.rbbiuxh.mongodb.net/?retryWrites=true&w=majority`,
-            {
-                useNewUrlParser: true,
-                useUnifiedTopology: true,
-            }
-        );
-        console.log("MongoDB connected");
-    } catch (error) {
-        console.log(error.message);
-        process.exit(1);
-    }
+  try {
+    await mongoose.connect(
+      `mongodb+srv://turtle19520253:19520253@cluster0.rbbiuxh.mongodb.net/?retryWrites=true&w=majority`
+    );
+    console.log("MongoDB connected");
+  } catch (error) {
+    console.log(error.message);
+    process.exit(1);
+  }
 };
 
 connectDB();
@@ -59,3 +55,9 @@ app.use("/api/payment_paypal", Payment_PaypalRouter);
 const PORT = 5000;
 
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
+
+module.exports = app;

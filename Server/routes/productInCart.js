@@ -1,9 +1,9 @@
 const express = require("express");
 const accounts = require("../Models/accounts");
-const productInCarts = require("../models/productInCarts");
+const productInCarts = require("../Models/productInCarts");
 const router = express.Router();
 
-const ProductInCart = require("../models/productInCarts");
+const ProductInCart = require("../Models/productInCarts");
 
 // @route GET api/productInCarts/byAccountId
 // @desc get productInCart by accountId

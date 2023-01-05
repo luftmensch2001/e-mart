@@ -23,6 +23,7 @@ import EditProduct from "./pages/StoreManagement/EditProduct";
 import OrderDetail from "./pages/Order/OrderDetail";
 import axios from "axios";
 import OrderCompleted from "./components/OrderCompleted";
+import apiHosting from "./apiHosting";
 
 function App() {
     // Hide header and footer in Login / Register screen
@@ -49,7 +50,7 @@ function App() {
 
     const GetCartData = () => {
         axios
-            .get("http://localhost:5000/api/productInCarts/byAccountId", {
+            .get(apiHosting() + "/api/productInCarts/byAccountId", {
                 params: {
                     accountId: localStorage.getItem("accountID"),
                 },
@@ -60,7 +61,7 @@ function App() {
 
     const GetWishlistData = () => {
         axios
-            .get("http://localhost:5000/api/productInFavorites/byAccountId", {
+            .get(apiHosting() + "/api/productInFavorites/byAccountId", {
                 params: {
                     accountId: localStorage.getItem("accountID"),
                 },

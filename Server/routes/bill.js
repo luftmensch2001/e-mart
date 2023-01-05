@@ -27,6 +27,7 @@ router.get("/buyer", async (req, res) => {
     const { accountBuyerId } = req.query;
     try {
         const bills = await Bill.find({ accountBuyerId });
+        bills.reverse();
         res.json({ success: true, message: "All bill of buyer", bills });
     } catch (error) {
         console.log(error);
@@ -43,6 +44,7 @@ router.get("/seller", async (req, res) => {
     const { accountSellerId } = req.query;
     try {
         const bills = await Bill.find({ accountSellerId });
+        bills.reverse();
         res.json({ success: true, message: "All bill of seller", bills });
     } catch (error) {
         console.log(error);

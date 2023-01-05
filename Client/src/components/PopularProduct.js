@@ -10,7 +10,7 @@ import GetStarImage from "./GetStarImage";
 import axios from "axios";
 import { toast } from "react-toastify";
 import SelectTypeDialog from "./SelectTypeDialog";
-import { updateMetadata } from "firebase/storage";
+import apiHosting from "../apiHosting";
 
 function PopularProduct({ UpdateNavbar }) {
     const [data, setData] = useState([]);
@@ -26,7 +26,7 @@ function PopularProduct({ UpdateNavbar }) {
 
     const GetAllData = () => {
         axios
-            .get("http://localhost:5000/api/products/allPopulate", {
+            .get(apiHosting() + "/api/products/allPopulate", {
                 params: {
                     count: 8,
                     accountId: localStorage.getItem("accountID"),
@@ -49,12 +49,14 @@ function PopularProduct({ UpdateNavbar }) {
         setIsLoaded(false);
         setFilterValue(event.target.value);
         if (event.target.value === "All") {
+            setWidthPercent(100);
+            setWidthPercentItem(22);
             GetAllData();
             return;
         }
 
         axios
-            .get("http://localhost:5000/api/products/populateCatalog", {
+            .get(apiHosting() + "/api/products/populateCatalog", {
                 params: {
                     count: 8,
                     accountId: localStorage.getItem("accountID"),
@@ -68,6 +70,9 @@ function PopularProduct({ UpdateNavbar }) {
                     setWidthPercentItem(40);
                 } else if (res.data.products.length === 6) {
                     setWidthPercentItem(25.1);
+                } else {
+                    setWidthPercent(100);
+                    setWidthPercentItem(22);
                 }
                 setData(res.data.products);
                 setIsLoaded(true);
@@ -121,8 +126,8 @@ function PopularProduct({ UpdateNavbar }) {
                     className="product-list"
                     style={{ width: `${widthPercent}%` }}
                 >
-                    {data.length > 0 ? (
-                        data.map((item) => (
+                    {data?.length > 0 ? (
+                        data?.map((item) => (
                             <ProductCard
                                 item={item}
                                 widthPercentItem={widthPercentItem}
@@ -151,7 +156,7 @@ function ProductCard({ item, widthPercentItem, UpdateNavbar }) {
         console.log("id: ", item._id);
         // Add to favorite
         axios
-            .post("http://localhost:5000/api/productInFavorites/create", {
+            .post(apiHosting() + "/api/productInFavorites/create", {
                 accountId: localStorage.getItem("accountID"),
                 productId: item._id,
                 // color: selectedType,
@@ -188,7 +193,8 @@ function ProductCard({ item, widthPercentItem, UpdateNavbar }) {
     const RemoveFromFavorite = () => {
         axios
             .delete(
-                "http://localhost:5000/api/productInFavorites/byProductIdAndAccountId",
+                apiHosting() +
+                    "/api/productInFavorites/byProductIdAndAccountId",
                 {
                     params: {
                         accountId: localStorage.getItem("accountID"),

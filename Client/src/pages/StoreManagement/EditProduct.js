@@ -3,7 +3,6 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { AiOutlineSave } from "react-icons/ai";
 import { toast } from "react-toastify";
 import "./AddProduct.css";
-import { BsCheckLg } from "react-icons/bs";
 import axios from "axios";
 import { storage } from "../../components/firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -11,6 +10,7 @@ import { v4 } from "uuid";
 import { Navigate, useParams } from "react-router-dom";
 import Loading from "../../components/Loading";
 import NotFound from "../../components/NotFound";
+import apiHosting from "../../apiHosting";
 
 const EditProduct = () => {
     const [types, setTypes] = useState([]);
@@ -38,7 +38,7 @@ const EditProduct = () => {
         setIsLoaded(false);
         // Get product data
         axios
-            .get("http://localhost:5000/api/products/byProductId", {
+            .get(apiHosting() + "/api/products/byProductId", {
                 params: {
                     productId: productID,
                 },
@@ -60,7 +60,7 @@ const EditProduct = () => {
             .catch(() => setFoundProduct(false));
         // Get type data
         axios
-            .get("http://localhost:5000/api/colors", {
+            .get(apiHosting() + "/api/colors", {
                 params: {
                     productId: productID,
                 },
@@ -163,7 +163,7 @@ const EditProduct = () => {
         imageURLs.forEach((item) => formData.append("imageURLs[]", item));
 
         axios
-            .put("http://localhost:5000/api/products/update", formData, {
+            .put(apiHosting() + "/api/products/update", formData, {
                 headers: {
                     "content-type": "multipart/form-data",
                 },
@@ -244,7 +244,7 @@ const EditProduct = () => {
     const UploadColor = (productID) => {
         console.log("productID: ", productID);
         axios
-            .delete("http://localhost:5000/api/colors/byProductId", {
+            .delete(apiHosting() + "/api/colors/byProductId", {
                 params: {
                     productId: productID,
                 },
@@ -253,7 +253,7 @@ const EditProduct = () => {
                 console.log(res);
                 types.forEach((item) => {
                     axios
-                        .post("http://localhost:5000/api/colors/create", {
+                        .post(apiHosting() + "/api/colors/create", {
                             productId: productID,
                             name: item.name,
                         })
@@ -385,9 +385,7 @@ const EditProduct = () => {
                                 className="product-info-input"
                                 type="number"
                                 value={productPrice}
-                                onChange={(e) =>
-                                    setProductPrice(e.target.value)
-                                }
+                                readOnly={true}
                             />
                         </div>
                         {/* Sale */}
@@ -408,10 +406,7 @@ const EditProduct = () => {
                                         cursor: "pointer",
                                     }}
                                     checked={sale}
-                                    onChange={() => {
-                                        setProductSalePrice("");
-                                        setSale(!sale);
-                                    }}
+                                    readOnly={true}
                                 />
                                 <span
                                     className="product-info-label"
@@ -426,9 +421,7 @@ const EditProduct = () => {
                                 disabled={!sale}
                                 placeholder="Nhập giá cũ"
                                 value={productSalePrice}
-                                onChange={(e) =>
-                                    setProductSalePrice(e.target.value)
-                                }
+                                readOnly={true}
                             />
                         </div>
                         <div className="product-info-row-detail">

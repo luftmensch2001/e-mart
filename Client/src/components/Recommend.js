@@ -6,6 +6,7 @@ import Loading from "./Loading";
 import axios from "axios";
 import GetStarImage from "./GetStarImage";
 import { Link } from "react-router-dom";
+import apiHosting from "../apiHosting";
 
 function Recommend() {
     const [bestSellerData, setBestSellerData] = useState([]);
@@ -24,7 +25,7 @@ function Recommend() {
 
     const GetBestSellerData = () => {
         axios
-            .get("http://localhost:5000/api/products/allPopulate", {
+            .get(apiHosting() + "/api/products/allPopulate", {
                 params: {
                     count: 3,
                     accountId: localStorage.getItem("accountID"),
@@ -40,7 +41,7 @@ function Recommend() {
 
     const GetLastestData = () => {
         axios
-            .get("http://localhost:5000/api/products/allNewest", {
+            .get(apiHosting() + "/api/products/allNewest", {
                 params: {
                     count: 3,
                     accountId: localStorage.getItem("accountID"),
@@ -56,7 +57,7 @@ function Recommend() {
 
     const GetDeepSaleData = () => {
         axios
-            .get("http://localhost:5000/api/products/allDiscount", {
+            .get(apiHosting() + "/api/products/allDiscount", {
                 params: {
                     count: 3,
                     accountId: localStorage.getItem("accountID"),
@@ -78,7 +79,7 @@ function Recommend() {
                         Best <span className="green-text">Seller</span>
                     </span>
                     <div className="recommend-product-container">
-                        {bestSellerData.map((item) => (
+                        {bestSellerData?.map((item) => (
                             <Link to={`/product/${item._id}`}>
                                 <div className="recommend-product">
                                     <img
@@ -121,7 +122,7 @@ function Recommend() {
                         Mới <span className="green-text">Nhất</span>
                     </span>
                     <div className="recommend-product-container">
-                        {lastestData.map((item) => (
+                        {lastestData?.map((item) => (
                             <Link to={`/product/${item._id}`}>
                                 <div className="recommend-product">
                                     <img
@@ -164,7 +165,7 @@ function Recommend() {
                         Giảm <span className="green-text">Giá Sâu</span>
                     </span>
                     <div className="recommend-product-container">
-                        {deepSaleData.map((item) => (
+                        {deepSaleData?.map((item) => (
                             <Link to={`/product/${item._id}`}>
                                 <div className="recommend-product">
                                     <img

@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import ThousandSeparator from "../../components/ThousandSeparator";
 import ConfirmDialog from "../../components/ConfirmDialog";
 import axios from "axios";
+import apiHosting from "../../apiHosting";
 
 const CartProduct = ({ data, updateFunction, UpdateNavbar }) => {
     const [quantity, setQuantity] = useState(data.count);
@@ -14,7 +15,7 @@ const CartProduct = ({ data, updateFunction, UpdateNavbar }) => {
 
     const UpdateQuantity = (count) => {
         axios
-            .put("http://localhost:5000/api/productInCarts/update", {
+            .put(apiHosting() + "/api/productInCarts/update", {
                 productInCartId: data._id,
                 count: count,
             })
@@ -60,7 +61,7 @@ const CartProduct = ({ data, updateFunction, UpdateNavbar }) => {
         console.log("data.productId: ", data.productId);
         axios
             .delete(
-                "http://localhost:5000/api/productInCarts/byProductIdAndAccountId",
+                apiHosting() + "/api/productInCarts/byProductIdAndAccountId",
                 {
                     params: {
                         accountId: localStorage.getItem("accountID"),

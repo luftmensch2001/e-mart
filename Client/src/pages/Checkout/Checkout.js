@@ -7,9 +7,10 @@ import ThousandSeparator from "../../components/ThousandSeparator";
 import Select from "react-select";
 import AddressData from "../../assets/AddressData.json";
 import axios from "axios";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Loading from "../../components/Loading";
+import apiHosting from "../../apiHosting";
 
 const Checkout = ({
     products,
@@ -101,7 +102,7 @@ const Checkout = ({
 
     function RemoveInvalidBill(id) {
         axios
-            .delete("http://localhost:5000/api/bills/", {
+            .delete(apiHosting() + "/api/bills/", {
                 params: { billId: id },
             })
             .then((res) => {})
@@ -110,7 +111,7 @@ const Checkout = ({
 
     function RemoveProductInCart() {
         axios
-            .delete("http://localhost:5000/api/productInCarts/byAccountId", {
+            .delete(apiHosting() + "/api/productInCarts/byAccountId", {
                 params: { accountId: localStorage.getItem("accountID") },
             })
             .then((res) => {
@@ -120,11 +121,33 @@ const Checkout = ({
             .catch((err) => console.log(err));
     }
 
-    const Checkout = () => {
-        // COD
+    function fullInfo() {
+        if (!fullName.trim() || !email.trim() || !phoneNumber.trim())
+            return false;
+        if (orderFor) {
+            if (!fullName2.trim() || !email2.trim() || !phoneNumber2.trim())
+                return false;
+        }
+        if (!province || !district || !ward) return false;
+        return true;
+    }
 
+    const Checkout = () => {
+        if (!fullInfo()) {
+            toast.warn("Vui lòng nhập đầy đủ thông tin!", {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+            return;
+        }
+        // COD
         if (paymentMethod === 1) {
-            console.log("paymentMethod: ", paymentMethod);
             CompleteOrder(false);
             return;
         }
@@ -157,7 +180,7 @@ const Checkout = ({
         console.log("items: ", items);
 
         axios
-            .post("http://localhost:5000/api/payment_paypal/pay", {
+            .post(apiHosting() + "/api/payment_paypal/pay", {
                 items: items,
                 totalPrice: total,
             })
@@ -176,7 +199,7 @@ const Checkout = ({
         // Reduce Coin and Voucher count
         if (usedCoin)
             axios
-                .put("http://localhost:5000/api/accounts/updateCoin", {
+                .put(apiHosting() + "/api/accounts/updateCoin", {
                     accountId: localStorage.getItem("accountID"),
                     coin: usedCoin * -1,
                 })
@@ -188,7 +211,7 @@ const Checkout = ({
                 });
         if (usedVoucher)
             axios
-                .put("http://localhost:5000/api/discountCodes/down1count", {
+                .put(apiHosting() + "/api/discountCodes/down1count", {
                     codeId: usedVoucher._id,
                 })
                 .then((res) => {
@@ -200,7 +223,7 @@ const Checkout = ({
 
         products.forEach((product) => {
             axios
-                .put("http://localhost:5000/api/products/upSoldCount", {
+                .put(apiHosting() + "/api/products/upSoldCount", {
                     productId: product.productId,
                     count: product.count,
                 })
@@ -215,7 +238,7 @@ const Checkout = ({
         // Create bill and product in bill
 
         axios
-            .post("http://localhost:5000/api/bills/create", {
+            .post(apiHosting() + "/api/bills/create", {
                 accountBuyerId: localStorage.getItem("accountID"),
                 productId: products[0].productId,
                 state: "1",
@@ -242,15 +265,12 @@ const Checkout = ({
                 // Create product in bill
                 products.forEach((item) => {
                     axios
-                        .post(
-                            "http://localhost:5000/api/productInBills/create",
-                            {
-                                billId: newBillId,
-                                productId: item.productId,
-                                color: item.color,
-                                count: item.count,
-                            }
-                        )
+                        .post(apiHosting() + "/api/productInBills/create", {
+                            billId: newBillId,
+                            productId: item.productId,
+                            color: item.color,
+                            count: item.count,
+                        })
                         .then((res) => {
                             console.log("res create productInBill: ", res);
                             counter++;

@@ -9,6 +9,7 @@ import AddToCart from "../../assets/images/illustrations/undraw_Add_to_cart_re_w
 import Loading from "../../components/Loading";
 import axios from "axios";
 import { toast } from "react-toastify";
+import apiHosting from "../../apiHosting";
 
 import ThousandSeparator from "../../components/ThousandSeparator";
 
@@ -32,7 +33,7 @@ const Cart = ({ SetCartData, SetDiscountData, UpdateNavbar }) => {
     const GetUserData = () => {
         setIsLoaded(false);
         axios
-            .get("http://localhost:5000/api/accounts/getInfo", {
+            .get(apiHosting() + "/api/accounts/getInfo", {
                 params: {
                     accountId: localStorage.getItem("accountID"),
                 },
@@ -48,7 +49,7 @@ const Cart = ({ SetCartData, SetDiscountData, UpdateNavbar }) => {
     const FetchData = (showLoading) => {
         setIsLoaded(!showLoading);
         axios
-            .get("http://localhost:5000/api/productInCarts/byAccountId", {
+            .get(apiHosting() + "/api/productInCarts/byAccountId", {
                 params: {
                     accountId: localStorage.getItem("accountID"),
                 },
@@ -63,7 +64,7 @@ const Cart = ({ SetCartData, SetDiscountData, UpdateNavbar }) => {
                 let totalTemp = 0;
                 cartProducts.forEach((item) => {
                     axios
-                        .get("http://localhost:5000/api/products/byProductId", {
+                        .get(apiHosting() + "/api/products/byProductId", {
                             params: {
                                 productId: item.productId,
                             },
@@ -131,7 +132,7 @@ const Cart = ({ SetCartData, SetDiscountData, UpdateNavbar }) => {
 
     const VoucherCheck = () => {
         axios
-            .get("http://localhost:5000/api/products/byProductId", {
+            .get(apiHosting() + "/api/products/byProductId", {
                 params: {
                     productId: data[0].productId,
                 },
@@ -140,13 +141,10 @@ const Cart = ({ SetCartData, SetDiscountData, UpdateNavbar }) => {
                 console.log("res product: ", res);
 
                 axios
-                    .post(
-                        "http://localhost:5000/api/discountCodes/checkExist",
-                        {
-                            code: voucherCode,
-                            accountId: res.data.product.accountId,
-                        }
-                    )
+                    .post(apiHosting() + "/api/discountCodes/checkExist", {
+                        code: voucherCode,
+                        accountId: res.data.product.accountId,
+                    })
                     .then((res) => {
                         console.log("res voucher: ", res);
                         if (res.data.success === false) {

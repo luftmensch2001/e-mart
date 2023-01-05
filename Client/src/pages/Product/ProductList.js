@@ -12,6 +12,7 @@ import Loading from "../../components/Loading";
 import GetStarImage from "../../components/GetStarImage";
 import { toast } from "react-toastify";
 import SelectTypeDialog from "../../components/SelectTypeDialog";
+import apiHosting from "../../apiHosting";
 
 import notFoundProduct from "../../assets/images/illustrations/notfoundproduct.jpg";
 
@@ -120,7 +121,7 @@ const ProductList = ({ UpdateNavbar }) => {
 
     const GetAllProducts = () => {
         axios
-            .get("http://localhost:5000/api/products/allByKeyWord", {
+            .get(apiHosting() + "/api/products/allByKeyWord", {
                 params: {
                     keyword: keyword,
                 },
@@ -146,7 +147,7 @@ const ProductList = ({ UpdateNavbar }) => {
         if (isCategory === "true") keywordNew = "";
 
         axios
-            .get("http://localhost:5000/api/products/catalogByKeyWord", {
+            .get(apiHosting() + "/api/products/catalogByKeyWord", {
                 params: {
                     keyword: keywordNew,
                     type: category,
@@ -547,7 +548,7 @@ const ProductCard = ({ item, UpdateNavbar }) => {
         console.log("id: ", item._id);
         // Add to favorite
         axios
-            .post("http://localhost:5000/api/productInFavorites/create", {
+            .post(apiHosting() + "/api/productInFavorites/create", {
                 accountId: localStorage.getItem("accountID"),
                 productId: item._id,
                 // color: selectedType,
@@ -584,7 +585,8 @@ const ProductCard = ({ item, UpdateNavbar }) => {
     const RemoveFromFavorite = () => {
         axios
             .delete(
-                "http://localhost:5000/api/productInFavorites/byProductIdAndAccountId",
+                apiHosting() +
+                    "/api/productInFavorites/byProductIdAndAccountId",
                 {
                     params: {
                         accountId: localStorage.getItem("accountID"),

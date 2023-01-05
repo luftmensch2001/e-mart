@@ -9,6 +9,7 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
 import { Navigate } from "react-router-dom";
 import Loading from "../../components/Loading";
+import apiHosting from "../../apiHosting";
 
 const AddProduct = () => {
     const [types, setTypes] = useState([]);
@@ -109,7 +110,7 @@ const AddProduct = () => {
         imageURLs.forEach((item) => formData.append("imageURLs[]", item));
 
         axios
-            .post("http://localhost:5000/api/products/create", formData, {
+            .post(apiHosting() + "/api/products/create", formData, {
                 headers: {
                     "content-type": "multipart/form-data",
                 },
@@ -188,7 +189,7 @@ const AddProduct = () => {
     const UploadColor = (productID) => {
         types.forEach((item) => {
             axios
-                .post("http://localhost:5000/api/colors/create", {
+                .post(apiHosting() + "/api/colors/create", {
                     productId: productID,
                     name: item.name,
                 })

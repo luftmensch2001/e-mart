@@ -9,6 +9,7 @@ import { AiOutlineDelete } from "react-icons/ai";
 import { IoMdClose } from "react-icons/io";
 import { toast } from "react-toastify";
 import axios from "axios";
+import apiHosting from "../../apiHosting";
 
 const sortOptions = [
     { value: "1", label: "Mới nhất trước" },
@@ -46,7 +47,7 @@ const Voucher = () => {
 
     function DeleteOutdatedVoucher() {
         axios
-            .delete("http://localhost:5000/api/discountCodes/outDate", {
+            .delete(apiHosting() + "/api/discountCodes/outDate", {
                 params: {
                     accountId: localStorage.getItem("accountID"),
                 },
@@ -83,7 +84,7 @@ const Voucher = () => {
     function FetchData() {
         setIsLoaded(false);
         axios
-            .get("http://localhost:5000/api/discountCodes/byAccountId", {
+            .get(apiHosting() + "/api/discountCodes/byAccountId", {
                 params: {
                     accountId: localStorage.getItem("accountID"),
                 },
@@ -287,7 +288,7 @@ const AddVoucherModal = ({ id, voucher, closeFunction, update }) => {
     useEffect(() => {
         if (id === 0) return;
         axios
-            .get("http://localhost:5000/api/discountCodes/", {
+            .get(apiHosting() + "/api/discountCodes/", {
                 params: {
                     codeId: id,
                 },
@@ -326,7 +327,7 @@ const AddVoucherModal = ({ id, voucher, closeFunction, update }) => {
         }
 
         axios
-            .post("http://localhost:5000/api/discountCodes/create", {
+            .post(apiHosting() + "/api/discountCodes/create", {
                 code: code.toUpperCase(),
                 count: count,
                 timeStart: timeStart,
@@ -382,7 +383,7 @@ const AddVoucherModal = ({ id, voucher, closeFunction, update }) => {
         }
 
         axios
-            .put("http://localhost:5000/api/discountCodes/update", {
+            .put(apiHosting() + "/api/discountCodes/update", {
                 code: code.toUpperCase(),
                 count: count,
                 timeStart: timeStart,
@@ -435,7 +436,7 @@ const AddVoucherModal = ({ id, voucher, closeFunction, update }) => {
 
     function DeleteCurrentVoucher() {
         axios
-            .delete("http://localhost:5000/api/discountCodes/byCodeId", {
+            .delete(apiHosting() + "/api/discountCodes/byCodeId", {
                 params: {
                     codeId: id,
                     accountId: localStorage.getItem("accountID"),

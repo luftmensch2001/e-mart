@@ -3,6 +3,7 @@ import { Link, Navigate } from "react-router-dom";
 import "./Register.css";
 import { toast } from "react-toastify";
 import axios from "axios";
+import apiHosting from "../../apiHosting";
 
 function Register() {
     const [username, setUsername] = useState("");
@@ -30,7 +31,7 @@ function Register() {
             return;
         }
         axios
-            .post("http://localhost:5000/api/accounts/register", {
+            .post(apiHosting() + "/api/accounts/register", {
                 username: username,
                 password: password,
                 fullName: fullName,

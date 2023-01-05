@@ -6,6 +6,7 @@ import "./ProfileTab.css";
 import { storage } from "../../components/firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
+import apiHosting from "../../apiHosting";
 
 import cover from "../../assets/images/cover.jpg";
 import avatar from "../../assets/images/avatar.png";
@@ -38,7 +39,7 @@ function ProfileTab() {
     useEffect(() => {
         setIsLoaded(false);
         axios
-            .get("http://localhost:5000/api/accounts/getInfo", {
+            .get(apiHosting() + "/api/accounts/getInfo", {
                 params: {
                     accountId: localStorage.getItem("accountID"),
                 },
@@ -57,7 +58,7 @@ function ProfileTab() {
         window.scrollTo(0, 0);
         setIsLoaded(false);
         axios
-            .get("http://localhost:5000/api/accounts/getInfo", {
+            .get(apiHosting() + "/api/accounts/getInfo", {
                 params: {
                     accountId: localStorage.getItem("accountID"),
                 },
@@ -75,7 +76,7 @@ function ProfileTab() {
     function UpdateAccount(avatarURL) {
         if (avatarURL === "") avatarURL = userData.imageURL;
         axios
-            .put("http://localhost:5000/api/accounts/updateInfo", {
+            .put(apiHosting() + "/api/accounts/updateInfo", {
                 accountId: localStorage.getItem("accountID"),
                 fullName: fullName,
                 phoneNumber: phoneNumber,

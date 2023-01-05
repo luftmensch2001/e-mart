@@ -1,5 +1,5 @@
 const apiHosting = () => {
-    return "http://localhost:5000";
+    return "https://anxpnu.deta.dev";
 };
 
 export default apiHosting;
